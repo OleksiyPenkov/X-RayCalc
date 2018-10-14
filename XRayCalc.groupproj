@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{589581B9-0198-4208-B6B7-873DAED8391D}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="xraycalc.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="xraycalc">
+        <MSBuild Projects="xraycalc.dproj"/>
+    </Target>
+    <Target Name="xraycalc:Clean">
+        <MSBuild Projects="xraycalc.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="xraycalc:Make">
+        <MSBuild Projects="xraycalc.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="xraycalc"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="xraycalc:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="xraycalc:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
