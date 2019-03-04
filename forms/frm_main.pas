@@ -1364,15 +1364,17 @@ end;
 procedure TfrmMain.FillRecentList;
 var
   P: Integer;
-  s: string;
+  S, tmpS: string;
 begin
-  s := Settings.RecentFiles;
+  S := Settings.RecentFiles;
+  S := StringReplace(S, '&', '', [rfReplaceAll]);
   P := pos(';', s);
   while P <> 0 do
   begin
-    AddRecentItem(copy(s, 1, P - 1));
-    Delete(s, 1, P);
-    P := pos(';', s);
+    tmpS := copy(s, 1, P - 1);
+    AddRecentItem(tmpS);
+    Delete(S, 1, P);
+    P := pos(';', S);
   end;
 end;
 
@@ -2298,7 +2300,7 @@ begin
   end;
 
   if rbngrpProject.Items[3].Items.Count > 10 then
-    rbngrpProject.Items[3].Items.Delete(11);
+    rbngrpProject.Items[3].Items.Delete(0);
 
 end;
 

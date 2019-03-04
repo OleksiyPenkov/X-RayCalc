@@ -119,6 +119,11 @@ object frmMain: TfrmMain
       Font.Style = []
       Header.AutoSizeIndex = 0
       Header.Background = clGreen
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -11
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = []
       Header.MainColumn = 1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
       NodeAlignment = naFromTop
@@ -207,6 +212,10 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -223,6 +232,11 @@ object frmMain: TfrmMain
           Font.Style = []
           Header.AutoSizeIndex = 0
           Header.Background = clSkyBlue
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -11
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = []
           Header.Height = 20
           Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
           ParentFont = False
@@ -1438,7 +1452,7 @@ object frmMain: TfrmMain
     Left = 288
     Top = 296
     Bitmap = {
-      494C01011B001D00240020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01011B001D00280020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000E0000000010020000000000000C0
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5146,7 +5160,7 @@ object frmMain: TfrmMain
     Left = 344
     Top = 296
     Bitmap = {
-      494C01011E002100240010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01011E002100280010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000008000000001002000000000000080
       00000000000000000000000000000000000000000000000000040000002A0000
       0024000000080000000000000000000000000000000000000000000000000000
