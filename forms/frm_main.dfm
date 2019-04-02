@@ -119,11 +119,7 @@ object frmMain: TfrmMain
       Font.Style = []
       Header.AutoSizeIndex = 0
       Header.Background = clGreen
-      Header.Font.Charset = DEFAULT_CHARSET
-      Header.Font.Color = clWindowText
-      Header.Font.Height = -11
-      Header.Font.Name = 'Tahoma'
-      Header.Font.Style = []
+      Header.Height = 20
       Header.MainColumn = 1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
       NodeAlignment = naFromTop
@@ -212,10 +208,6 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -232,11 +224,6 @@ object frmMain: TfrmMain
           Font.Style = []
           Header.AutoSizeIndex = 0
           Header.Background = clSkyBlue
-          Header.Font.Charset = DEFAULT_CHARSET
-          Header.Font.Color = clWindowText
-          Header.Font.Height = -11
-          Header.Font.Name = 'Tahoma'
-          Header.Font.Style = []
           Header.Height = 20
           Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
           ParentFont = False
@@ -263,27 +250,27 @@ object frmMain: TfrmMain
               Color = clCream
               Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coResizable, coShowDropMark, coVisible, coAllowFocus]
               Position = 0
+              Text = 'Material'
               Width = 334
-              WideText = 'Material'
             end
             item
               Position = 1
+              Text = 'Thickness'
               Width = 70
-              WideText = 'Thickness'
             end
             item
               Position = 2
+              Text = 'Roughness'
               Width = 80
-              WideText = 'Roughness'
             end
             item
               Position = 3
+              Text = 'Density'
               Width = 80
-              WideText = 'Density'
             end
             item
               Position = 4
-              WideText = 'N'
+              Text = 'N'
             end>
         end
       end
@@ -1452,7 +1439,7 @@ object frmMain: TfrmMain
     Left = 288
     Top = 296
     Bitmap = {
-      494C01011B001D00280020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01011B001D00040020002000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000080000000E0000000010020000000000000C0
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5160,7 +5147,7 @@ object frmMain: TfrmMain
     Left = 344
     Top = 296
     Bitmap = {
-      494C01011E002100280010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01011E002100040010001000FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000008000000001002000000000000080
       00000000000000000000000000000000000000000000000000040000002A0000
       0024000000080000000000000000000000000000000000000000000000000000
@@ -6227,7 +6214,7 @@ object frmMain: TfrmMain
     ExtractCorruptedFiles = False
     CompressionLevel = clMax
     CompressionMode = 9
-    CurrentVersion = '6.91 '
+    CurrentVersion = '6.92 '
     SpanningMode = smNone
     SpanningOptions.AdvancedNaming = False
     SpanningOptions.FirstVolumeSize = 0

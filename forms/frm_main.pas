@@ -992,6 +992,7 @@ begin
   Data.Curve := TLineSeries.Create(Chart);
   Data.Curve.Title := Data.Title;
   Data.Color := Data.Curve.Color;
+  Data.Curve.LinePen.Width := 2;
 
   SeriesFromFile(Data.Curve, dlgLoadData.FileName, True, Data.Description);
   Chart.AddSeries(Data.Curve);
@@ -1017,6 +1018,7 @@ begin
   Data.Curve := TLineSeries.Create(Chart);
   Data.Curve.Title := Data.Title;
   Data.Color := Data.Curve.Color;
+  Data.Curve.LinePen.Width := 2;
 
   SeriesFromClipboard(Data.Curve);
   Chart.AddSeries(Data.Curve);
@@ -1103,7 +1105,7 @@ begin
           Data.Curve.Title := Data.Title;
           mmDescription.Lines.Text := Data.Description;
         end;
-        Tree.RepaintNode(Node);
+        Tree.Repaint;
       end;
     prExtension:
       begin

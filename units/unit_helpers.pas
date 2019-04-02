@@ -57,7 +57,7 @@ uses
   VCLTee.TeEngine;
 
 const
-  Separator = #9;
+  TabSeparator = #9;
 
 
 
@@ -215,15 +215,15 @@ var
   s: string;
   x, y: single;
 begin
-  MyStringList.Add('2Theta' + Separator + 'Reflectivity');
-  MyStringList.Add('deg' + Separator + '');
+  MyStringList.Add('2Theta' + TabSeparator + 'Reflectivity');
+  MyStringList.Add('deg' + TabSeparator + '');
   MyStringList.Add('');
   N := Series.Count;
   for i := 0 to N - 1 do
   begin
     x := Series.XValues[i];
     y := Series.YValues[i];
-    s := FloatToStrF(x, ffFixed, 5, 3) + Separator;
+    s := FloatToStrF(x, ffFixed, 5, 3) + TabSeparator;
     s := s + FloatToStrF(y, ffExponent, 5, 4);
     MyStringList.Add(s);
   end;
@@ -234,18 +234,35 @@ var
   i, p: integer;
   s1, s2: string;
   x, y: single;
+  min: Double;
+  Separator: string;
 begin
+  Separator := TabSeparator;
+  min := 1000;
   Series.Clear;
   for i := 0 to MyStringList.Count - 1 do
   begin
     s2 := MyStringList.Strings[i];
+    if s2 = '' then Continue;
+
     p := Pos(Separator, s2);
+    if p = 0 then
+    begin
+      Separator := ' ';
+      p := Pos(Separator, s2);
+    end;
+
+    if p = 0 then Continue;
+
+
     s1 := Copy(s2, 1, p - 1);
     delete(s2, 1, p);
     if (s1 <> '') and (s2 <> '') and IsNumber(s1[1]) and IsNumber(s2[1]) then
     try
       x := StrToFloat(s1);
       y := StrToFloat(s2);
+      if (y < min) and (y > 0) then min := y;
+      if y = 0 then y := min;
       Series.AddXY(x, y);
     except
       on EConvertError do;
