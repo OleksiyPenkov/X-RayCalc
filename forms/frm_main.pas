@@ -2554,6 +2554,7 @@ begin
 
   FIgnoreFocusChange := False;
   Ribbon.DocumentName := FProjectName;
+  Project.Repaint;
 end;
 
 procedure TfrmMain.ModelCreateExecute(Sender: TObject);
