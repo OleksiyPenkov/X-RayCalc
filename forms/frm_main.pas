@@ -224,6 +224,11 @@ type
     TabSheet1: TRzTabSheet;
     chGradients: TChart;
     Series1: TPointSeries;
+    pmCopytoclipboard: TMenuItem;
+    pmExporttofile: TMenuItem;
+    N5: TMenuItem;
+    DataCopyClpbrd: TAction;
+    DataExport: TAction;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -349,6 +354,8 @@ type
     procedure Edit1Click(Sender: TObject);
     procedure TreeClick(Sender: TObject);
     procedure TreeDblClick(Sender: TObject);
+    procedure DataCopyClpbrdExecute(Sender: TObject);
+    procedure DataExportExecute(Sender: TObject);
   private
     { Private declarations }
     FSubstrate: PVirtualNode;
@@ -964,6 +971,17 @@ begin
   Project.Refresh;
 end;
 
+
+procedure TfrmMain.DataCopyClpbrdExecute(Sender: TObject);
+begin
+  SeriesToClipboard(FActiveData.Curve);
+end;
+
+procedure TfrmMain.DataExportExecute(Sender: TObject);
+begin
+  if dlgSaveResult.Execute then
+      SeriesToFile(FActiveData.Curve, dlgSaveResult.FileName);
+end;
 
 procedure TfrmMain.DataLoadExecute(Sender: TObject);
 var
@@ -1774,6 +1792,10 @@ end;
 procedure TfrmMain.pmProjectPopup(Sender: TObject);
 begin
   pmiNorm.Visible := IsData and IsItem;
+  pmCopytoclipboard.Visible  := IsData and IsItem;
+  pmExporttofile.Visible  := IsData and IsItem;
+  N5.Visible  := IsData and IsItem;
+
   pmiVisible.Visible := IsItem;
   pmiEnabled.Visible := IsExtension;
   if pmiEnabled.Visible then

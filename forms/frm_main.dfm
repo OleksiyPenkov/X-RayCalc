@@ -6246,7 +6246,7 @@ object frmMain: TfrmMain
   end
   object dlgLoadData: TOpenDialog
     DefaultExt = 'dat'
-    Filter = 'Counter files|*.dat|ASCII data|*.txt;*.csv|All files|*.*'
+    Filter = 'ASCII data|*.txt;*.csv;*.tet|Counter files|*.dat|All files|*.*'
     Title = 'Load curve from file'
     Left = 296
     Top = 456
@@ -7038,33 +7038,33 @@ object frmMain: TfrmMain
     Top = 256
     StyleName = 'Ribbon - Luna'
     object FileNew: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'New project'
       ImageIndex = 0
       OnExecute = FileNewExecute
     end
     object FileOpen: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Open project ...'
       ImageIndex = 1
       ShortCut = 114
       OnExecute = FileOpenExecute
     end
     object FileSave: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Save project'
       ImageIndex = 2
       ShortCut = 16467
       OnExecute = FileSaveExecute
     end
     object FilePrint: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Print'
       ImageIndex = 3
       OnExecute = FilePrintExecute
     end
     object FileClose: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Exit'
       ImageIndex = 4
       OnExecute = FileCloseExecute
@@ -7182,7 +7182,7 @@ object frmMain: TfrmMain
       OnExecute = ResultCopyExecute
     end
     object FileSaveAs: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Save project As ...'
       ImageIndex = 2
       ShortCut = 113
@@ -7238,22 +7238,22 @@ object frmMain: TfrmMain
       OnExecute = DataNormExecute
     end
     object FilePlotToFile: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Save plot as file ...'
       OnExecute = FilePlotToFileExecute
     end
     object FileCopyPlotBMP: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Copy as BMP'
       OnExecute = FileCopyPlotBMPExecute
     end
     object FilePlotCopyWMF: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Copy as WMF'
       OnExecute = FilePlotCopyWMFExecute
     end
     object FileAppend: TAction
-      Category = 'File'
+      Category = 'Help'
       Caption = 'Append project ...'
       OnExecute = FileAppendExecute
     end
@@ -7328,10 +7328,20 @@ object frmMain: TfrmMain
       ImageIndex = 14
       OnExecute = ProjectItemExtensionExecute
     end
+    object DataCopyClpbrd: TAction
+      Category = 'Data'
+      Caption = 'DataCopyClpbrd'
+      OnExecute = DataCopyClpbrdExecute
+    end
+    object DataExport: TAction
+      Category = 'Data'
+      Caption = 'DataExport'
+      OnExecute = DataExportExecute
+    end
   end
   object RzVersionInfo: TRzVersionInfo
-    Left = 48
-    Top = 216
+    Left = 80
+    Top = 328
   end
   object ScreenTipsManager: TScreenTipsManager
     FooterImage.Data = {
@@ -7621,6 +7631,17 @@ object frmMain: TfrmMain
     object Properties1: TMenuItem
       Caption = 'Properties'
       OnClick = Properties1Click
+    end
+    object N5: TMenuItem
+      Caption = '-'
+    end
+    object pmCopytoclipboard: TMenuItem
+      Action = DataCopyClpbrd
+      Caption = 'Copy to clipboard'
+    end
+    object pmExporttofile: TMenuItem
+      Action = DataExport
+      Caption = 'Export to file'
     end
   end
   object dlgExport: TSaveDialog
