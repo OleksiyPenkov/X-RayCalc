@@ -2522,7 +2522,7 @@ begin
   while Node <> nil do
   begin
     Data := Project.GetNodeData(Node);
-    if Data.RowType = prItem then
+    if (Data.RowType = prItem) and FileExists(DataName(Data)) then
     begin
       if FActiveData = nil then
         FActiveData := Data;
