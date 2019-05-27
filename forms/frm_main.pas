@@ -2537,9 +2537,13 @@ begin
       Data.Curve.LinePen.Width := 2;
       SeriesFromFile(Data.Curve, DataName(Data), True, s);
       Chart.AddSeries(Data.Curve);
-    end;
+    end
+    else
+      Project.DeleteNode(Node);
     Node := Project.GetNext(Node);
   end;
+
+
 
   if FActiveModel = nil then
   begin
