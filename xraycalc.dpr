@@ -40,7 +40,9 @@ uses
   Vcl.Styles,
   unit_VTEditors in 'units\unit_VTEditors.pas',
   MHLSimplePanel in 'components\MHLSimplePanel.pas',
-  frm_about in 'forms\frm_about.pas' {frmAbout};
+  frm_about in 'forms\frm_about.pas' {frmAbout},
+  frm_fitting in 'forms\frm_fitting.pas' {frmFitWin},
+  XRCFittingInput in 'components\XRCFittingInput.pas';
 
 {$R *.res}
 
@@ -64,6 +66,7 @@ begin
   Application.CreateForm(TfrmEditorBase, frmEditorBase);
   Application.CreateForm(TedtrGradient, edtrGradient);
   Application.CreateForm(TfrmAbout, frmAbout);
+  Application.CreateForm(TfrmFitWin, frmFitWin);
   frmSplash.Hide;  // Hide the splash screen
   frmSplash.Free;  // Free the splash screen
 

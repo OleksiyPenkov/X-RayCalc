@@ -19,12 +19,9 @@ uses
   TeeProcs, Chart, StdCtrls, Mask, RzEdit, RzSplit, unit_types, RzCmboBx,
   RzSpnEdt, RzButton, RzRadChk, RzRadGrp, XPMan, RzStatus, ActiveX, ScreenTips,
   unit_calc_thread_1, unit_calc_thread_2, Menus, GestureMgr, System.Actions,
-  unit_VersionChecker, Vcl.Buttons, VclTee.TeeGDIPlus, System.ImageList, editor_Gradient;
+  unit_VersionChecker, Vcl.Buttons, VclTee.TeeGDIPlus, System.ImageList,
+  editor_Gradient, unit_consts;
 
-
-const
-  // Helper message to decouple node change handling from edit handling.
-  WM_STARTEDITING = WM_USER + 778;
 
 type
   TfrmMain = class(TForm)
@@ -229,6 +226,7 @@ type
     N5: TMenuItem;
     DataCopyClpbrd: TAction;
     DataExport: TAction;
+    CalcFitting: TAction;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -356,6 +354,7 @@ type
     procedure TreeDblClick(Sender: TObject);
     procedure DataCopyClpbrdExecute(Sender: TObject);
     procedure DataExportExecute(Sender: TObject);
+    procedure CalcFittingExecute(Sender: TObject);
   private
     { Private declarations }
     FSubstrate: PVirtualNode;
@@ -412,7 +411,7 @@ type
 
     ThreadsRunning: Integer;
 
-
+    procedure OnMyMessage(var Msg: TMessage); message WM_RECALC;
     procedure ThreadDone(Sender: TObject);
     function OnHelpHandler(Command: Word; Data: NativeInt;
       var CallHelp: Boolean): Boolean;
@@ -442,7 +441,6 @@ implementation
 
 uses
   editor_Layer,
-  unit_consts,
   unit_helpers,
   unit_settings,
   IniFiles,
@@ -458,7 +456,7 @@ uses
   frm_GenParams,
   frm_about,
   math_complex2,
-  unit_VTEditors;
+  unit_VTEditors, frm_fitting;
 
 {$R *.dfm}
 
@@ -491,6 +489,25 @@ begin
     end;
     Node := Project.GetNext(Node);
   end;
+end;
+
+procedure TfrmMain.CalcFittingExecute(Sender: TObject);
+var
+  Data: PRowData;
+  Node: PVirtualNode;
+begin
+  frmFitWin.MainForm := Self.Handle;
+
+  Node := Tree.GetLast;
+  while Node <> nil do
+  begin
+    Data := Tree.GetNodeData(Node);
+    if Data.RowType = rtLayer then
+       frmFitWin.SetData(Data);
+
+    Node := Tree.GetPrevious(Node);
+  end;
+  frmFitWin.ShowModal;
 end;
 
 procedure TfrmMain.FinalizeCalc;
@@ -1523,6 +1540,11 @@ begin
     HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_HELP_CONTEXT, Data);
 
   CallHelp := False;
+end;
+
+procedure TfrmMain.OnMyMessage(var Msg: TMessage);
+begin
+  CalcRunExecute(Self);
 end;
 
 procedure TfrmMain.HelpAboutExecute(Sender: TObject);
