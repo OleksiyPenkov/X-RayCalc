@@ -496,6 +496,7 @@ var
   Data: PRowData;
   Node: PVirtualNode;
 begin
+  frmFitWin.Reset;
   frmFitWin.MainForm := Self.Handle;
 
   Node := Tree.GetLast;
@@ -504,7 +505,8 @@ begin
     Data := Tree.GetNodeData(Node);
     if Data.RowType = rtLayer then
        frmFitWin.SetData(Data);
-
+    if (Data.RowType = rtPeriod) and (Node <> Tree.GetFirst) then
+       frmFitWin.AddSeparator;
     Node := Tree.GetPrevious(Node);
   end;
   frmFitWin.ShowModal;

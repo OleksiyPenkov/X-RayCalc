@@ -24,11 +24,10 @@ object frmFitWin: TfrmFitWin
     Align = alTop
     BorderOuter = fsFlatRounded
     TabOrder = 0
-    ExplicitWidth = 433
     object Label1: TLabel
       Left = 32
       Top = 6
-      Width = 41
+      Width = 37
       Height = 16
       Caption = 'Layer'
       Font.Charset = DEFAULT_CHARSET
@@ -41,7 +40,7 @@ object frmFitWin: TfrmFitWin
     object Label2: TLabel
       Left = 120
       Top = 6
-      Width = 41
+      Width = 9
       Height = 16
       Caption = 'H'
       Font.Charset = DEFAULT_CHARSET
@@ -54,7 +53,7 @@ object frmFitWin: TfrmFitWin
     object Label3: TLabel
       Left = 183
       Top = 6
-      Width = 74
+      Width = 7
       Height = 16
       Caption = 's'
       Font.Charset = DEFAULT_CHARSET
@@ -92,7 +91,6 @@ object frmFitWin: TfrmFitWin
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 1
-    ExplicitLeft = -2
   end
   object RzPanel2: TRzPanel
     AlignWithMargins = True
@@ -102,8 +100,9 @@ object frmFitWin: TfrmFitWin
     Height = 37
     Align = alBottom
     BorderOuter = fsFlatRounded
+    Color = clMenuBar
     TabOrder = 2
-    ExplicitWidth = 433
+    ExplicitLeft = -2
     DesignSize = (
       363
       37)
@@ -115,7 +114,6 @@ object frmFitWin: TfrmFitWin
       Anchors = [akTop, akRight]
       TabOrder = 0
       Text = '0.1'
-      ExplicitLeft = 319
     end
   end
 end
