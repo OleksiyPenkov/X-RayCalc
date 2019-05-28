@@ -586,12 +586,11 @@ begin
       Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
 
     //------------------------------------------------------
-    i := 0;
     FCalc1 := TCalcThread1.Create;
     FCalc1.OnTerminate := ThreadDone;
     FCalc1.Tree := Tree;
     FCalc1.Chart := chGradients;
-    FCalc1.Number := i;
+    FCalc1.Number := 0;
 
     if (FLinkedData <> nil) and FActiveData.Curve.Visible then
       FCalc1.ExpValues := SeriesToData(FLinkedData.Curve);
@@ -602,8 +601,8 @@ begin
           ThreadsRunning := 2;
           CD.Mode := cmTheta;
           CD.Lambda := StrToFloat(edLambda.Text);
-          CD.StartT := StartT + i * (EndT/2);
-          CD.EndT := CD.StartT + EndT/2;
+          CD.StartT := StartT;
+          CD.EndT   := StartT + (EndT - StartT)/2;
           CD.RF := rfError;
           FCalc1.Layers := Layers;
           CD.N := StrToInt(edN.Text) div 2;
@@ -633,19 +632,18 @@ begin
           end;
 
           //------------------------------------------------------
-          i := 1;
           FCalc2 := TCalcThread2.Create;
           FCalc2.OnTerminate := ThreadDone;
           FCalc2.Tree := Tree;
-          FCalc2.Number := i;
+          FCalc2.Number := 1;
 
           if (FLinkedData <> nil) and FActiveData.Curve.Visible then
             FCalc2.ExpValues := SeriesToData(FLinkedData.Curve);
 
           CD.Mode := cmTheta;
           CD.Lambda := StrToFloat(edLambda.Text);
-          CD.StartT := StartT + i * (EndT/2);
-          CD.EndT := CD.StartT + EndT/2;
+          CD.StartT := StartT + (EndT - StartT)/2;
+          CD.EndT   := EndT;
           CD.RF := rfError;
           FCalc2.Layers := Layers2;
 

@@ -3,7 +3,7 @@
         <ProjectGuid>{6283BDEA-4CD8-499D-909F-C78CBC8867A2}</ProjectGuid>
         <ProjectVersion>18.6</ProjectVersion>
         <MainSource>xraycalc.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <Base>True</Base>
         <AppType>Application</AppType>
