@@ -17,7 +17,7 @@ uses
 
 
 type
-  TGenTherad   = class(TCalcThread1)
+  TGenTherad   = class(TCalcThread)
   private
     procedure StartGenetic; // весь алг.
     procedure OffspringsMutation(i1, i2: integer; dh, dr, ds: single); // мутация

@@ -380,8 +380,6 @@ type
 
     FLayerBuff: array of TRowData;
 
-    FCalc1: TCalcThread1;
-    FCalc2: TCalcThread2;
     FVersionChecker: TVersionCheckerThread;
     FProjectVersion: Byte;
 
@@ -459,7 +457,9 @@ uses
   frm_GenParams,
   frm_about,
   math_complex2,
-  unit_VTEditors, frm_fitting, frm_MList;
+  unit_VTEditors,
+  frm_fitting,
+  frm_MList;
 
 {$R *.dfm}
 
@@ -563,13 +563,12 @@ begin
 end;
 
 procedure TfrmMain.CalcRunExecute(Sender: TObject);
+const N = 2;
 var
   CD: TThreadParams;
-  StepT, StartT, EndT: single;
-  i: Integer;
+  StepT, StartT, EndT, DeltaT: single;
+  i, j: Integer;
 
-  Layers: TLayers;
-  Layers2: TLayers2;
   Code: Integer;
 
 begin
@@ -591,7 +590,7 @@ begin
 
     StartT := StrToFloat(edStartTeta.Text);
     EndT := StrToFloat(edEndTeta.Text);
-
+    DeltaT := (EndT - StartT)/N;
 
     if cb2Theta.Checked then
       CD.k := 2
@@ -603,91 +602,59 @@ begin
     else
       CD.P := cmSP;
 
+    SetLength(CalcTreads, N);
+    SetLength(Layers, N);
+
     Gradients := FillGradients(Project, FLastModel);
     if rgCalcMode.ItemIndex = 0 then
       Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
 
+
+
     //------------------------------------------------------
-    FCalc1 := TCalcThread1.Create;
-    FCalc1.OnTerminate := ThreadDone;
-    FCalc1.Tree := Tree;
-    FCalc1.Chart := chGradients;
-    FCalc1.Number := 0;
+    for j := 0 to N - 1 do
+    begin
+      CalcTreads[j] := TCalcThread.Create;
+      CalcTreads[j].OnTerminate := ThreadDone;
+      CalcTreads[j].Tree := Tree;
+      CalcTreads[j].Chart := chGradients;
+      CalcTreads[j].Number := j;
 
-    if (FLinkedData <> nil) and FActiveData.Curve.Visible then
-      FCalc1.ExpValues := SeriesToData(FLinkedData.Curve);
+      if (FLinkedData <> nil) and FActiveData.Curve.Visible then
+        CalcTreads[j].ExpValues := SeriesToData(FLinkedData.Curve);
 
-    case rgCalcMode.ItemIndex of
-      0:begin
-          SetLength(FResults, 2);
-          ThreadsRunning := 2;
-          CD.Mode := cmTheta;
-          CD.Lambda := StrToFloat(edLambda.Text);
-          CD.StartT := StartT;
-          CD.EndT   := StartT + (EndT - StartT)/2;
-          CD.RF := rfError;
-          FCalc1.Layers := Layers;
-          CD.N := StrToInt(edN.Text) div 2;
-          FCalc1.CalcData := CD;
-          FCalc1.Limit := StrToFloat(cbMinLimit.Text);
-          FCalc1.Resume;
-
-
-          SetLength(Layers2, Length(Layers));
-          for I := 0 to High(Layers2) do
-          begin
-            Layers2[i].e.Re := Layers[i].e.Re;
-            Layers2[i].e.Im := Layers[i].e.Im;
-
-            Layers2[i].s   := Layers[i].s;
-            Layers2[i].L   := Layers[i].L;
-            Layers2[i].LID := Layers[i].LID;
-
-            Layers2[i].K.Im := Layers[i].K.Im;
-            Layers2[i].K.Re := Layers[i].K.Re;
-
-            Layers2[i].RF.Im := Layers[i].RF.Im;
-            Layers2[i].RF.Re := Layers[i].RF.Re;
-
-            Layers2[i].r.Im := Layers[i].r.Im;
-            Layers2[i].r.Re := Layers[i].r.Re;
+      case rgCalcMode.ItemIndex of
+        0:begin
+            SetLength(FResults, N);
+            ThreadsRunning := N;
+            CD.Mode := cmTheta;
+            CD.Lambda := StrToFloat(edLambda.Text);
+            CD.Lambda := StrToFloat(edLambda.Text);
+            CD.StartT := StartT + j * DeltaT;
+            CD.EndT   := CD.StartT + DeltaT;
+            CD.RF := rfError;
+            CalcTreads[j].Layers := Layers;
+            CD.N := StrToInt(edN.Text) div N;
+            CalcTreads[j].CalcData := CD;
+            CalcTreads[j].Limit := StrToFloat(cbMinLimit.Text);
+            CalcTreads[j].Resume;
           end;
 
-          //------------------------------------------------------
-          FCalc2 := TCalcThread2.Create;
-          FCalc2.OnTerminate := ThreadDone;
-          FCalc2.Tree := Tree;
-          FCalc2.Number := 1;
-
-          if (FLinkedData <> nil) and FActiveData.Curve.Visible then
-            FCalc2.ExpValues := SeriesToData(FLinkedData.Curve);
-
-          CD.Mode := cmTheta;
-          CD.Lambda := StrToFloat(edLambda.Text);
-          CD.StartT := StartT + (EndT - StartT)/2;
-          CD.EndT   := EndT;
-          CD.RF := rfError;
-          FCalc2.Layers := Layers2;
-
-          CD.N := StrToInt(edN.Text) div 2;
-          FCalc2.CalcData := CD;
-          FCalc2.Limit := StrToFloat(cbMinLimit.Text);
-          FCalc2.Resume;
-        end;
-      1:
-        begin
-          ThreadsRunning := 1;
-          SetLength(FResults, 1);
-          CD.Mode := cmLambda;
-          CD.Theta := StrToFloat(edTheta.Text);
-          CD.StartL := StrToFloat(edStartL.Text);
-          CD.EndL := StrToFloat(edEndL.Text);
-          CD.DW := StrToFloat(edDL.Text);
-          CD.N := StrToInt(edN.Text);
-          FCalc1.CalcData := CD;
-          FCalc1.Limit := StrToFloat(cbMinLimit.Text);
-          FCalc1.Resume;
-        end;
+        1:
+          begin
+            ThreadsRunning := 1;
+            SetLength(FResults, 1);
+            CD.Mode := cmLambda;
+            CD.Theta := StrToFloat(edTheta.Text);
+            CD.StartL := StrToFloat(edStartL.Text);
+            CD.EndL := StrToFloat(edEndL.Text);
+            CD.DW := StrToFloat(edDL.Text);
+            CD.N := StrToInt(edN.Text);
+            CalcTreads[j].CalcData := CD;
+            CalcTreads[j].Limit := StrToFloat(cbMinLimit.Text);
+            CalcTreads[j].Resume;
+          end;
+      end;
     end;
 
     Pages.ActivePage := tsCalc;
@@ -708,8 +675,9 @@ procedure TfrmMain.CalcStopExecute(Sender: TObject);
 var
   i: Integer;
 begin
-  if Assigned(FCalc1) then FCalc1.Terminate;
-  if Assigned(FCalc2) then FCalc2.Terminate;
+  for I := 0 to High(CalcTreads) do
+     if Assigned(CalcTreads[i]) then CalcTreads[i].Terminate;
+
   FActiveModel.Curve.Clear;
 end;
 

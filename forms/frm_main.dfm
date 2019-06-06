@@ -143,7 +143,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 41
+          Width = 45
         end
         item
           Position = 1
@@ -208,6 +208,10 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -277,6 +281,10 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -561,6 +569,10 @@ object frmMain: TfrmMain
       object TabSheet1: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Gradients'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
@@ -617,6 +629,7 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
+    TabIndex = 3
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -624,6 +637,68 @@ object frmMain: TfrmMain
       1206
       143)
     StyleName = 'Ribbon - Luna'
+    object rbStructure: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Project'
+      Index = 0
+      object RibbonGroup1: TRibbonGroup
+        Left = 484
+        Top = 3
+        Width = 68
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Period'
+        GroupIndex = 2
+      end
+      object RibbonGroup2: TRibbonGroup
+        Left = 554
+        Top = 3
+        Width = 134
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Layer'
+        GroupIndex = 3
+      end
+      object RibbonGroup13: TRibbonGroup
+        Left = 270
+        Top = 3
+        Width = 212
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project Items'
+        GroupIndex = 1
+      end
+      object RibbonGroup6: TRibbonGroup
+        Left = 690
+        Top = 3
+        Width = 139
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Data'
+        GroupIndex = 4
+      end
+      object rbngrpProject: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 264
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project'
+        GroupIndex = 0
+      end
+      object grpMaterial: TRibbonGroup
+        Left = 831
+        Top = 3
+        Width = 51
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Materials'
+        GroupIndex = 5
+      end
+    end
     object rbnpgCalc: TRibbonPage
       Left = 0
       Top = 50
@@ -1375,68 +1450,6 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Tutorials'
         GroupIndex = 2
-      end
-    end
-    object rbStructure: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Project'
-      Index = 0
-      object RibbonGroup1: TRibbonGroup
-        Left = 484
-        Top = 3
-        Width = 68
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Period'
-        GroupIndex = 2
-      end
-      object RibbonGroup2: TRibbonGroup
-        Left = 554
-        Top = 3
-        Width = 134
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Layer'
-        GroupIndex = 3
-      end
-      object RibbonGroup13: TRibbonGroup
-        Left = 270
-        Top = 3
-        Width = 212
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project Items'
-        GroupIndex = 1
-      end
-      object RibbonGroup6: TRibbonGroup
-        Left = 690
-        Top = 3
-        Width = 139
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Data'
-        GroupIndex = 4
-      end
-      object rbngrpProject: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 264
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project'
-        GroupIndex = 0
-      end
-      object grpMaterial: TRibbonGroup
-        Left = 831
-        Top = 3
-        Width = 51
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Materials'
-        GroupIndex = 5
       end
     end
   end

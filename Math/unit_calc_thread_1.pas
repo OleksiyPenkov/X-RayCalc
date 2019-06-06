@@ -20,7 +20,7 @@ uses
   VirtualTrees;
 
 type
-  TCalcThread1 = class(TThread)
+  TCalcThread = class(TThread)
   private
     FData: TDataArray;
     FResult: TDataArray;
@@ -66,6 +66,10 @@ type
       property Chart: TChart write SetChart;
     end;
 
+threadvar
+    CalcTreads: array of TCalcThread;
+    Layers: TLayers;
+
 implementation
 
 uses
@@ -83,7 +87,7 @@ var
 
   { TCalcThread }
 
-procedure TCalcThread1.CalcLambda(StartL, EndL, Theta: single; N: integer; var Chart: TChart);
+procedure TCalcThread.CalcLambda(StartL, EndL, Theta: single; N: integer; var Chart: TChart);
 var
   i: integer;
   Step: single;
@@ -107,7 +111,7 @@ begin
   end;
 end;
 
-procedure TCalcThread1.CalcTet(StartTeta, EndTeta: single; N: integer);
+procedure TCalcThread.CalcTet(StartTeta, EndTeta: single; N: integer);
 var
   i: integer;
   Step: single;
@@ -129,7 +133,7 @@ begin
   end;
 end;
 
-constructor TCalcThread1.Create(Free: boolean);
+constructor TCalcThread.Create(Free: boolean);
 begin
   inherited Create(True);
   FreeOnTerminate := Free;
@@ -137,8 +141,9 @@ begin
   FLimit := 5E-7;
 end;
 
-procedure TCalcThread1.Execute;
+procedure TCalcThread.Execute;
 begin
+  CriticalSection.Enter;
   case CD.Mode of
     cmTheta:
       CalcTet(CD.StartT, CD.EndT, CD.N);
@@ -147,10 +152,12 @@ begin
     cmTest:
       CalcTest;
   end;
+  CriticalSection.Leave;
   Synchronize(ReturnResult);
+
 end;
 
-function TCalcThread1.RefCalc(t, Lambda: single): single;
+function TCalcThread.RefCalc(t, Lambda: single): single;
 var
   c, Rs, Rp, s, s1, ex, sin_t, cos_t: single;
   i: integer;
@@ -252,26 +259,24 @@ begin
 end;
 
 
-procedure TCalcThread1.ReturnResult;
+procedure TCalcThread.ReturnResult;
 begin
-  CriticalSection.Enter;
   CopyData(FResult, frmMain.FResults[FNumber]);
-  CriticalSection.Leave;
 end;
 
-procedure TCalcThread1.SetChart(const Value: TChart);
+procedure TCalcThread.SetChart(const Value: TChart);
 begin
   if Assigned(Value) then
     FChart := Value;
 end;
 
-procedure TCalcThread1.SetResSeries(const Value: TLineSeries);
+procedure TCalcThread.SetResSeries(const Value: TLineSeries);
 begin
   if Assigned(Value) then
     FResSeries := Value;
 end;
 
-procedure TCalcThread1.CalcTest;
+procedure TCalcThread.CalcTest;
 begin
 
 end;
