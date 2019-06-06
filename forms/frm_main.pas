@@ -1474,8 +1474,6 @@ begin
 
   FillRecentList;
 
-
-
   // ---------------------------------
   Panel.Width := Settings.SplitterPosition;
   cbMinLimit.Text := Settings.MinLimit;

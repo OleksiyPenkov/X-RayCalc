@@ -13,6 +13,7 @@ object frmFitWin: TfrmFitWin
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object RzPanel1: TRzPanel
@@ -102,7 +103,6 @@ object frmFitWin: TfrmFitWin
     BorderOuter = fsFlatRounded
     Color = clMenuBar
     TabOrder = 2
-    ExplicitLeft = -2
     DesignSize = (
       363
       37)

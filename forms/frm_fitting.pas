@@ -18,13 +18,14 @@ type
     Label3: TLabel;
     Label4: TLabel;
     cbbStep: TComboBox;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     FData : PRowData;
     FMainForm: HWND;
 
     FOnSet:  boolean;
-
+    FCount: Integer;
 
   public
     { Public declarations }
@@ -63,6 +64,11 @@ begin
   Separator.Color := clBtnFace;
 end;
 
+procedure TfrmFitWin.FormCreate(Sender: TObject);
+begin
+  FCount := 0;
+end;
+
 procedure TfrmFitWin.Reset;
 var
 
@@ -72,6 +78,10 @@ begin
     if Box.Components[i] is TXRCFitInput then
       Box.Components[i].Free;
 
+  for i := Box.ComponentCount - 1 downto 0 do
+    if Box.Components[i] is TRzSeparator then
+      Box.Components[i].Free;
+  FCount := 0;
 end;
 
 procedure TfrmFitWin.SetData(Data: PRowData);
@@ -79,6 +89,10 @@ var
   Input: TXRCFitInput;
 begin
   Input := TXRCFitInput.Create(Box, FMainForm, Data);
+  inc(FCount);
+  if (FCount mod 2) = 0 then Input.Color := clBtnFace
+    else Input.Color := clWebLightgrey;
+
 end;
 
 end.
