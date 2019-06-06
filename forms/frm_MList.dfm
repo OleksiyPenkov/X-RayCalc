@@ -74,7 +74,7 @@ object frmMaterialList: TfrmMaterialList
       Top = 333
       Width = 75
       Height = 25
-      Caption = 'Add'
+      Caption = 'Add New'
       TabOrder = 1
       OnClick = AddClick
     end
@@ -95,7 +95,6 @@ object frmMaterialList: TfrmMaterialList
       Width = 74
       Height = 21
       TabOrder = 3
-      Text = 'Cr3C2'
     end
     object Edit2: TEdit
       Left = 88
@@ -103,7 +102,6 @@ object frmMaterialList: TfrmMaterialList
       Width = 88
       Height = 21
       TabOrder = 4
-      Text = '6.68'
     end
   end
   object PopupMenu1: TPopupMenu

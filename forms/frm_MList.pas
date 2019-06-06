@@ -54,7 +54,7 @@ type
     procedure Deletefile1Click(Sender: TObject);
   private
     { Private declarations }
-    procedure NewElement;
+    function NewElement: boolean;
   public
     { Public declarations }
   end;
@@ -83,8 +83,17 @@ end;
 
 procedure TfrmMaterialList.AddClick(Sender: TObject);
 begin
-  NewElement;
-  lbFiles.Items.Add(Edit1.Text);
+  if NewElement then
+  begin
+    ShowMessage('Material ' + Edit1.Text + ' was created succefully.');
+    lbFiles.Items.Add(Edit1.Text);
+
+    Edit1.Text := '';
+    Edit2.Text := '';
+    SpinEdit1.Value := 1;
+    stringGrid1.Cells[0,1] := '';
+    stringGrid1.Cells[1,1] := '';
+  end;
 end;
 
 procedure TfrmMaterialList.Deletefile1Click(Sender: TObject);
@@ -122,7 +131,7 @@ begin
   if Key = vk_Return  then lbFilesDblClick(Sender);
 end;
 
-procedure TfrmMaterialList.NewElement;
+function TfrmMaterialList.NewElement: boolean;
 var
   i, N: integer;
   s: string;
@@ -150,6 +159,7 @@ var
   end;
 
 begin
+  Result := False;
   N := SpinEdit1.Value;
   // считаем атомный вес
   sNa := 0;
@@ -198,6 +208,7 @@ begin
       StreamOut.Write(f1.Im, Size);
     end;
     StreamOut.SaveToFile(Settings.HenkePath + Edit1.Text + '.bin');
+    Result := True;
   finally
     StreamIn.Free;
     StreamOut.Free;

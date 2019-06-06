@@ -227,6 +227,8 @@ type
     DataCopyClpbrd: TAction;
     DataExport: TAction;
     CalcFitting: TAction;
+    grpMaterial: TRibbonGroup;
+    actShowLibrary: TAction;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -355,6 +357,7 @@ type
     procedure DataCopyClpbrdExecute(Sender: TObject);
     procedure DataExportExecute(Sender: TObject);
     procedure CalcFittingExecute(Sender: TObject);
+    procedure actShowLibraryExecute(Sender: TObject);
   private
     { Private declarations }
     FSubstrate: PVirtualNode;
@@ -456,7 +459,7 @@ uses
   frm_GenParams,
   frm_about,
   math_complex2,
-  unit_VTEditors, frm_fitting;
+  unit_VTEditors, frm_fitting, frm_MList;
 
 {$R *.dfm}
 
@@ -2300,6 +2303,11 @@ end;
 procedure TfrmMain.actQuickStartExecute(Sender: TObject);
 begin
   HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 99)
+end;
+
+procedure TfrmMain.actShowLibraryExecute(Sender: TObject);
+begin
+  frmMaterialList.ShowModal;
 end;
 
 procedure TfrmMain.actSupportExecute(Sender: TObject);
