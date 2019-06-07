@@ -18,7 +18,7 @@ uses
   RzPanel, VirtualTrees, ActnMenus, RibbonActnMenus, ZipForge, TeEngine, Series,
   TeeProcs, Chart, StdCtrls, Mask, RzEdit, RzSplit, unit_types, RzCmboBx,
   RzSpnEdt, RzButton, RzRadChk, RzRadGrp, XPMan, RzStatus, ActiveX, ScreenTips,
-  unit_calc_thread_1, unit_calc_thread_2, Menus, GestureMgr, System.Actions,
+  Menus, GestureMgr, System.Actions,
   unit_VersionChecker, Vcl.Buttons, VclTee.TeeGDIPlus, System.ImageList,
   editor_Gradient, unit_consts;
 
@@ -456,10 +456,9 @@ uses
   editor_Substrate,
   frm_GenParams,
   frm_about,
-  math_complex2,
   unit_VTEditors,
   frm_fitting,
-  frm_MList;
+  frm_MList, unit_calc;
 
 {$R *.dfm}
 
@@ -519,16 +518,14 @@ procedure TfrmMain.FinalizeCalc;
 var
   k,i,j : Integer;
 begin
-//  Sort(FActiveModel.Curve);
   if cb2Theta.Checked then
     k := 2
   else
     k := 1;
 
   FActiveModel.Curve.Clear;
-  for I := 0 to High(FResults) do
-    for j := 0 to High(FResults[i]) do
-      FActiveModel.Curve.AddXY(FResults[i][j].t,FResults[i][j].R);
+  for j := 0 to High(Calc.Results) do
+      FActiveModel.Curve.AddXY(Calc.Results[j].t, Calc.Results[j].R);
 
   case rgCalcMode.ItemIndex of
     0: Convolute(StrToFloat(edWidth.Text) * K, FActiveModel.Curve);
@@ -542,31 +539,15 @@ begin
 end;
 
 procedure TfrmMain.ThreadDone(Sender: TObject);
-var
-  Hour, Min, Sec, MSec: Word;
-
-  RMax: double;
-  i: Integer;
 begin
-  Dec(ThreadsRunning);
-  if ThreadsRunning = 0 then
-  begin
-    FinalizeCalc;
-    DecodeTime(Now - StartTime, Hour, Min, Sec, MSec);
-    spnTime.Caption := Format('Time: %d.%3.3d s.', [60 * Min + Sec, MSec]);
-    FActiveModel.Curve.EndUpdate;
-    FActiveModel.Curve.Repaint;
-    Screen.Cursor := crDefault;
-    CalcRun.Enabled := True;
-    PrintMax;
-  end;
+
 end;
 
 procedure TfrmMain.CalcRunExecute(Sender: TObject);
-const N = 2;
 var
   CD: TThreadParams;
   StepT, StartT, EndT, DeltaT: single;
+  Hour, Min, Sec, MSec: Word;
   i, j: Integer;
 
   Code: Integer;
@@ -586,11 +567,10 @@ begin
   RT.Clear;
 
   try
-
+    Calc := TCalc.Create;
 
     StartT := StrToFloat(edStartTeta.Text);
     EndT := StrToFloat(edEndTeta.Text);
-    DeltaT := (EndT - StartT)/N;
 
     if cb2Theta.Checked then
       CD.k := 2
@@ -602,42 +582,28 @@ begin
     else
       CD.P := cmSP;
 
-    SetLength(CalcTreads, N);
-    SetLength(Layers, N);
-
     Gradients := FillGradients(Project, FLastModel);
+
+
+
     if rgCalcMode.ItemIndex = 0 then
-      Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
+      Calc.Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
 
-
-
-    //------------------------------------------------------
-    for j := 0 to N - 1 do
-    begin
-      CalcTreads[j] := TCalcThread.Create;
-      CalcTreads[j].OnTerminate := ThreadDone;
-      CalcTreads[j].Tree := Tree;
-      CalcTreads[j].Chart := chGradients;
-      CalcTreads[j].Number := j;
-
-      if (FLinkedData <> nil) and FActiveData.Curve.Visible then
-        CalcTreads[j].ExpValues := SeriesToData(FLinkedData.Curve);
+    if (FLinkedData <> nil) and FActiveData.Curve.Visible then
+       Calc.ExpValues := SeriesToData(FLinkedData.Curve);
 
       case rgCalcMode.ItemIndex of
         0:begin
-            SetLength(FResults, N);
-            ThreadsRunning := N;
             CD.Mode := cmTheta;
             CD.Lambda := StrToFloat(edLambda.Text);
             CD.Lambda := StrToFloat(edLambda.Text);
-            CD.StartT := StartT + j * DeltaT;
-            CD.EndT   := CD.StartT + DeltaT;
+            CD.StartT := StartT;
+            CD.EndT   := EndT;
             CD.RF := rfError;
-            CalcTreads[j].Layers := Layers;
-            CD.N := StrToInt(edN.Text) div N;
-            CalcTreads[j].CalcData := CD;
-            CalcTreads[j].Limit := StrToFloat(cbMinLimit.Text);
-            CalcTreads[j].Resume;
+            CD.N := StrToInt(edN.Text);
+            Calc.CalcData := CD;
+            Calc.Limit := StrToFloat(cbMinLimit.Text);
+            Calc.Run;
           end;
 
         1:
@@ -650,12 +616,12 @@ begin
             CD.EndL := StrToFloat(edEndL.Text);
             CD.DW := StrToFloat(edDL.Text);
             CD.N := StrToInt(edN.Text);
-            CalcTreads[j].CalcData := CD;
-            CalcTreads[j].Limit := StrToFloat(cbMinLimit.Text);
-            CalcTreads[j].Resume;
+            Calc.CalcData := CD;
+            Calc.Limit := StrToFloat(cbMinLimit.Text);
+            Calc.Run;
           end;
       end;
-    end;
+
 
     Pages.ActivePage := tsCalc;
   except
@@ -669,15 +635,20 @@ begin
     end;
   end;
 
+  FinalizeCalc;
+  DecodeTime(Now - StartTime, Hour, Min, Sec, MSec);
+  spnTime.Caption := Format('Time: %d.%3.3d s.', [60 * Min + Sec, MSec]);
+  FActiveModel.Curve.EndUpdate;
+  FActiveModel.Curve.Repaint;
+  Screen.Cursor := crDefault;
+  CalcRun.Enabled := True;
+  PrintMax;
 end;
 
 procedure TfrmMain.CalcStopExecute(Sender: TObject);
 var
   i: Integer;
 begin
-  for I := 0 to High(CalcTreads) do
-     if Assigned(CalcTreads[i]) then CalcTreads[i].Terminate;
-
   FActiveModel.Curve.Clear;
 end;
 

@@ -23,15 +23,12 @@ uses
   unit_materials in 'Math\unit_materials.pas',
   editor_period in 'editors\editor_period.pas' {edtrPeriod},
   editor_proj_item in 'editors\editor_proj_item.pas' {edtrProjectItem},
-  unit_calc_thread_1 in 'Math\unit_calc_thread_1.pas',
   editor_Normalisation in 'editors\editor_Normalisation.pas' {edtrManualNorm},
   editor_Substrate in 'editors\editor_Substrate.pas' {edtrSubstrate},
   frm_GenParams in 'forms\frm_GenParams.pas' {frmFit},
   math_Gen in 'Math\math_Gen.pas',
   frm_MList in 'forms\frm_MList.pas' {frmMaterialList},
   frm_Splash in 'forms\frm_Splash.pas' {frmSplash},
-  unit_calc_thread_2 in 'Math\unit_calc_thread_2.pas',
-  math_complex2 in 'Math\math_complex2.pas',
   unit_VersionChecker in 'units\unit_VersionChecker.pas',
   frm_NewVersionInfo in 'forms\frm_NewVersionInfo.pas' {frmNewVersionInfo},
   frm_EditorBase in 'forms\frm_EditorBase.pas' {frmEditorBase},
@@ -42,7 +39,8 @@ uses
   MHLSimplePanel in 'components\MHLSimplePanel.pas',
   frm_about in 'forms\frm_about.pas' {frmAbout},
   frm_fitting in 'forms\frm_fitting.pas' {frmFitWin},
-  XRCFittingInput in 'components\XRCFittingInput.pas';
+  XRCFittingInput in 'components\XRCFittingInput.pas',
+  unit_calc in 'units\unit_calc.pas';
 
 {$R *.res}
 

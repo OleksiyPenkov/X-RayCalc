@@ -12,12 +12,11 @@ unit math_Gen;
 interface
 
 uses
-  unit_types,
-  unit_calc_thread_1;
+  unit_types, unit_calc;
 
 
 type
-  TGenTherad   = class(TCalcThread)
+  TGenTherad   = class(TCalc)
   private
     procedure StartGenetic; // весь алг.
     procedure OffspringsMutation(i1, i2: integer; dh, dr, ds: single); // мутация
