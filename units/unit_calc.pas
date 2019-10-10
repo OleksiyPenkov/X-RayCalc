@@ -14,8 +14,10 @@ interface
 uses
   Classes,
   unit_types,
-  math_complex;
-
+  math_complex,
+  VirtualTrees,
+  TeEngine, Series,
+  TeeProcs, Chart;
 type
 
 
@@ -30,6 +32,8 @@ type
     CD: TThreadParams;
     FNumber: Integer;
 
+    FTree: TVirtualStringTree;
+    FChart: TChart;
 
     function RefCalc(t, Lambda: single): single;
     procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
@@ -48,7 +52,9 @@ type
       property ExpValues: TDataArray write FData;
       property Limit: single write FLimit;
       property Results: TDataArray read FResult;
-    end;
+      property Chart: TChart read FChart write FChart;
+      property Tree: TVirtualStringTree read FTree write FTree;
+  end;
 
 var
     Calc:   TCalc;
@@ -63,7 +69,7 @@ uses
 
   { TCalc }
 
-procedure TCalc.CalcLambda(StartL, EndL, Theta: single; N: integer);
+procedure TCalc.CalcLambda;
 var
   i: integer;
   Step: single;
@@ -75,7 +81,7 @@ begin
   for i := 0 to N - 1 do
   begin
     L := StartL + i * Step;
-    //FLayers := FillLayers(FTree, L, Chart);
+    FLayers := FillLayers(FTree, L, FChart);
     FResult[i].t := L;
     R := RefCalc(Theta, L);
     if R > FLimit then

@@ -7,7 +7,7 @@
   *
   ****************************************************************************** *)
 
-unit unit_calc_thread_1;
+unit unit_calc_thread;
 
 interface
 
@@ -17,10 +17,10 @@ uses
   Series,
   unit_types,
   math_complex,
-  VirtualTrees;
+  VirtualTrees, JvThread;
 
 type
-  TCalcThread = class(TThread)
+  TCalcThread = class(TJvThread)
   private
     FData: TDataArray;
     FResult: TDataArray;
@@ -32,43 +32,37 @@ type
 
     CD: TThreadParams;
     FNumber: Integer;
-    FChart: TChart;
-
 
     function RefCalc(t, Lambda: single): single;
     procedure CalcTest;
-    procedure CalcLambda(StartL, EndL, Theta: single; N: integer; var Chart: TChart);
-    procedure CalcTet(StartTeta, EndTeta: single; N: integer);
-    procedure SetResSeries(const Value: TLineSeries);
+    procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
 
-    procedure ReturnResult;
-    procedure SetChart(const Value: TChart);
+
+
 
     { Private declarations }
     protected
-      procedure Execute;
-      override;
+
     public
       constructor Create(Free: boolean = True);
 
+       procedure CalcTet(StartTeta, EndTeta: single; N: integer);
+       procedure ReturnResult;
       //property ResSeries: TLineSeries write SetResSeries;
 
       property Number:Integer write FNumber;
 
       property Layers: TLayers write FLayers;
-
-      property Tree: TVirtualStringTree write FTree;
-
       property CalcData: TThreadParams write CD;
-
       property ExpValues: TDataArray write FData;
       property Limit: single write FLimit;
-      property Chart: TChart write SetChart;
+      procedure Execute;
     end;
 
-threadvar
-    CalcTreads: array of TCalcThread;
+var
+    CalcThreads: array of TCalcThread;
     Layers: TLayers;
+    StartTime: TDateTime;
 
 implementation
 
@@ -87,7 +81,7 @@ var
 
   { TCalcThread }
 
-procedure TCalcThread.CalcLambda(StartL, EndL, Theta: single; N: integer; var Chart: TChart);
+procedure TCalcThread.CalcLambda(StartL, EndL, Theta: single; N: integer);
 var
   i: integer;
   Step: single;
@@ -99,7 +93,7 @@ begin
   for i := 0 to N - 1 do
   begin
     L := StartL + i * Step;
-    FLayers := FillLayers(FTree, L, Chart);
+    //FLayers := FillLayers(FTree, L);
     FResult[i].t := L;
     R := RefCalc(Theta, L);
     if R > FLimit then
@@ -135,10 +129,11 @@ end;
 
 constructor TCalcThread.Create(Free: boolean);
 begin
-  inherited Create(True);
-  FreeOnTerminate := Free;
-  Priority := tpHighest;
-  FLimit := 5E-7;
+  inherited Create(nil);
+  FreeOnTerminate := False;
+
+//  Priority := tpHighest;
+//  FLimit := 5E-7;
 end;
 
 procedure TCalcThread.Execute;
@@ -147,14 +142,13 @@ begin
   case CD.Mode of
     cmTheta:
       CalcTet(CD.StartT, CD.EndT, CD.N);
-    cmLambda:
-      CalcLambda(CD.StartL, CD.EndL, CD.Theta, CD.N, FChart);
+    //cmLambda:
+      //CalcLambda(CD.StartL, CD.EndL, CD.Theta, CD.N, FChart);
     cmTest:
       CalcTest;
   end;
   CriticalSection.Leave;
   Synchronize(ReturnResult);
-
 end;
 
 function TCalcThread.RefCalc(t, Lambda: single): single;
@@ -261,19 +255,7 @@ end;
 
 procedure TCalcThread.ReturnResult;
 begin
-  CopyData(FResult, frmMain.FResults[FNumber]);
-end;
-
-procedure TCalcThread.SetChart(const Value: TChart);
-begin
-  if Assigned(Value) then
-    FChart := Value;
-end;
-
-procedure TCalcThread.SetResSeries(const Value: TLineSeries);
-begin
-  if Assigned(Value) then
-    FResSeries := Value;
+  frmMain.FResults[FNumber] := FResult;
 end;
 
 procedure TCalcThread.CalcTest;

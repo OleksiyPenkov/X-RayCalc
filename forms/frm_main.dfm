@@ -143,7 +143,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 45
+          Width = 41
         end
         item
           Position = 1
@@ -208,10 +208,6 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -281,10 +277,6 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -569,10 +561,6 @@ object frmMain: TfrmMain
       object TabSheet1: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Gradients'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
@@ -709,13 +697,13 @@ object frmMain: TfrmMain
       object RibbonGroup4: TRibbonGroup
         Left = 4
         Top = 3
-        Width = 63
+        Width = 105
         Height = 86
         ActionManager = ActionManager
         GroupIndex = 0
       end
       object RibbonGroup5: TRibbonGroup
-        Left = 288
+        Left = 330
         Top = 3
         Width = 183
         Height = 86
@@ -837,7 +825,7 @@ object frmMain: TfrmMain
         end
       end
       object RibbonGroup10: TRibbonGroup
-        Left = 473
+        Left = 515
         Top = 3
         Width = 134
         Height = 86
@@ -951,7 +939,7 @@ object frmMain: TfrmMain
         end
       end
       object RibbonGroup11: TRibbonGroup
-        Left = 69
+        Left = 111
         Top = 3
         Width = 217
         Height = 86
@@ -1014,7 +1002,7 @@ object frmMain: TfrmMain
         end
       end
       object RibbonGroup9: TRibbonGroup
-        Left = 609
+        Left = 651
         Top = 3
         Width = 50
         Height = 86
@@ -1023,7 +1011,7 @@ object frmMain: TfrmMain
         GroupIndex = 6
       end
       object rbngrpPlot: TRibbonGroup
-        Left = 661
+        Left = 703
         Top = 3
         Width = 50
         Height = 86
@@ -6231,25 +6219,6 @@ object frmMain: TfrmMain
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
   end
-  object Zip: TZipForge
-    ExtractCorruptedFiles = False
-    CompressionLevel = clMax
-    CompressionMode = 9
-    CurrentVersion = '6.92 '
-    SpanningMode = smNone
-    SpanningOptions.AdvancedNaming = False
-    SpanningOptions.FirstVolumeSize = 0
-    SpanningOptions.VolumeSize = vsAutoDetect
-    SpanningOptions.CustomVolumeSize = 65536
-    Options.FlushBuffers = True
-    Options.OEMFileNames = True
-    InMemory = False
-    Zip64Mode = zmDisabled
-    UnicodeFilenames = True
-    EncryptionMethod = caPkzipClassic
-    Left = 280
-    Top = 544
-  end
   object dlgOpenProject: TOpenDialog
     DefaultExt = 'xrcx'
     Filter = 'X-Ray Calc project|*.xrcx'
@@ -6739,6 +6708,13 @@ object frmMain: TfrmMain
       end
       item
         Items = <
+          item
+            Action = CalcRun
+            Caption = '&Run'
+            ImageIndex = 9
+            ShortCut = 116
+            CommandProperties.ButtonSize = bsLarge
+          end
           item
             Caption = '-'
           end
@@ -7732,5 +7708,15 @@ object frmMain: TfrmMain
       Action = LayerDelete
       Caption = 'Delete layer'
     end
+  end
+  object UnZip: TAbUnZipper
+    Left = 754
+    Top = 502
+  end
+  object Zip: TAbZipper
+    AutoSave = False
+    DOSMode = False
+    Left = 842
+    Top = 494
   end
 end

@@ -20,7 +20,7 @@ uses
   RzSpnEdt, RzButton, RzRadChk, RzRadGrp, XPMan, RzStatus, ActiveX, ScreenTips,
   Menus, GestureMgr, System.Actions,
   unit_VersionChecker, Vcl.Buttons, VclTee.TeeGDIPlus, System.ImageList,
-  editor_Gradient, unit_consts;
+  editor_Gradient, unit_consts, AbBase, AbBrowse, AbZBrows, AbUnzper, AbZipper, AbUtils;
 
 
 type
@@ -28,7 +28,6 @@ type
     il_32: TImageList;
     RzStatusBar1: TRzStatusBar;
     il_16: TImageList;
-    Zip: TZipForge;
     Panel: TRzSizePanel;
     RzPanel1: TRzPanel;
     Pages: TRzPageControl;
@@ -229,6 +228,8 @@ type
     CalcFitting: TAction;
     grpMaterial: TRibbonGroup;
     actShowLibrary: TAction;
+    UnZip: TAbUnZipper;
+    Zip: TAbZipper;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -421,6 +422,7 @@ type
     procedure DeleteExtension(Node: PVirtualNode; Data: PProjectData);
     procedure WMStartEditing(var Message: TMessage); message WM_STARTEDITING;
     procedure FillExtensionPeriods(var Periods: TCombobox);
+    procedure SaveData;
 
   public
     { Public declarations }
@@ -618,6 +620,8 @@ begin
             CD.N := StrToInt(edN.Text);
             Calc.CalcData := CD;
             Calc.Limit := StrToFloat(cbMinLimit.Text);
+            Calc.Tree := Tree;
+            Calc.Chart  := chGradients;
             Calc.Run;
           end;
       end;
@@ -1275,6 +1279,15 @@ begin
 {$ELSE}
   if dlgSaveProject.Execute then
   begin
+    FProjectName := ExtractFileName(dlgSaveProject.FileName);
+    FProjectDir := IncludeTrailingPathDelimiter
+      (Settings.TempPath + FProjectName);
+
+    if DirectoryExists(FProjectDir) then
+        ClearDir(FProjectDir, True);
+
+    CreateDir(FProjectDir);
+    SaveData;
     SaveProject(dlgSaveProject.FileName);
     LoadProject(dlgSaveProject.FileName);
     FProjectFileName := dlgSaveProject.FileName;
@@ -2323,11 +2336,28 @@ begin
   end;
 end;
 
+
+procedure TfrmMain.SaveData;
+var
+  Data: PProjectData;
+  Node: PVirtualNode;
+begin
+  Node := Project.GetFirstChild(Project.GetFirst);
+  Data := Project.GetNodeData(Node);
+  while Node <> Nil do
+  begin
+    Data := Project.GetNodeData(Node);
+    if (Data.RowType = prItem) and (Data.Group =  gtData) then
+    begin
+      SeriesToFile(Data.Curve, DataName(Data));
+    end;
+    Node := Project.GetNext(Node);
+  end;
+end;
+
 procedure TfrmMain.SaveProject(FileName: string);
 var
   INF: TMemIniFile;
-  Data: PProjectData;
-  Node: PVirtualNode;
   i: Integer;
 begin
   try
@@ -2363,12 +2393,15 @@ begin
     if FileExists(FileName) then
       DeleteFile(FileName);
 
-    Zip.FileName := FileName;
-    Zip.BaseDir := FProjectDir;
-    Zip.OpenArchive;
-
     Project.SaveToFile(FProjectDir + PROJECT_FILE_NAME);
-    Zip.AddFiles('*.*');
+
+    Zip.ArchiveType := atZip;
+    Zip.AutoSave := True;
+    Zip.ForceType := True;
+    Zip.OpenArchive(FileName);
+    Zip.BaseDirectory  := FProjectDir;
+
+    Zip.AddFiles('*.*', faAnyFile and faDirectory);
     Zip.CloseArchive;
   finally
     INF.Free;
@@ -2423,11 +2456,11 @@ begin
     CreateDir(FProjectDir);
   end;
 
-  Zip.FileName := FileName;
-  Zip.BaseDir := FProjectDir;
-  Zip.OpenArchive;
-  Zip.ExtractFiles('*.*');
-  Zip.CloseArchive;
+  UnZip.FileName := FileName;
+  UnZip.BaseDirectory := FProjectDir;
+  unZip.OpenArchive(FileName);
+  unZip.ExtractFiles('*.*');
+  unZip.CloseArchive;
 
   try
     INF := TMemIniFile.Create(FProjectDir + PARAMETERS_FILE_NAME);

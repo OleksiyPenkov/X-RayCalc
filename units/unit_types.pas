@@ -40,10 +40,10 @@ type
         ();
       prItem:
         (ID: integer;
-          Curve: TLineSeries;
-          Color: TColor;
-          Active: boolean;
-          Visible: boolean);
+         Curve: TLineSeries;
+         Color: TColor;
+         Active: boolean;
+         Visible: boolean);
       prExtension:
          (Enabled: boolean;
           case ExtType: TExtentionType of
