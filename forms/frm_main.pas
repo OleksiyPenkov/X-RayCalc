@@ -2443,16 +2443,15 @@ var
 begin
   FIgnoreFocusChange := True;
 
+  FProjectName := ExtractFileName(FileName);
+  FProjectDir := IncludeTrailingPathDelimiter(Settings.TempPath + FProjectName);
+
   if Clear then
   begin
     // удаляем папку старого проекта
     if DirectoryExists(FProjectDir) then
       ClearDir(FProjectDir, True);
     //
-
-    FProjectName := ExtractFileName(FileName);
-    FProjectDir := IncludeTrailingPathDelimiter
-      (Settings.TempPath + FProjectName);
     CreateDir(FProjectDir);
   end;
 
