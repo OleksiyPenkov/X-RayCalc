@@ -143,7 +143,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 41
+          Width = 45
         end
         item
           Position = 1
@@ -208,6 +208,10 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -277,6 +281,10 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -561,6 +569,10 @@ object frmMain: TfrmMain
       object TabSheet1: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Gradients'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3

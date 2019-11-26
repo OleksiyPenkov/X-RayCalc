@@ -1217,15 +1217,13 @@ begin
     FileName := (Sender as TAction).Caption;
     FileName := StringReplace(FileName,'&','',[]);
     LoadProject(FileName);
-    FProjectFileName := FileName;
     AddRecentItem(FileName);
   end
   else
     if dlgOpenProject.Execute then
     begin
       LoadProject(dlgOpenProject.FileName);
-      FProjectFileName := dlgOpenProject.FileName;
-      AddRecentItem(dlgOpenProject.FileName, True);
+      AddRecentItem(FProjectFileName , True);
     end;
 end;
 
@@ -2304,7 +2302,7 @@ begin
   end;
 
   if rbngrpProject.Items[3].Items.Count > 10 then
-    rbngrpProject.Items[3].Items.Delete(0);
+    rbngrpProject.Items[3].Items.Delete(10);
 
 end;
 
@@ -2443,6 +2441,7 @@ var
 begin
   FIgnoreFocusChange := True;
 
+  FProjectFileName := FileName;
   FProjectName := ExtractFileName(FileName);
   FProjectDir := IncludeTrailingPathDelimiter(Settings.TempPath + FProjectName);
 
