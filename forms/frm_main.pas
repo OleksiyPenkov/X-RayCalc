@@ -15,7 +15,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ActnList, ImgList, ActnMan, ToolWin, ActnCtrls, Ribbon,
   RibbonLunaStyleActnCtrls, RibbonSilverStyleActnCtrls, RzTabs, ExtCtrls,
-  RzPanel, VirtualTrees, ActnMenus, RibbonActnMenus, ZipForge, TeEngine, Series,
+  RzPanel, VirtualTrees, ActnMenus, RibbonActnMenus, TeEngine, Series,
   TeeProcs, Chart, StdCtrls, Mask, RzEdit, RzSplit, unit_types, RzCmboBx,
   RzSpnEdt, RzButton, RzRadChk, RzRadGrp, XPMan, RzStatus, ActiveX, ScreenTips,
   Menus, GestureMgr, System.Actions,
