@@ -15,17 +15,37 @@ type
       Thickness: TRzSpinEdit;
       Sigma: TRzSpinEdit;
       Rho: TRzSpinEdit;
-      Link: TRzCheckBox;
+      FLink: TRzCheckBox;
 
       FData : PRowData;
       FOnSet:  boolean;
       FHandler: HWND;
 
-      procedure ThicknessChange(Sender: TObject);
+      FLinked : TXRCFitInput;
+
+      procedure ValueChange(Sender: TObject);
+      procedure SetIncrement(const Value: Double);
+      procedure SetEnabled(const Value: Boolean);
+      function GetEnabled: Boolean;
+      function GetLinked: TXRCFitInput;
+      procedure SetLinked(const Value: TXRCFitInput);
+    function GetCheckBox: TRzCheckBox;
+    procedure SetCheckBox(const Value: TRzCheckBox);
+    function GetLinkChecked: Boolean;
     public
       constructor Create(AOwner: TComponent; const Handler: HWND; const Data: PRowData);
       destructor  Destroy;
+
     published
+      property Increment: Double write SetIncrement;
+      property Enabled: Boolean read GetEnabled write SetEnabled;
+      property Linked:TXRCFitInput read GetLinked write SetLinked;
+      property Onset: Boolean read FOnSet write FOnSet;
+      property CheckBox:TRzCheckBox read GetCheckBox write SetCheckBox;
+      property Checked: Boolean read GetLinkChecked;
+
+      procedure IncreaseThickness;
+      procedure DecreaseThickness;
   end;
 
 implementation
@@ -60,7 +80,7 @@ begin
   Rho := TRzSpinEdit.Create(Self);
 
   //RzCheckBox1
-  Link := TRzCheckBox.Create(Self);
+  FLink := TRzCheckBox.Create(Self);
 
 
   //Name
@@ -117,13 +137,13 @@ begin
 
 
   //Link
-  Link.Name := '';
-  Link.Parent := Self;
-  Link.Left := 8;
-  Link.Top := 13;
-  Link.Width := 19;
-  Link.Height := 15;
-  Link.TabOrder := 3;
+  FLink.Name := '';
+  FLink.Parent := Self;
+  FLink.Left := 8;
+  FLink.Top := 13;
+  FLink.Width := 19;
+  FLink.Height := 15;
+  FLink.TabOrder := 3;
 
 
   Name.Caption    := FData.Text;
@@ -132,9 +152,14 @@ begin
   Rho.Text        := FData.r;
 
 
-  Rho.OnChange := ThicknessChange;
-  Sigma.OnChange := ThicknessChange;
-  Thickness.OnChange := ThicknessChange;
+  Rho.OnChange := ValueChange;
+  Sigma.OnChange := ValueChange;
+  Thickness.OnChange := ValueChange;
+end;
+
+procedure TXRCFitInput.DecreaseThickness;
+begin
+  Thickness.Value := Thickness.Value - Thickness.Increment;
 end;
 
 destructor TXRCFitInput.Destroy;
@@ -142,15 +167,73 @@ begin
 
 end;
 
-procedure TXRCFitInput.ThicknessChange;
+procedure TXRCFitInput.SetCheckBox(const Value: TRzCheckBox);
 begin
-  if FOnSet then Exit;
+  FLink := Value;
+end;
+
+procedure TXRCFitInput.SetEnabled(const Value: Boolean);
+begin
+  Enabled := Value;
+end;
+
+function TXRCFitInput.GetCheckBox: TRzCheckBox;
+begin
+  Result := FLink;
+end;
+
+function TXRCFitInput.GetEnabled: Boolean;
+begin
+  Result := Enabled;
+end;
+
+function TXRCFitInput.GetLinkChecked: Boolean;
+begin
+  Result := FLink.Checked;
+end;
+
+function TXRCFitInput.GetLinked: TXRCFitInput;
+begin
+  Result := nil;
+  if Assigned(FLinked) then Result := FLinked;
+end;
+
+procedure TXRCFitInput.IncreaseThickness;
+begin
+  Thickness.Value := Thickness.Value + Thickness.Increment;
+end;
+
+procedure TXRCFitInput.SetIncrement(const Value: Double);
+begin
+  Thickness.Increment := Value;
+  Sigma.Increment     := Value;
+  Rho.Increment       := Value;
+end;
+
+procedure TXRCFitInput.SetLinked(const Value: TXRCFitInput);
+begin
+  FLinked := Value;
+end;
+
+
+procedure TXRCFitInput.ValueChange;
+begin
+  if FLinked <> nil then
+  begin
+    FLinked.OnSet := True;
+
+    if FData.H > Thickness.Text then FLinked.IncreaseThickness else FLinked.DecreaseThickness;
+
+
+
+    FLinked.OnSet := False;
+  end;
 
   FData.H := Thickness.Text;
   FData.s := Sigma.Text;
   FData.r := Rho.Text;
 
-  PostMessage(FHandler, WM_RECALC, 0, 0);
+  if not FOnSet then PostMessage(FHandler, WM_RECALC, 0, 0);
 end;
 
 end.

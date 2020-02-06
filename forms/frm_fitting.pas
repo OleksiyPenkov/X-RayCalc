@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RzButton, RzRadChk, Vcl.StdCtrls,
   Vcl.Mask, RzEdit, RzSpnEdt, Vcl.ExtCtrls, RzPanel, unit_types, unit_consts,
-  JvDesignSurface, RzBckgnd;
+  JvDesignSurface, RzBckgnd, XRCFittingInput;
 
 type
   TfrmFitWin = class(TForm)
@@ -18,7 +18,10 @@ type
     Label3: TLabel;
     Label4: TLabel;
     cbbStep: TComboBox;
+    RzSpinEdit1: TRzSpinEdit;
     procedure FormCreate(Sender: TObject);
+    procedure cbbStepChange(Sender: TObject);
+    procedure LinkChecked(Sender: TObject);
   private
     { Private declarations }
     FData : PRowData;
@@ -26,6 +29,10 @@ type
 
     FOnSet:  boolean;
     FCount: Integer;
+
+    FStep : Double;
+
+    FFirstChecked : TXRCFitInput;
 
   public
     { Public declarations }
@@ -40,8 +47,6 @@ var
 
 implementation
 
-uses
-  XRCFittingInput;
 
 {$R *.dfm}
 
@@ -64,14 +69,45 @@ begin
   Separator.Color := clBtnFace;
 end;
 
+procedure TfrmFitWin.cbbStepChange(Sender: TObject);
+var
+  i: Integer;
+begin
+  FStep := StrToFloat(cbbStep.Text);
+
+  for i := Box.ComponentCount - 1 downto 0 do
+    if Box.Components[i] is TXRCFitInput then
+      (Box.Components[i] as TXRCFitInput).Increment := FStep;
+
+end;
+
 procedure TfrmFitWin.FormCreate(Sender: TObject);
 begin
   FCount := 0;
+  FStep  := 0.1;
+end;
+
+procedure TfrmFitWin.LinkChecked(Sender: TObject);
+var
+  i: Integer;
+begin
+  for i := Box.ComponentCount - 1 downto 0 do
+    if Box.Components[i] is TXRCFitInput then
+      if (Box.Components[i]as TXRCFitInput).Checked then
+      begin
+        if FFirstChecked = nil then FFirstChecked := Box.Components[i]as TXRCFitInput;
+        if Box.Components[i] = FFirstChecked then Continue;
+        if FFirstChecked <> nil then
+        begin
+          FFirstChecked.Linked := Box.Components[i]as TXRCFitInput;
+          Break;
+        end;
+      end;
+
 end;
 
 procedure TfrmFitWin.Reset;
 var
-
   i: Integer;
 begin
   for i := Box.ComponentCount - 1 downto 0 do
@@ -89,10 +125,10 @@ var
   Input: TXRCFitInput;
 begin
   Input := TXRCFitInput.Create(Box, FMainForm, Data);
+  Input.CheckBox.OnClick := LinkChecked;
   inc(FCount);
   if (FCount mod 2) = 0 then Input.Color := clBtnFace
     else Input.Color := clWebLightgrey;
-
 end;
 
 end.

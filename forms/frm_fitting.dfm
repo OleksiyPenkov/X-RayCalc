@@ -114,6 +114,22 @@ object frmFitWin: TfrmFitWin
       Anchors = [akTop, akRight]
       TabOrder = 0
       Text = '0.1'
+      OnChange = cbbStepChange
+      Items.Strings = (
+        '5'
+        '1'
+        '0.25'
+        '0.1'
+        '0.01'
+        '0.001')
+    end
+    object RzSpinEdit1: TRzSpinEdit
+      Left = 64
+      Top = 8
+      Width = 47
+      Height = 21
+      Max = 100.000000000000000000
+      TabOrder = 1
     end
   end
 end
