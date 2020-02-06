@@ -18,7 +18,7 @@ type
     Label3: TLabel;
     Label4: TLabel;
     cbbStep: TComboBox;
-    RzSpinEdit1: TRzSpinEdit;
+    Label5: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure cbbStepChange(Sender: TObject);
     procedure LinkChecked(Sender: TObject);
@@ -33,6 +33,8 @@ type
     FStep : Double;
 
     FFirstChecked : TXRCFitInput;
+    procedure SetDisabled;
+    procedure SetEnabled;
 
   public
     { Public declarations }
@@ -60,13 +62,13 @@ begin
   Separator := TRzSeparator.Create(Box);
 
   Separator.Parent := Box;
-  Separator.Left := 0;
-  Separator.Top := 0;
-  Separator.Width := 363;
+  Separator.Left   := 0;
+  Separator.Top    := 0;
+  Separator.Width  := 363;
   Separator.Height := 5;
+  Separator.Align  := alTop;
+  Separator.Color  := clBtnFace;
   Separator.ShowGradient := True;
-  Separator.Align := alTop;
-  Separator.Color := clBtnFace;
 end;
 
 procedure TfrmFitWin.cbbStepChange(Sender: TObject);
@@ -78,7 +80,6 @@ begin
   for i := Box.ComponentCount - 1 downto 0 do
     if Box.Components[i] is TXRCFitInput then
       (Box.Components[i] as TXRCFitInput).Increment := FStep;
-
 end;
 
 procedure TfrmFitWin.FormCreate(Sender: TObject);
@@ -87,22 +88,47 @@ begin
   FStep  := 0.1;
 end;
 
+procedure TfrmFitWin.SetDisabled;
+begin
+
+end;
+
+procedure TfrmFitWin.SetEnabled;
+begin
+
+end;
+
 procedure TfrmFitWin.LinkChecked(Sender: TObject);
 var
   i: Integer;
 begin
-  for i := Box.ComponentCount - 1 downto 0 do
-    if Box.Components[i] is TXRCFitInput then
-      if (Box.Components[i]as TXRCFitInput).Checked then
-      begin
-        if FFirstChecked = nil then FFirstChecked := Box.Components[i]as TXRCFitInput;
-        if Box.Components[i] = FFirstChecked then Continue;
-        if FFirstChecked <> nil then
+  if (Sender as TRzCheckBox).Checked then
+  begin
+    for i := Box.ComponentCount - 1 downto 0 do
+      if Box.Components[i] is TXRCFitInput then
+        if (Box.Components[i]as TXRCFitInput).Checked then
         begin
-          FFirstChecked.Linked := Box.Components[i]as TXRCFitInput;
-          Break;
+          if FFirstChecked = nil then FFirstChecked := Box.Components[i]as TXRCFitInput;
+          if Box.Components[i] = FFirstChecked then Continue;
+          if FFirstChecked <> nil then
+          begin
+            FFirstChecked.Linked := Box.Components[i]as TXRCFitInput;
+            (Box.Components[i]as TXRCFitInput).Linked := FFirstChecked;
+            Break;
+          end;
         end;
-      end;
+  end
+  else begin
+    if (FFirstChecked.Linked <> nil) and (FFirstChecked <> nil) and ((Sender as TRzCheckBox) = FFirstChecked.Linked.CheckBox) then FFirstChecked.Linked := nil;
+    if (FFirstChecked <> nil) and ((Sender as TRzCheckBox) = FFirstChecked.CheckBox) then
+    begin
+      FFirstChecked.Linked := nil;
+      FFirstChecked := nil;
+    end;
+  end;
+
+  if (FFirstChecked <> nil) and (FFirstChecked.Linked <> nil) then SetDisabled
+    else SetEnabled;
 
 end;
 
@@ -129,6 +155,9 @@ begin
   inc(FCount);
   if (FCount mod 2) = 0 then Input.Color := clBtnFace
     else Input.Color := clWebLightgrey;
+
+  ClientHeight := 67 + FCount * 51;
+
 end;
 
 end.

@@ -3,7 +3,7 @@ object frmFitWin: TfrmFitWin
   Top = 0
   BorderStyle = bsSizeToolWin
   Caption = 'Fitting'
-  ClientHeight = 272
+  ClientHeight = 374
   ClientWidth = 369
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -83,7 +83,7 @@ object frmFitWin: TfrmFitWin
     Left = 3
     Top = 39
     Width = 363
-    Height = 187
+    Height = 289
     HorzScrollBar.Visible = False
     VertScrollBar.Style = ssFlat
     VertScrollBar.Tracking = True
@@ -92,20 +92,35 @@ object frmFitWin: TfrmFitWin
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 1
+    ExplicitHeight = 187
   end
   object RzPanel2: TRzPanel
     AlignWithMargins = True
     Left = 3
-    Top = 232
+    Top = 334
     Width = 363
     Height = 37
     Align = alBottom
     BorderOuter = fsFlatRounded
     Color = clMenuBar
     TabOrder = 2
+    ExplicitTop = 232
     DesignSize = (
       363
       37)
+    object Label5: TLabel
+      Left = 208
+      Top = 8
+      Width = 30
+      Height = 16
+      Caption = 'Step'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
     object cbbStep: TComboBox
       Left = 249
       Top = 8
@@ -113,7 +128,7 @@ object frmFitWin: TfrmFitWin
       Height = 21
       Anchors = [akTop, akRight]
       TabOrder = 0
-      Text = '0.1'
+      Text = '1'
       OnChange = cbbStepChange
       Items.Strings = (
         '5'
@@ -122,14 +137,6 @@ object frmFitWin: TfrmFitWin
         '0.1'
         '0.01'
         '0.001')
-    end
-    object RzSpinEdit1: TRzSpinEdit
-      Left = 64
-      Top = 8
-      Width = 47
-      Height = 21
-      Max = 100.000000000000000000
-      TabOrder = 1
     end
   end
 end
