@@ -5,7 +5,7 @@ object frmFitWin: TfrmFitWin
   Caption = 'Fitting'
   ClientHeight = 374
   ClientWidth = 369
-  Color = clBtnFace
+  Color = 16765595
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -24,6 +24,7 @@ object frmFitWin: TfrmFitWin
     Height = 30
     Align = alTop
     BorderOuter = fsFlatRounded
+    Color = 16765595
     TabOrder = 0
     object Label1: TLabel
       Left = 32
@@ -102,7 +103,7 @@ object frmFitWin: TfrmFitWin
     Height = 37
     Align = alBottom
     BorderOuter = fsFlatRounded
-    Color = clMenuBar
+    ParentColor = True
     TabOrder = 2
     ExplicitTop = 232
     DesignSize = (

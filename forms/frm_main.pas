@@ -71,7 +71,7 @@ type
     RibbonGroup1: TRibbonGroup;
     RibbonGroup2: TRibbonGroup;
     rbnpgCalc: TRibbonPage;
-    RibbonGroup4: TRibbonGroup;
+    RibbonGroupCalc: TRibbonGroup;
     RibbonGroup5: TRibbonGroup;
     pnlAngleParams: TRzPanel;
     Label1: TLabel;
@@ -123,25 +123,6 @@ type
     CalcTest: TAction;
     btnChartScale: TRzBitBtn;
     ProjectAddFolder: TAction;
-    RibbonGroup8: TRibbonGroup;
-    RzPanel2: TRzPanel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    seR_FSL: TRzSpinEdit;
-    seS_FSL: TRzSpinEdit;
-    seH_FSL: TRzSpinEdit;
-    cbLayers_SLF: TRzComboBox;
-    RibbonGroup3: TRibbonGroup;
-    RzPanel4: TRzPanel;
-    cbLayers_MF1: TRzComboBox;
-    cbLayers_MF2: TRzComboBox;
-    cbLayers_MF3: TRzComboBox;
-    cbFitStep: TRzComboBox;
-    edH1: TEdit;
-    edH2: TEdit;
-    edH3: TEdit;
-    btnFitSplit: TRzSpinButtons;
     RzPanel5: TRzPanel;
     mmDescription: TRzMemo;
     CalcAll: TAction;
@@ -199,22 +180,6 @@ type
     actHelpStructure: TAction;
     actHelpFitting: TAction;
     Status: TRzStatusPane;
-    rbnpgFitting: TRibbonPage;
-    rbngrpGenetic: TRibbonGroup;
-    rbngrpGenParams: TRibbonGroup;
-    edCount: TRzEdit;
-    edEliteCount: TRzEdit;
-    Label13: TLabel;
-    Label14: TLabel;
-    Label15: TLabel;
-    edParentCount: TRzEdit;
-    edMovedCount: TRzEdit;
-    Label17: TLabel;
-    edIter: TRzEdit;
-    Label16: TLabel;
-    Label18: TLabel;
-    btnPeaks: TSpeedButton;
-    cbbSingleStep: TRzComboBox;
     ProjectItemExtension: TAction;
     pmiEnabled: TMenuItem;
     TabSheet1: TRzTabSheet;
@@ -275,7 +240,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure RibbonTabChange(Sender: TObject;
       const NewIndex, OldIndex: Integer; var AllowChange: Boolean);
-    procedure cbLayers_SLFChange(Sender: TObject);
     procedure seH_FSLChange(Sender: TObject);
     procedure ResultCopyExecute(Sender: TObject);
     procedure ResultSaveExecute(Sender: TObject);
@@ -288,10 +252,6 @@ type
     procedure ChartMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure ChartZoom(Sender: TObject);
-    procedure btnFitSplitDownLeftClick(Sender: TObject);
-    procedure btnFitSplitUpRightClick(Sender: TObject);
-    procedure cbLayers_MF2Change(Sender: TObject);
-    procedure cbFitStepChange(Sender: TObject);
     procedure btnChartScaleClick(Sender: TObject);
     procedure ProjectAddFolderExecute(Sender: TObject);
     procedure ProjectDblClick(Sender: TObject);
@@ -344,7 +304,6 @@ type
     procedure actQuickStartExecute(Sender: TObject);
     procedure actCheckUpdateExecute(Sender: TObject);
     procedure btnPeaksClick(Sender: TObject);
-    procedure cbbSingleStepChange(Sender: TObject);
     procedure ProjectItemExtensionExecute(Sender: TObject);
     procedure pmiEnabledClick(Sender: TObject);
     procedure TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -391,8 +350,6 @@ type
     procedure CreateDefaultProject;
 
     procedure DeleteModel(Node: PVirtualNode; Data: PProjectData);
-
-    procedure MultiFit(Direction: Integer);
 
     procedure SaveProject(FileName: string);
     procedure LoadProject(FileName: string; Clear: Boolean = True);
@@ -463,16 +420,6 @@ uses
   frm_MList, unit_calc;
 
 {$R *.dfm}
-
-procedure TfrmMain.btnFitSplitDownLeftClick(Sender: TObject);
-begin
-  MultiFit(-1);
-end;
-
-procedure TfrmMain.btnFitSplitUpRightClick(Sender: TObject);
-begin
-  MultiFit(1);
-end;
 
 procedure TfrmMain.CalcAllExecute(Sender: TObject);
 var
@@ -654,48 +601,6 @@ var
   i: Integer;
 begin
   FActiveModel.Curve.Clear;
-end;
-
-procedure TfrmMain.cbbSingleStepChange(Sender: TObject);
-begin
-  seS_FSL.Increment := StrToFloat(cbbSingleStep.Value);
-  seR_FSL.Increment := StrToFloat(cbbSingleStep.Value);
-  seH_FSL.Increment := StrToFloat(cbbSingleStep.Value);
-end;
-
-procedure TfrmMain.cbFitStepChange(Sender: TObject);
-begin
-  seH_FSL.Increment := StrToFloat(cbFitStep.Text);
-  seS_FSL.Increment := StrToFloat(cbFitStep.Text);
-  seR_FSL.Increment := StrToFloat(cbFitStep.Text);
-end;
-
-procedure TfrmMain.cbLayers_MF2Change(Sender: TObject);
-begin
-  FIgnore := True;
-
-  case (Sender as TRzComboBox).Tag of
-    1:
-      edH1.Text := FMFLayers1[(Sender as TRzComboBox).ItemIndex].Data.H;
-    2:
-      edH2.Text := FMFLayers2[(Sender as TRzComboBox).ItemIndex].Data.H;
-    3:
-      edH3.Text := FMFLayers3[(Sender as TRzComboBox).ItemIndex].Data.H;
-  end;
-
-  FIgnore := False;
-end;
-
-procedure TfrmMain.cbLayers_SLFChange(Sender: TObject);
-begin
-  FIgnore := True;
-
-  FCurrentLayerData := FLayersList[cbLayers_SLF.ItemIndex].Data;
-  seH_FSL.Text := FCurrentLayerData.H;
-  seR_FSL.Text := FCurrentLayerData.R;
-  seS_FSL.Text := FCurrentLayerData.s;
-
-  FIgnore := False;
 end;
 
 procedure TfrmMain.PrintMax;
@@ -1313,7 +1218,6 @@ var
   Data: PRowData;
   i, k: Integer;
 begin
-  cbLayers_SLF.Items.Clear;
   SetLength(FLayersList, Tree.AbsoluteIndex(Tree.GetLast) + 1);
   i := 0;
   k := 0;
@@ -1336,19 +1240,11 @@ begin
         FLayersList[i].ItemType := itLayer;
       end;
       FLayersList[i].Data := Data;
-      cbLayers_SLF.Items.Add(FLayersList[i].Title);
       inc(i);
     end;
     Node := Tree.GetNext(Node);
   end;
 
-  cbLayers_MF1.Items := cbLayers_SLF.Items;
-  cbLayers_MF2.Items := cbLayers_SLF.Items;
-  cbLayers_MF3.Items := cbLayers_SLF.Items;
-
-  FMFLayers1 := FLayersList;
-  FMFLayers2 := FLayersList;
-  FMFLayers3 := FLayersList;
 end;
 
 procedure TfrmMain.FillRecentList;
@@ -2650,39 +2546,6 @@ begin
   EditProjectItem;
 end;
 
-procedure TfrmMain.MultiFit(Direction: Integer);
-var
-  Delta: single;
-  Value: single;
-begin
-  Delta := Direction * StrToFloat(cbFitStep.Text);
-
-  if cbLayers_MF1.ItemIndex = 0 then
-    Exit;
-
-  Value := FMFLayers1[cbLayers_MF1.ItemIndex].Data.HV + Delta;
-  edH1.Text := FloatToStrF(Value, ffFixed, 5, 3);
-  FMFLayers1[cbLayers_MF1.ItemIndex].Data.H := edH1.Text;
-
-  if cbLayers_MF3.ItemIndex < 1 then
-  begin
-    Value := FMFLayers2[cbLayers_MF2.ItemIndex].Data.HV - Delta;
-    edH2.Text := FloatToStrF(Value, ffFixed, 5, 3);
-    FMFLayers2[cbLayers_MF2.ItemIndex].Data.H := edH2.Text;
-  end
-  else
-  begin
-    Value := FMFLayers2[cbLayers_MF2.ItemIndex].Data.HV - Delta / 2;
-    edH2.Text := FloatToStrF(Value, ffFixed, 5, 3);
-    FMFLayers2[cbLayers_MF2.ItemIndex].Data.H := edH2.Text;
-
-    Value := FMFLayers3[cbLayers_MF3.ItemIndex].Data.HV - Delta / 2;
-    edH3.Text := FloatToStrF(Value, ffFixed, 5, 3);
-    FMFLayers3[cbLayers_MF3.ItemIndex].Data.H := edH3.Text;
-  end;
-
-  CalcRunExecute(frmMain);
-end;
 
 procedure TfrmMain.TreeBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;

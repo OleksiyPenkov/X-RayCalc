@@ -106,7 +106,7 @@ object frmMain: TfrmMain
       Color = clCream
       Colors.BorderColor = clSkyBlue
       Colors.GridLineColor = clSkyBlue
-      Colors.HeaderHotColor = clSkyBlue
+      Colors.HeaderHotColor = 16776176
       Colors.UnfocusedSelectionColor = clSkyBlue
       Colors.UnfocusedSelectionBorderColor = clSkyBlue
       DefaultNodeHeight = 25
@@ -118,10 +118,10 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       Header.AutoSizeIndex = 0
-      Header.Background = clGreen
+      Header.Background = 16765595
       Header.Height = 20
       Header.MainColumn = 1
-      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs]
       NodeAlignment = naFromTop
       ParentFont = False
       PopupMenu = pmProject
@@ -143,7 +143,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 45
+          Width = 41
         end
         item
           Position = 1
@@ -170,7 +170,7 @@ object frmMain: TfrmMain
         BevelInner = bvNone
         BevelOuter = bvNone
         BorderStyle = bsNone
-        Color = clSkyBlue
+        Color = 16765595
         ReadOnly = True
         TabOrder = 0
         FrameHotColor = cl3DDkShadow
@@ -208,10 +208,6 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -281,10 +277,6 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -569,10 +561,6 @@ object frmMain: TfrmMain
       object TabSheet1: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Gradients'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
@@ -622,14 +610,10 @@ object frmMain: TfrmMain
         Page = rbnpgCalc
       end
       item
-        Caption = 'Fitting'
-        Page = rbnpgFitting
-      end
-      item
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 3
+    TabIndex = 1
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -699,6 +683,41 @@ object frmMain: TfrmMain
         GroupIndex = 5
       end
     end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 365
+        Top = 3
+        Width = 97
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 196
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 202
+        Top = 3
+        Width = 161
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
+      end
+    end
     object rbnpgCalc: TRibbonPage
       Left = 0
       Top = 50
@@ -706,16 +725,17 @@ object frmMain: TfrmMain
       Height = 93
       Caption = 'Calc'
       Index = 1
-      object RibbonGroup4: TRibbonGroup
+      object RibbonGroupCalc: TRibbonGroup
         Left = 4
         Top = 3
-        Width = 105
+        Width = 160
         Height = 86
         ActionManager = ActionManager
+        Caption = 'Calc'
         GroupIndex = 0
       end
       object RibbonGroup5: TRibbonGroup
-        Left = 330
+        Left = 385
         Top = 3
         Width = 183
         Height = 86
@@ -837,7 +857,7 @@ object frmMain: TfrmMain
         end
       end
       object RibbonGroup10: TRibbonGroup
-        Left = 515
+        Left = 570
         Top = 3
         Width = 134
         Height = 86
@@ -951,7 +971,7 @@ object frmMain: TfrmMain
         end
       end
       object RibbonGroup11: TRibbonGroup
-        Left = 111
+        Left = 166
         Top = 3
         Width = 217
         Height = 86
@@ -1014,7 +1034,7 @@ object frmMain: TfrmMain
         end
       end
       object RibbonGroup9: TRibbonGroup
-        Left = 651
+        Left = 706
         Top = 3
         Width = 50
         Height = 86
@@ -1023,433 +1043,13 @@ object frmMain: TfrmMain
         GroupIndex = 6
       end
       object rbngrpPlot: TRibbonGroup
-        Left = 703
+        Left = 758
         Top = 3
         Width = 50
         Height = 86
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
-      end
-    end
-    object rbnpgFitting: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Fitting'
-      Index = 2
-      object RibbonGroup8: TRibbonGroup
-        Left = 388
-        Top = 3
-        Width = 221
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Single fit'
-        GroupIndex = 2
-        object RzPanel2: TRzPanel
-          Left = 3
-          Top = 4
-          Width = 211
-          Height = 61
-          Align = alClient
-          BorderOuter = fsNone
-          TabOrder = 0
-          Transparent = True
-          object Label6: TLabel
-            Left = 66
-            Top = 40
-            Width = 10
-            Height = 20
-            Caption = 's'
-            Font.Charset = GREEK_CHARSET
-            Font.Color = clBlack
-            Font.Height = -16
-            Font.Name = 'Symbol'
-            Font.Style = []
-            ParentFont = False
-          end
-          object Label7: TLabel
-            Left = 141
-            Top = 38
-            Width = 9
-            Height = 20
-            Caption = 'r'
-            Font.Charset = GREEK_CHARSET
-            Font.Color = clBlack
-            Font.Height = -16
-            Font.Name = 'Symbol'
-            Font.Style = []
-            ParentFont = False
-          end
-          object Label8: TLabel
-            Left = 142
-            Top = 15
-            Width = 8
-            Height = 16
-            Caption = 'H'
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = 7214336
-            Font.Height = -13
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
-          end
-          object seR_FSL: TRzSpinEdit
-            Tag = 3
-            Left = 153
-            Top = 39
-            Width = 59
-            Height = 21
-            AllowKeyEdit = True
-            ButtonWidth = 20
-            Decimals = 2
-            Increment = 0.100000000000000000
-            IntegersOnly = False
-            Max = 100.000000000000000000
-            TabOrder = 0
-            OnChange = seH_FSLChange
-          end
-          object seS_FSL: TRzSpinEdit
-            Tag = 2
-            Left = 77
-            Top = 40
-            Width = 58
-            Height = 21
-            AllowKeyEdit = True
-            ButtonWidth = 20
-            Decimals = 2
-            Increment = 0.100000000000000000
-            IntegersOnly = False
-            Max = 100.000000000000000000
-            TabOrder = 1
-            OnChange = seH_FSLChange
-          end
-          object seH_FSL: TRzSpinEdit
-            Tag = 1
-            Left = 153
-            Top = 13
-            Width = 59
-            Height = 21
-            AllowKeyEdit = True
-            ButtonWidth = 20
-            Decimals = 2
-            Increment = 0.100000000000000000
-            IntegersOnly = False
-            Max = 100000.000000000000000000
-            TabOrder = 2
-            OnChange = seH_FSLChange
-          end
-          object cbLayers_SLF: TRzComboBox
-            Left = 8
-            Top = 13
-            Width = 127
-            Height = 21
-            AllowEdit = False
-            AutoComplete = False
-            TabOrder = 3
-            Text = 'Select layer'
-            OnChange = cbLayers_SLFChange
-            Items.Strings = (
-              '')
-          end
-          object cbbSingleStep: TRzComboBox
-            Left = 8
-            Top = 40
-            Width = 52
-            Height = 21
-            AllowEdit = False
-            AutoComplete = False
-            TabOrder = 4
-            Text = '0.25'
-            OnChange = cbbSingleStepChange
-            Items.Strings = (
-              '0.001'
-              '0.005'
-              '0.01'
-              '0.05'
-              '0.1'
-              '0.25'
-              '0.5'
-              '1'
-              '5'
-              '10')
-            ItemIndex = 5
-          end
-        end
-      end
-      object RibbonGroup3: TRibbonGroup
-        Left = 611
-        Top = 3
-        Width = 324
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Multi Fit'
-        GroupIndex = 3
-        object RzPanel4: TRzPanel
-          Left = 4
-          Top = 3
-          Width = 316
-          Height = 61
-          Align = alClient
-          BorderOuter = fsNone
-          TabOrder = 0
-          Transparent = True
-          object cbLayers_MF1: TRzComboBox
-            Tag = 1
-            Left = 3
-            Top = 11
-            Width = 81
-            Height = 21
-            AllowEdit = False
-            AutoComplete = False
-            TabOrder = 0
-            Text = 'Select layer'
-            OnChange = cbLayers_MF2Change
-            Items.Strings = (
-              'Layer 1')
-            Values.Strings = (
-              '50')
-          end
-          object cbLayers_MF2: TRzComboBox
-            Tag = 2
-            Left = 144
-            Top = 11
-            Width = 78
-            Height = 21
-            AllowEdit = False
-            AutoComplete = False
-            TabOrder = 1
-            Text = 'Select layer'
-            OnChange = cbLayers_MF2Change
-            Items.Strings = (
-              '')
-          end
-          object cbLayers_MF3: TRzComboBox
-            Tag = 3
-            Left = 144
-            Top = 40
-            Width = 78
-            Height = 21
-            AllowEdit = False
-            AutoComplete = False
-            TabOrder = 2
-            Text = 'Select layer'
-            OnChange = cbLayers_MF2Change
-            Items.Strings = (
-              '')
-          end
-          object cbFitStep: TRzComboBox
-            Left = 25
-            Top = 41
-            Width = 59
-            Height = 21
-            AllowEdit = False
-            AutoComplete = False
-            TabOrder = 3
-            Text = '0.25'
-            OnChange = cbFitStepChange
-            Items.Strings = (
-              '0.001'
-              '0.005'
-              '0.01'
-              '0.05'
-              '0.1'
-              '0.25'
-              '0.5'
-              '1'
-              '5'
-              '10')
-            ItemIndex = 5
-          end
-          object edH1: TEdit
-            Left = 87
-            Top = 11
-            Width = 50
-            Height = 21
-            Alignment = taRightJustify
-            BevelInner = bvNone
-            BevelOuter = bvNone
-            Color = 14078917
-            ReadOnly = True
-            TabOrder = 4
-            Text = '0'
-          end
-          object edH2: TEdit
-            Left = 224
-            Top = 12
-            Width = 50
-            Height = 21
-            Alignment = taRightJustify
-            Color = 14078917
-            ReadOnly = True
-            TabOrder = 5
-            Text = '0'
-          end
-          object edH3: TEdit
-            Left = 224
-            Top = 40
-            Width = 50
-            Height = 21
-            Alignment = taRightJustify
-            Color = 14078917
-            ReadOnly = True
-            TabOrder = 6
-            Text = '0'
-          end
-          object btnFitSplit: TRzSpinButtons
-            Left = 276
-            Top = 12
-            Width = 39
-            Height = 49
-            OnDownLeftClick = btnFitSplitDownLeftClick
-            OnUpRightClick = btnFitSplitUpRightClick
-            TabOrder = 7
-          end
-        end
-      end
-      object rbngrpGenetic: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 105
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Genetic'
-        GroupIndex = 0
-      end
-      object rbngrpGenParams: TRibbonGroup
-        Left = 111
-        Top = 3
-        Width = 275
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Genetic params'
-        GroupIndex = 1
-        object Label13: TLabel
-          Left = 50
-          Top = 33
-          Width = 18
-          Height = 13
-          Caption = 'Elte'
-        end
-        object Label14: TLabel
-          Left = 109
-          Top = 9
-          Width = 63
-          Height = 13
-          Caption = 'Iteration size'
-        end
-        object Label15: TLabel
-          Left = 524
-          Top = 53
-          Width = 32
-          Height = 13
-          Caption = 'Parent'
-        end
-        object Label17: TLabel
-          Left = 20
-          Top = 9
-          Width = 43
-          Height = 13
-          Caption = 'Ierations'
-        end
-        object Label16: TLabel
-          Left = 135
-          Top = 34
-          Width = 37
-          Height = 13
-          Caption = 'Parents'
-        end
-        object Label18: TLabel
-          Left = 6
-          Top = 51
-          Width = 62
-          Height = 13
-          Caption = 'Moved count'
-        end
-        object btnPeaks: TSpeedButton
-          Left = 217
-          Top = 7
-          Width = 52
-          Height = 58
-          Caption = 'Peaks'
-          OnClick = btnPeaksClick
-        end
-        object edCount: TRzEdit
-          Left = 175
-          Top = 6
-          Width = 35
-          Height = 21
-          Text = '100'
-          TabOrder = 0
-        end
-        object edEliteCount: TRzEdit
-          Left = 72
-          Top = 27
-          Width = 35
-          Height = 21
-          Text = '5'
-          TabOrder = 1
-        end
-        object edParentCount: TRzEdit
-          Left = 175
-          Top = 30
-          Width = 35
-          Height = 21
-          Text = '50'
-          TabOrder = 2
-        end
-        object edMovedCount: TRzEdit
-          Left = 72
-          Top = 49
-          Width = 35
-          Height = 21
-          Text = '5'
-          TabOrder = 3
-        end
-        object edIter: TRzEdit
-          Left = 72
-          Top = 6
-          Width = 35
-          Height = 21
-          Text = '100'
-          TabOrder = 4
-        end
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 3
-      object rbngrpHelp: TRibbonGroup
-        Left = 365
-        Top = 3
-        Width = 97
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 196
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 202
-        Top = 3
-        Width = 161
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
       end
     end
   end
@@ -6735,8 +6335,19 @@ object frmMain: TfrmMain
             Caption = '&Stop'
             ImageIndex = 4
             CommandProperties.ButtonSize = bsLarge
+          end
+          item
+            Color = 16776176
+            Caption = '-'
+          end
+          item
+            Action = CalcFitting
+            Caption = '&Fitting'
+            ImageIndex = 17
+            ShortCut = 117
+            CommandProperties.ButtonSize = bsLarge
           end>
-        ActionBar = RibbonGroup4
+        ActionBar = RibbonGroupCalc
       end
       item
         Items = <
@@ -6769,7 +6380,7 @@ object frmMain: TfrmMain
             Caption = '&ActionClientItem0'
             CommandStyle = csControl
             CommandProperties.Width = 150
-            CommandProperties.ContainedControl = RzPanel2
+            CommandProperties.ContainedControl = DockSite3.DockTab
           end>
       end
       item
@@ -7036,10 +6647,8 @@ object frmMain: TfrmMain
             ImageIndex = 4
             CommandProperties.ButtonSize = bsLarge
           end>
-        ActionBar = rbngrpGenetic
       end
       item
-        ActionBar = rbngrpGenParams
       end
       item
         Items = <
@@ -7359,7 +6968,8 @@ object frmMain: TfrmMain
     end
     object CalcFitting: TAction
       Category = 'Calc'
-      Caption = 'CalcFitting'
+      Caption = 'Fitting'
+      ImageIndex = 17
       ShortCut = 117
       OnExecute = CalcFittingExecute
     end

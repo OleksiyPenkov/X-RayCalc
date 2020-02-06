@@ -110,12 +110,6 @@ begin
 
   LayerCount := 2;
 
-  Count := StrToInt(frmMain.edCount.Text);
-  EliteCount := StrToInt(frmMain.edEliteCount.Text);
-  ParentCount := StrToInt(frmMain.edParentCount.Text);
-  MovedCount := StrToInt(frmMain.edMovedCount.Text);
-  IterCount := StrToInt(frmMain.edIter.Text);
-
   // ---------------------------------------------
   SetLength(ExpData, SizeOfDataArray + 1);
   for i := 0 to SizeOfDataArray do

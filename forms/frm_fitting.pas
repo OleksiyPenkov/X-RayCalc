@@ -67,7 +67,7 @@ begin
   Separator.Width  := 363;
   Separator.Height := 5;
   Separator.Align  := alTop;
-  Separator.Color  := clBtnFace;
+  Separator.Color  := $00FFD29B;
   Separator.ShowGradient := True;
 end;
 
@@ -153,10 +153,10 @@ begin
   Input := TXRCFitInput.Create(Box, FMainForm, Data);
   Input.CheckBox.OnClick := LinkChecked;
   inc(FCount);
-  if (FCount mod 2) = 0 then Input.Color := clBtnFace
-    else Input.Color := clWebLightgrey;
+  if (FCount mod 2) = 0 then Input.Color := $00FFD29B
+    else Input.Color := $00FFE3C1;
 
-  ClientHeight := 67 + FCount * 51;
+  ClientHeight := 67 + FCount * 52;
 
 end;
 
