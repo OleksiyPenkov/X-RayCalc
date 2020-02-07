@@ -14,6 +14,7 @@ object frmFitWin: TfrmFitWin
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object RzPanel1: TRzPanel
@@ -42,9 +43,9 @@ object frmFitWin: TfrmFitWin
     object Label2: TLabel
       Left = 120
       Top = 6
-      Width = 9
+      Width = 35
       Height = 16
-      Caption = 'H'
+      Caption = 'H ('#197')'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -53,11 +54,11 @@ object frmFitWin: TfrmFitWin
       ParentFont = False
     end
     object Label3: TLabel
-      Left = 183
+      Left = 191
       Top = 6
-      Width = 7
+      Width = 35
       Height = 16
-      Caption = 's'
+      Caption = #963' ('#197')'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -66,11 +67,11 @@ object frmFitWin: TfrmFitWin
       ParentFont = False
     end
     object Label4: TLabel
-      Left = 249
+      Left = 268
       Top = 6
-      Width = 22
+      Width = 65
       Height = 16
-      Caption = 'rho'
+      Caption = #961' (g/cm'#179')'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -93,7 +94,6 @@ object frmFitWin: TfrmFitWin
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 1
-    ExplicitHeight = 187
   end
   object RzPanel2: TRzPanel
     AlignWithMargins = True
@@ -105,7 +105,6 @@ object frmFitWin: TfrmFitWin
     BorderOuter = fsFlatRounded
     ParentColor = True
     TabOrder = 2
-    ExplicitTop = 232
     DesignSize = (
       363
       37)

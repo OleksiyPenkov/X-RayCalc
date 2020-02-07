@@ -30,7 +30,6 @@ type
     FLimit: single;
 
     CD: TThreadParams;
-    FNumber: Integer;
 
     FTree: TVirtualStringTree;
     FChart: TChart;

@@ -22,12 +22,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure cbbStepChange(Sender: TObject);
     procedure LinkChecked(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
-    FData : PRowData;
+
     FMainForm: HWND;
 
-    FOnSet:  boolean;
     FCount: Integer;
 
     FStep : Double;
@@ -85,7 +85,11 @@ end;
 procedure TfrmFitWin.FormCreate(Sender: TObject);
 begin
   FCount := 0;
-  FStep  := 0.1;
+end;
+
+procedure TfrmFitWin.FormShow(Sender: TObject);
+begin
+  cbbStepChange(Sender);
 end;
 
 procedure TfrmFitWin.SetDisabled;

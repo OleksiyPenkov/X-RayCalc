@@ -230,10 +230,7 @@ begin
     FLinked.OnSet := True;
     if FData.H > Thickness.Text then FLinked.IncreaseThickness else FLinked.DecreaseThickness;
 
-
-
     FLinked.OnSet := False;
-
   end;
 
   FData.H := Thickness.Text;
@@ -242,7 +239,6 @@ begin
 
   FOnSet := FOnSetOld;
   if not FOnSet then PostMessage(FHandler, WM_RECALC, 0, 0);
-
 end;
 
 end.

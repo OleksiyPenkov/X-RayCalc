@@ -331,7 +331,6 @@ type
     FLastID: Integer;
 
     FLayersList: TLayerComboItemList;
-    FMFLayers1, FMFLayers2, FMFLayers3: TLayerComboItemList;
 
     FCurrentLayerData: PRowData;
 
@@ -371,7 +370,6 @@ type
     ThreadsRunning: Integer;
 
     procedure OnMyMessage(var Msg: TMessage); message WM_RECALC;
-    procedure ThreadDone(Sender: TObject);
     function OnHelpHandler(Command: Word; Data: NativeInt;
       var CallHelp: Boolean): Boolean;
     procedure FinalizeCalc;
@@ -465,7 +463,7 @@ end;
 
 procedure TfrmMain.FinalizeCalc;
 var
-  k,i,j : Integer;
+  k, j : Integer;
 begin
   if cb2Theta.Checked then
     k := 2
@@ -487,19 +485,11 @@ begin
   frmFit.ShowModal;
 end;
 
-procedure TfrmMain.ThreadDone(Sender: TObject);
-begin
-
-end;
-
 procedure TfrmMain.CalcRunExecute(Sender: TObject);
 var
   CD: TThreadParams;
-  StepT, StartT, EndT, DeltaT: single;
+  StartT, EndT: single;
   Hour, Min, Sec, MSec: Word;
-  i, j: Integer;
-
-  Code: Integer;
 
 begin
   if FActiveModel = nil then
@@ -597,8 +587,6 @@ begin
 end;
 
 procedure TfrmMain.CalcStopExecute(Sender: TObject);
-var
-  i: Integer;
 begin
   FActiveModel.Curve.Clear;
 end;
@@ -699,7 +687,7 @@ procedure TfrmMain.CreateDefaultProject;
 var
   Data: PRowData;
   PD: PProjectData;
-  PG, PL, MP, ML: PVirtualNode;
+  PG, PL: PVirtualNode;
 
 begin
   if DirectoryExists(FProjectDir) then
@@ -767,7 +755,6 @@ end;
 procedure TfrmMain.CreateNewExtension(Node: PVirtualNode);
 var
   Data: PProjectData;
-  MD: PRowData;
 begin
   Data := Project.GetNodeData(Node);
 
@@ -953,7 +940,6 @@ procedure TfrmMain.FillExtensionPeriods(var Periods: TCombobox);
 var
   Node: PVirtualNode;
   Data: PRowData;
-  i, k: Integer;
 begin
   Periods.Items.Clear;
   Node := Tree.GetFirst;
@@ -1295,9 +1281,6 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
-var
-  Handled: Boolean;
-  S: string;
 begin
   Application.OnHelp := OnHelpHandler;
   FormatSettings.DecimalSeparator := '.';
@@ -1590,7 +1573,6 @@ end;
 procedure TfrmMain.PeriodDeleteExecute(Sender: TObject);
 var
   Node: PVirtualNode;
-  Parent: PVirtualNode;
   AllowDelete: Boolean;
 begin
   Node := Tree.GetFirstSelected;
@@ -1881,6 +1863,7 @@ begin
 
   if (Assigned(Node)) then
     Data := Project.GetNodeData(Project.DropTargetNode);
+
   Nodes := (Sender as TVirtualStringTree).GetSortedSelection(True);
   if Length(Nodes) > 0 then
   begin
@@ -2167,7 +2150,6 @@ end;
 procedure TfrmMain.AddRecentItem(const FileName: string;const First:boolean = False);
 var
   Item: TActionClientItem;
-  Action: TAction;
   i: Integer;
   S: string;
 begin
@@ -2237,7 +2219,6 @@ var
   Node: PVirtualNode;
 begin
   Node := Project.GetFirstChild(Project.GetFirst);
-  Data := Project.GetNodeData(Node);
   while Node <> Nil do
   begin
     Data := Project.GetNodeData(Node);
@@ -2252,7 +2233,6 @@ end;
 procedure TfrmMain.SaveProject(FileName: string);
 var
   INF: TMemIniFile;
-  i: Integer;
 begin
   try
     INF := TMemIniFile.Create(FProjectDir + PARAMETERS_FILE_NAME);
@@ -2326,7 +2306,6 @@ end;
 
 procedure TfrmMain.LoadProject(FileName: string; Clear: Boolean);
 var
-  Stream: TStream;
   INF: TMemIniFile;
 
   Node, First: PVirtualNode;
@@ -2394,7 +2373,6 @@ begin
   FLastModel := nil;
 
   Node := Project.GetFirstChild(Project.GetFirst);
-  Data := Project.GetNodeData(Node);
   while Node <> FDataRoot do
   begin
     Data := Project.GetNodeData(Node);
@@ -2430,11 +2408,10 @@ begin
   end;
 
   inc(FLastID);
-  // загружаем сохраненные кривые
+
   FActiveData := nil;
 
   Node := Project.GetFirstChild(FDataRoot);
-  Data := Project.GetNodeData(Node);
   while Node <> nil do
   begin
     Data := Project.GetNodeData(Node);
@@ -2579,14 +2556,8 @@ end;
 
 procedure TfrmMain.TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode;
   Column: TColumnIndex; var Allowed: Boolean);
-var
-  Data: PRowData;
 begin
-  with Sender do
-  begin
-    Data := GetNodeData(Node);
-    Allowed := True; //(Node.Parent <> RootNode) and (Column = 1) and (Data.ValueType <> vtNone);
-  end;
+  Allowed := (Node.Parent <> Sender.RootNode) and (Column = 1);
 end;
 
 procedure TfrmMain.TreeFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);

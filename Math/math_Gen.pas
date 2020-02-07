@@ -46,19 +46,17 @@ var
   SizeOfDataArray: integer;
   EliteCount, ParentCount, MovedCount: integer;
   FitRanges: array of TFitRange;
-  CalcStopped,OnRecalculated,FittingOn:boolean;
+  CalcStopped,FittingOn:boolean;
   Population, NewPopulation,
   Selected: record
       P: array of TPerson;
       FS: double;
       N: integer;
   end;
-  DW : single;
-  ExpData, TempData: array of TDataPoint;
+
+  ExpData: array of TDataPoint;
   Period,Count,IterCount,LayerCount:Integer;
   RangeCells:array of array of TRangeCell;
-
-  ActivePeriod: PRowData;
 
 procedure TGenTherad.Verify(var A:TFitParam);
 begin
@@ -173,7 +171,7 @@ end;
 procedure TGenTherad.OffspringsMutation(i1, i2: integer; dh, dr, ds: single);
 var
   i, j, j1: integer;
-  SP, value: single;
+  value, SP: single;
 begin
   Randomize;
   // ---  случайное заполнение период ---------------
@@ -181,7 +179,7 @@ begin
   for i := i1 to i2 do
     with NewPopulation.P[i] do
     begin
-      SP := 0;
+
       // a:=Random(LayerCount);
       // b:=Random(LayerCount);
       j1 := Random(EliteCount);
@@ -406,7 +404,7 @@ procedure TGenTherad.ParentSelection;
 var
   i, j, j1, j2, k, Size: integer;
   A, b: integer;
-  SP, HC: single;
+  HC, SP: Double;
 begin
   Randomize;
   // -----------------   H   -----------------
@@ -460,7 +458,6 @@ begin
     j2 := Random(20);
     // --- объединение признаков ------
     NewPopulation.P[i].R := Population.P[i].R;
-    SP := 0;
     with NewPopulation.P[i] do
       for j := 0 to High(S) do
         R[j].V := BLX_Crossover(Population.P[j1].R[j].V,

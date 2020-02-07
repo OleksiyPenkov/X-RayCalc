@@ -48,14 +48,8 @@ const
   H = 12398.6;
 
 procedure CopyData(const Input: TDataArray; var Output: TDataArray);
-var
-  i: integer;
 begin
-//  SetLength(Output, Length(Input));
-//  for I := 1 to 10 do
    Output := Input;
-
-//  Move(Input[0], Output[0], SizeOf(TDataPoint)*Length(Input));
 end;
 
 

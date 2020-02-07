@@ -61,12 +61,12 @@ end;
 
 procedure TedtrGradient.FormShow(Sender: TObject);
 begin
-  edTitle.Text := FData.Title;
-  cbPeriod.Text := FData.ParentPeriodName;
-  cbLayer.Text := FData.ParentLayerName;
+  edTitle.Text := string(FData.Title);
+  cbPeriod.Text := string(FData.ParentPeriodName);
+  cbLayer.Text := string(FData.ParentLayerName);
   edRate.Value := FData.Rate;
   rgSubject.ItemIndex := Ord(FData.Subj);
-  mmDescription.Lines.Text := FData.Description;
+  mmDescription.Lines.Text := string(FData.Description);
 end;
 
 end.

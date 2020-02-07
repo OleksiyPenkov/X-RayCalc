@@ -135,7 +135,6 @@ begin
   else
     FullPath := TPath.Combine(Root, Path);
 
-  //Assert(TPath.IsPathRooted(FullPath));
 
   Result := SysUtils.ForceDirectories(FullPath);
 end;
