@@ -111,12 +111,6 @@ type
     StatusMaxX: TRzStatusPane;
     StatusRMax: TRzStatusPane;
     RzStatusPane5: TRzStatusPane;
-    RzStatusPane6: TRzStatusPane;
-    StatusS: TRzStatusPane;
-    StatusRi: TRzStatusPane;
-    RzStatusPane8: TRzStatusPane;
-    RzStatusPane9: TRzStatusPane;
-    StatusDelta: TRzStatusPane;
     StatusD: TRzStatusPane;
     RzVersionInfo: TRzVersionInfo;
     spnTime: TRzStatusPane;
@@ -197,6 +191,10 @@ type
     Zip: TAbZipper;
     miAddStack: TMenuItem;
     miDeleteStack: TMenuItem;
+    RzStatusPane7: TRzStatusPane;
+    RzStatusPane10: TRzStatusPane;
+    RzStatusPane6: TRzStatusPane;
+    StatusRi: TRzStatusPane;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -324,6 +322,14 @@ type
     procedure pmStructurePopup(Sender: TObject);
     procedure ChartAllowScroll(Sender: TChartAxis; var AMin, AMax: Double;
       var AllowScroll: Boolean);
+    procedure TreeHeaderDrawQueryElements(Sender: TVTHeader;
+      var PaintInfo: THeaderPaintInfo; var Elements: THeaderPaintElements);
+    procedure TreeAdvancedHeaderDraw(Sender: TVTHeader;
+      var PaintInfo: THeaderPaintInfo; const Elements: THeaderPaintElements);
+    procedure ProjectAdvancedHeaderDraw(Sender: TVTHeader;
+      var PaintInfo: THeaderPaintInfo; const Elements: THeaderPaintElements);
+    procedure ProjectHeaderDrawQueryElements(Sender: TVTHeader;
+      var PaintInfo: THeaderPaintInfo; var Elements: THeaderPaintElements);
   private
     { Private declarations }
     FSubstrate: PVirtualNode;
@@ -537,6 +543,8 @@ begin
 
     if rgCalcMode.ItemIndex = 0 then
       Calc.Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
+
+    StatusD.Caption := FloatToStrF(TotalD, ffFixed, 7, 2) + ' Å';
 
     if (FLinkedData <> nil) and FActiveData.Curve.Visible then
        Calc.ExpValues := SeriesToData(FLinkedData.Curve);
@@ -1731,6 +1739,18 @@ begin
   Project.Selected[Node] := True;
 end;
 
+procedure TfrmMain.ProjectAdvancedHeaderDraw(Sender: TVTHeader;
+  var PaintInfo: THeaderPaintInfo; const Elements: THeaderPaintElements);
+begin
+  if hpeBackground in Elements then
+  begin
+    PaintInfo.TargetCanvas.Brush.Color := clSkyBlue; // <-- your color here
+    if Assigned(PaintInfo.Column) then
+      DrawFrameControl(PaintInfo.TargetCanvas.Handle, PaintInfo.PaintRectangle, DFC_BUTTON, DFCS_FLAT or DFCS_ADJUSTRECT); // <-- I think, that this keeps the style of the header background, but I'm not sure about that
+    PaintInfo.TargetCanvas.FillRect(PaintInfo.PaintRectangle);
+  end;
+end;
+
 procedure TfrmMain.ProjectAfterCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellRect: TRect);
@@ -1948,6 +1968,12 @@ begin
     0:
       CellText := '';
   end;
+end;
+
+procedure TfrmMain.ProjectHeaderDrawQueryElements(Sender: TVTHeader;
+  var PaintInfo: THeaderPaintInfo; var Elements: THeaderPaintElements);
+begin
+  Elements := [hpeBackground];
 end;
 
 procedure TfrmMain.ProjectItemCopyExecute(Sender: TObject);
@@ -2568,6 +2594,20 @@ begin
 end;
 
 
+procedure TfrmMain.TreeAdvancedHeaderDraw(Sender: TVTHeader;
+  var PaintInfo: THeaderPaintInfo; const Elements: THeaderPaintElements);
+begin
+  if hpeBackground in Elements then
+  begin
+    PaintInfo.TargetCanvas.Brush.Color := clSkyBlue; // <-- your color here
+    if Assigned(PaintInfo.Column) then
+      DrawFrameControl(PaintInfo.TargetCanvas.Handle, PaintInfo.PaintRectangle, DFC_BUTTON, DFCS_FLAT or DFCS_ADJUSTRECT); // <-- I think, that this keeps the style of the header background, but I'm not sure about that
+    PaintInfo.TargetCanvas.FillRect(PaintInfo.PaintRectangle);
+    PaintInfo.TargetCanvas.Brush.Color := $00FFEECC;
+    PaintInfo.TargetCanvas.FrameRect(PaintInfo.PaintRectangle);
+  end;
+end;
+
 procedure TfrmMain.TreeBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -2656,6 +2696,12 @@ begin
     else
       CellText := '';
     end;
+end;
+
+procedure TfrmMain.TreeHeaderDrawQueryElements(Sender: TVTHeader;
+  var PaintInfo: THeaderPaintInfo; var Elements: THeaderPaintElements);
+begin
+  Elements := [hpeBackground];
 end;
 
 procedure TfrmMain.TreeKeyDown(Sender: TObject; var Key: Word;

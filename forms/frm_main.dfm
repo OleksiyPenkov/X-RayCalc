@@ -20,6 +20,31 @@ object frmMain: TfrmMain
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
+  object RzStatusPane7: TRzStatusPane
+    Left = 230
+    Top = 26
+    Width = 25
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Alignment = taRightJustify
+    Caption = 'D'
+  end
+  object RzStatusPane10: TRzStatusPane
+    Left = 260
+    Top = 26
+    Width = 89
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    Caption = '0.00'
+  end
   object RzStatusBar1: TRzStatusBar
     Left = 0
     Top = 638
@@ -103,10 +128,11 @@ object frmMain: TfrmMain
       Align = alClient
       ButtonFillMode = fmTransparent
       ButtonStyle = bsTriangle
-      Color = clCream
+      Color = clWhite
       Colors.BorderColor = clSkyBlue
       Colors.GridLineColor = clSkyBlue
-      Colors.HeaderHotColor = 16776176
+      Colors.HeaderHotColor = clAqua
+      Colors.SelectionTextColor = clBtnFace
       Colors.UnfocusedSelectionColor = clSkyBlue
       Colors.UnfocusedSelectionBorderColor = clSkyBlue
       DefaultNodeHeight = 25
@@ -119,17 +145,24 @@ object frmMain: TfrmMain
       Font.Style = []
       Header.AutoSizeIndex = 0
       Header.Background = 16765595
-      Header.Height = 20
+      Header.Font.Charset = DEFAULT_CHARSET
+      Header.Font.Color = clWindowText
+      Header.Font.Height = -13
+      Header.Font.Name = 'Tahoma'
+      Header.Font.Style = [fsBold]
+      Header.Height = 23
       Header.MainColumn = 1
-      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoOwnerDraw, hoShowSortGlyphs, hoVisible]
+      Header.ParentFont = False
       NodeAlignment = naFromTop
       ParentFont = False
       PopupMenu = pmProject
       RootNodeCount = 5
       TabOrder = 0
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning]
-      TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages, toFullVertGridLines]
+      TreeOptions.PaintOptions = [toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages, toFullVertGridLines]
       TreeOptions.SelectionOptions = [toFullRowSelect, toRightClickSelect]
+      OnAdvancedHeaderDraw = ProjectAdvancedHeaderDraw
       OnAfterCellPaint = ProjectAfterCellPaint
       OnChange = ProjectChange
       OnDblClick = ProjectDblClick
@@ -138,6 +171,7 @@ object frmMain: TfrmMain
       OnFocusChanging = ProjectFocusChanging
       OnGetText = ProjectGetText
       OnPaintText = ProjectPaintText
+      OnHeaderDrawQueryElements = ProjectHeaderDrawQueryElements
       OnLoadNode = ProjectLoadNode
       OnSaveNode = ProjectSaveNode
       Columns = <
@@ -202,22 +236,33 @@ object frmMain: TfrmMain
       Align = alClient
       Color = clSkyBlue
       UseColoredTabs = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
       ParentColor = False
+      ParentFont = False
       TabIndex = 1
       TabOrder = 0
       OnChange = PagesChange
-      FixedDimension = 19
+      FixedDimension = 22
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
+        ExplicitTop = 20
+        ExplicitHeight = 466
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 944
-          Height = 460
+          Height = 457
           Align = alClient
-          Color = clCream
+          Color = clWhite
+          Colors.BorderColor = 10930928
+          Colors.HeaderHotColor = 16776176
+          Colors.SelectionTextColor = clWhite
           EditDelay = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -225,9 +270,16 @@ object frmMain: TfrmMain
           Font.Name = 'Tahoma'
           Font.Style = []
           Header.AutoSizeIndex = 0
-          Header.Background = clSkyBlue
+          Header.Background = 16763283
+          Header.Font.Charset = DEFAULT_CHARSET
+          Header.Font.Color = clWindowText
+          Header.Font.Height = -13
+          Header.Font.Name = 'Tahoma'
+          Header.Font.Style = [fsBold]
           Header.Height = 20
-          Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+          Header.Options = [hoColumnResize, hoDrag, hoOwnerDraw, hoShowSortGlyphs, hoVisible]
+          Header.ParentFont = False
+          Header.Style = hsPlates
           ParentFont = False
           ParentShowHint = False
           PopupMenu = pmStructure
@@ -236,6 +288,7 @@ object frmMain: TfrmMain
           TreeOptions.AutoOptions = [toAutoScrollOnExpand, toAutoTristateTracking, toAutoDeleteMovedNodes]
           TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toUseExplorerTheme]
           TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect, toMultiSelect, toRightClickSelect]
+          OnAdvancedHeaderDraw = TreeAdvancedHeaderDraw
           OnBeforeCellPaint = TreeBeforeCellPaint
           OnChange = TreeChange
           OnClick = TreeClick
@@ -245,33 +298,39 @@ object frmMain: TfrmMain
           OnFreeNode = TreeFreeNode
           OnGetText = TreeGetText
           OnPaintText = TreePaintText
+          OnHeaderDrawQueryElements = TreeHeaderDrawQueryElements
           OnKeyDown = TreeKeyDown
           OnLoadNode = TreeLoadNode
           OnSaveNode = TreeSaveNode
+          ExplicitHeight = 460
           Columns = <
             item
-              Color = clCream
+              Color = clWhite
               Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coResizable, coShowDropMark, coVisible, coAllowFocus]
               Position = 0
               Text = 'Stack / Material'
               Width = 334
             end
             item
+              Alignment = taCenter
               Position = 1
-              Text = 'Thickness'
+              Text = 'H ('#197')'
               Width = 70
             end
             item
+              Alignment = taCenter
               Position = 2
-              Text = 'Roughness'
+              Text = #963' ('#197')'
               Width = 80
             end
             item
+              Alignment = taCenter
               Position = 3
-              Text = 'Density'
-              Width = 80
+              Text = #961' (g/cm'#179')'
+              Width = 90
             end
             item
+              Alignment = taCenter
               Position = 4
               Text = 'N'
             end>
@@ -280,12 +339,14 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
+        ExplicitTop = 20
+        ExplicitHeight = 466
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 944
-          Height = 404
+          Height = 401
           Cursor = crCross
           Foot.Visible = False
           Legend.Brush.Color = clSilver
@@ -359,6 +420,7 @@ object frmMain: TfrmMain
           OnMouseDown = ChartMouseDown
           OnMouseMove = ChartMouseMove
           OnMouseUp = ChartMouseUp
+          ExplicitHeight = 404
           DefaultCanvas = 'TGDIPlusCanvas'
           PrintMargins = (
             5
@@ -370,13 +432,14 @@ object frmMain: TfrmMain
         object RzPanel3: TRzPanel
           AlignWithMargins = True
           Left = 3
-          Top = 413
+          Top = 410
           Width = 944
           Height = 50
           Align = alBottom
           BorderOuter = fsFlatRounded
           Color = clSkyBlue
           TabOrder = 1
+          ExplicitTop = 413
           DesignSize = (
             944
             50)
@@ -384,6 +447,12 @@ object frmMain: TfrmMain
             Left = 5
             Top = 4
             Width = 25
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             Alignment = taRightJustify
             Caption = 'X'
           end
@@ -391,6 +460,12 @@ object frmMain: TfrmMain
             Left = 5
             Top = 28
             Width = 25
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             Alignment = taRightJustify
             Caption = 'Y'
           end
@@ -400,7 +475,7 @@ object frmMain: TfrmMain
             Width = 64
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
@@ -412,7 +487,7 @@ object frmMain: TfrmMain
             Width = 64
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
@@ -422,6 +497,12 @@ object frmMain: TfrmMain
             Left = 103
             Top = 5
             Width = 46
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             Alignment = taRightJustify
             Caption = 'Rmax'
           end
@@ -429,6 +510,12 @@ object frmMain: TfrmMain
             Left = 104
             Top = 28
             Width = 44
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             Alignment = taRightJustify
             Caption = 'Xmax'
           end
@@ -438,7 +525,7 @@ object frmMain: TfrmMain
             Width = 64
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
@@ -450,7 +537,7 @@ object frmMain: TfrmMain
             Width = 64
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
@@ -460,90 +547,50 @@ object frmMain: TfrmMain
             Left = 221
             Top = 4
             Width = 25
-            Visible = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             Alignment = taRightJustify
             Caption = 'Ri'
+          end
+          object StatusD: TRzStatusPane
+            Left = 252
+            Top = 28
+            Width = 89
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'MS Sans Serif'
+            Font.Style = [fsBold]
+            ParentFont = False
+            Caption = '0.00'
           end
           object RzStatusPane6: TRzStatusPane
             Left = 221
             Top = 28
             Width = 25
-            Visible = False
-            Alignment = taRightJustify
-            Caption = 'S'
-          end
-          object StatusS: TRzStatusPane
-            Left = 252
-            Top = 28
-            Width = 64
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
+            Font.Height = -13
+            Font.Name = 'Tahoma'
             Font.Style = [fsBold]
             ParentFont = False
-            Visible = False
-            Caption = '0.00'
-          end
-          object StatusRi: TRzStatusPane
-            Left = 251
-            Top = 5
-            Width = 64
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Visible = False
-            Caption = '0.00'
-          end
-          object RzStatusPane8: TRzStatusPane
-            Left = 325
-            Top = 4
-            Width = 25
-            Visible = False
             Alignment = taRightJustify
             Caption = 'D'
           end
-          object RzStatusPane9: TRzStatusPane
-            Left = 325
-            Top = 28
-            Width = 25
-            Font.Charset = SYMBOL_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Symbol'
-            Font.Style = []
-            ParentFont = False
-            Visible = False
-            Alignment = taRightJustify
-            Caption = 'd'
-          end
-          object StatusDelta: TRzStatusPane
-            Left = 355
-            Top = 29
-            Width = 70
+          object StatusRi: TRzStatusPane
+            Left = 252
+            Top = 4
+            Width = 89
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
-            Font.Height = -11
+            Font.Height = -13
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
-            Visible = False
-            Caption = '0.00'
-          end
-          object StatusD: TRzStatusPane
-            Left = 355
-            Top = 5
-            Width = 70
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'MS Sans Serif'
-            Font.Style = [fsBold]
-            ParentFont = False
-            Visible = False
             Caption = '0.00'
           end
           object btnChartScale: TRzBitBtn
@@ -551,6 +598,12 @@ object frmMain: TfrmMain
             Top = 15
             Anchors = [akTop, akRight]
             Caption = 'Linear'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             TabOrder = 0
             OnClick = btnChartScaleClick
           end
@@ -558,8 +611,14 @@ object frmMain: TfrmMain
             Left = 794
             Top = 16
             Width = 53
-            Height = 21
+            Height = 24
             Anchors = [akRight, akBottom]
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
             TabOrder = 1
             Text = '5e-7'
             Items.Strings = (
@@ -574,12 +633,14 @@ object frmMain: TfrmMain
         Color = clSkyBlue
         TabVisible = False
         Caption = 'Gradients'
+        ExplicitTop = 20
+        ExplicitHeight = 466
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
           Top = 3
           Width = 944
-          Height = 460
+          Height = 457
           Cursor = crCross
           Legend.Alignment = laTop
           Title.Text.Strings = (
@@ -589,6 +650,7 @@ object frmMain: TfrmMain
           ZoomWheel = pmwNormal
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 460
           DefaultCanvas = 'TGDIPlusCanvas'
           ColorPaletteIndex = 13
           object Series1: TPointSeries
@@ -626,7 +688,6 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 2
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -968,6 +1029,41 @@ object frmMain: TfrmMain
         GroupIndex = 7
       end
     end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 371
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 196
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 202
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
+      end
+    end
     object rbStructure: TRibbonPage
       Left = 0
       Top = 50
@@ -1028,41 +1124,6 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Materials'
         GroupIndex = 5
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 371
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 196
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 202
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
       end
     end
   end
@@ -7057,45 +7118,49 @@ object frmMain: TfrmMain
       item
         Action = LayerAdd
         Description.Strings = (
-          'Add new layer to the period')
+          'Add a new layer to the selected stack')
         Header = 'Add'
       end
       item
         Action = LayerInsert
         Description.Strings = (
-          'Insert new layer')
+          'Insert a new layer into the selected stack')
         Header = 'Insert'
       end
       item
         Action = LayerDelete
         Description.Strings = (
-          'Delete selected layer')
+          'Delete the selected layer')
         Header = 'Delete'
       end
       item
         Action = PeriodAdd
         Description.Strings = (
-          'Add new stack (group of layers)')
+          'Add a new stack (group of layers) to the model')
         Header = 'Add'
       end
       item
         Action = PeriodInsert
         Description.Strings = (
-          'Insert new stack')
+          'Insert a new stack')
         Header = 'Insert'
       end
       item
         Action = PeriodDelete
         Description.Strings = (
-          'Delete selected stack')
+          'Delete the selected stack')
         Header = 'Delete'
       end
       item
         Action = LayerCopy
+        Description.Strings = (
+          'Copy the selected layer to the clipboard')
         Header = 'Copy'
       end
       item
         Action = LayerCut
+        Description.Strings = (
+          'Cut the selected layer to the clipboard')
         Header = 'Cut'
       end
       item
@@ -7115,13 +7180,13 @@ object frmMain: TfrmMain
       item
         Action = CalcRun
         Description.Strings = (
-          'Calculate selected model')
+          'Calculate the active model')
         Header = 'Run'
       end
       item
         Action = ModelCreate
         Description.Strings = (
-          'Create new empty model')
+          'Create a new empty model')
         Header = 'New'
       end
       item
@@ -7133,7 +7198,7 @@ object frmMain: TfrmMain
       item
         Action = DataLoad
         Description.Strings = (
-          'Create new dataset and load data from selected file')
+          'Create a new dataset and load data a file')
         Header = 'Load'
       end
       item
@@ -7165,13 +7230,13 @@ object frmMain: TfrmMain
       item
         Action = CalcTest
         Description.Strings = (
-          'Run the test caclculation to estimate performance')
+          'Run the test calculation to estimate the performance')
         Header = 'Test run'
       end
       item
         Action = ProjectAddFolder
         Description.Strings = (
-          'Add new folder')
+          'Add a new folder')
         Header = 'Add'
       end
       item
@@ -7183,7 +7248,7 @@ object frmMain: TfrmMain
       item
         Action = ProjectItemDelete
         Description.Strings = (
-          'Delete selected project item (Folder, Model or Data)')
+          'Delete the selected project item (Folder, Model, or Data)')
         Header = 'Delete Item'
       end
       item
@@ -7288,6 +7353,8 @@ object frmMain: TfrmMain
       end
       item
         Action = CalcFitting
+        Description.Strings = (
+          'Show the manual fitting floating panel')
         Header = 'Fitting'
       end
       item

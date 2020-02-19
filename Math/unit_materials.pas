@@ -23,6 +23,7 @@ function FillGradients(Tree: TVirtualStringTree; Model: PVirtualNode): TGradient
 
 var
   Gradients: TGradients;
+  TotalD: single;
 
 implementation
 
@@ -31,6 +32,7 @@ const
 
 var
   Materials: array of TMaterial;
+
 
 
 function FillGradients(Tree: TVirtualStringTree; Model: PVirtualNode): TGradients;
@@ -151,7 +153,7 @@ end;
 
 function FillLayers(Tree: TVirtualStringTree; Lambda: single;  Chart: TChart): TLayers;
 var
-  Period, Layer: PVirtualNode;
+  Stack, Layer: PVirtualNode;
   Data: PRowData;
 
   i, j, NM, NL, CurrentLayer, g: integer;
@@ -163,41 +165,40 @@ var
   GradientValue: single;
 
   Inside: boolean;
+  InsideMain: Boolean;
+
 begin
   SetLength(Result, 0);
   SetLength(Materials, 0);
 
   PrepareChart(Chart);
 
-  // считаем общее количество слоев
   LayersCount := 0;
-  Period := Tree.GetFirst;
-  while Period <> Nil do
+  Stack := Tree.GetFirst;
+  while Stack <> Nil do
   begin
-    Data := Tree.GetNodeData(Period);
+    Data := Tree.GetNodeData(Stack);
     if Data.RowType = rtStack then
-      inc(LayersCount, Period.ChildCount * Data.N);
-    Period := Tree.GetNextSibling(Period);
+      inc(LayersCount, Stack.ChildCount * Data.N);
+    Stack := Tree.GetNextSibling(Stack);
   end;
 
   SetLength(Result, LayersCount + 2);
   CurrentLayer := 1;
 
-  // Находим материалы
-  Period := Tree.GetFirst;
-  while Period <> Nil do
+  Stack := Tree.GetFirst;
+  while Stack <> Nil do
   begin
-    Data := Tree.GetNodeData(Period);
+    Data := Tree.GetNodeData(Stack);
     if Data.RowType = rtLayer then
       AddMaterial(Data, Lambda);
-    Period := Tree.GetNext(Period);
+    Stack := Tree.GetNext(Stack);
   end;
 
-  // заполняем слои
-  Period := Tree.GetFirst;
-  while Period <> Nil do
+  Stack := Tree.GetFirst;
+  while Stack <> Nil do
   begin
-    Data := Tree.GetNodeData(Period);
+    Data := Tree.GetNodeData(Stack);
     if Data.RowType = rtStack then
     begin
       NL := Data.N;
@@ -210,11 +211,13 @@ begin
           Break;
         end;
 
-      for i := 1 to NL do // повторяем по числу периодов
+      InsideMain := Pos('Main', Data.Text) <> 0;
+      if InsideMain then TotalD := 0;
+
+      for i := 1 to NL do
       begin
-        // проходим по слоям внутри периода и заполняем массив слоев
-        Layer := Period.FirstChild;
-        for j := 0 to Period.ChildCount - 1 do
+        Layer := Stack.FirstChild;
+        for j := 0 to Stack.ChildCount - 1 do
         begin
           Data := Tree.GetNodeData(Layer);
 
@@ -237,6 +240,8 @@ begin
           with Result[CurrentLayer] do
           begin
             L := StrToFloat(Data.H);
+
+            if (i = 1) and InsideMain then TotalD := TotalD + L;
 
             for g := 0 to High(Gradients) do
             begin
@@ -279,7 +284,7 @@ begin
         end;
       end;
     end;
-    Period := Tree.GetNextSibling(Period);
+    Stack := Tree.GetNextSibling(Stack);
   end;
 
   with Substrate do // подложка
