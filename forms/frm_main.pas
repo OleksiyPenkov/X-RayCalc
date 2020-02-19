@@ -354,7 +354,7 @@ type
     procedure FillLayerCombos;
     procedure EditRow;
     procedure EditProjectItem;
-    procedure FillTestData;
+    procedure PrepareDemoData;
     procedure CreateDefaultProject;
 
     procedure DeleteModel(Node: PVirtualNode; Data: PProjectData);
@@ -1266,7 +1266,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.FillTestData;
+procedure TfrmMain.PrepareDemoData;
 var
   Data: PRowData;
   MP, ML: PVirtualNode;

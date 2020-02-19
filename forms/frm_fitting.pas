@@ -78,6 +78,8 @@ begin
   Separator.Align  := alTop;
   Separator.Color  := $00FFD29B;
   Separator.ShowGradient := True;
+
+  ClientHeight := ClientHeight + 5;
 end;
 
 procedure TfrmFitWin.cbbStepChange(Sender: TObject);
@@ -94,6 +96,7 @@ end;
 procedure TfrmFitWin.FormCreate(Sender: TObject);
 begin
   FCount := 0;
+  ClientHeight := 67;
 end;
 
 procedure TfrmFitWin.FormShow(Sender: TObject);
@@ -169,7 +172,7 @@ begin
   if (FCount mod 2) = 0 then Input.Color := $00FFD29B
     else Input.Color := $00FFE3C1;
 
-  ClientHeight := 67 + FCount * 52;
+  ClientHeight := 67 + (FCount + 1) * (Input.Height + 3);
 
 end;
 
