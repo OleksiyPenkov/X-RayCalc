@@ -2,7 +2,7 @@ object edtrPeriod: TedtrPeriod
   Left = 0
   Top = 0
   BorderStyle = bsToolWindow
-  Caption = 'Period properties'
+  Caption = 'Stack properties'
   ClientHeight = 94
   ClientWidth = 286
   Color = clBtnFace
@@ -27,9 +27,9 @@ object edtrPeriod: TedtrPeriod
     object Label1: TLabel
       Left = 9
       Top = 13
-      Width = 66
+      Width = 55
       Height = 13
-      Caption = 'Period'#39's name'
+      Caption = 'Stack name'
     end
     object Label2: TLabel
       Left = 199

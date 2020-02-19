@@ -4,7 +4,7 @@ object edtrLayer: TedtrLayer
   BorderStyle = bsToolWindow
   Caption = 'Layer properties'
   ClientHeight = 115
-  ClientWidth = 320
+  ClientWidth = 358
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,55 +20,62 @@ object edtrLayer: TedtrLayer
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 314
+    Width = 352
     Height = 62
     Align = alClient
     BorderOuter = fsFlatRounded
     TabOrder = 0
+    ExplicitWidth = 314
     object Label1: TLabel
       Left = 9
       Top = 10
-      Width = 75
+      Width = 68
       Height = 13
-      Caption = 'Layer'#39's material'
+      Caption = 'Layer material'
     end
     object Label2: TLabel
-      Left = 10
-      Top = 37
-      Width = 7
-      Height = 13
-      Caption = 'H'
+      Left = 5
+      Top = 34
+      Width = 30
+      Height = 16
+      Caption = 'H ('#197')'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
     end
     object Label7: TLabel
       Left = 226
-      Top = 31
-      Width = 9
-      Height = 20
-      Caption = 'r'
-      Font.Charset = GREEK_CHARSET
+      Top = 34
+      Width = 56
+      Height = 16
+      Caption = #961' (g/cm'#179')'
+      Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -16
-      Font.Name = 'Symbol'
+      Font.Height = -13
+      Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
     end
     object Label6: TLabel
-      Left = 124
-      Top = 31
-      Width = 10
-      Height = 20
-      Caption = 's'
-      Font.Charset = GREEK_CHARSET
+      Left = 114
+      Top = 34
+      Width = 30
+      Height = 16
+      Caption = #963' ('#197')'
+      Font.Charset = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -16
-      Font.Name = 'Symbol'
+      Font.Height = -13
+      Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
     end
     object edMaterial: TRzButtonEdit
       Left = 90
       Top = 6
-      Width = 216
+      Width = 255
       Height = 21
       Text = ''
       TabOrder = 0
@@ -78,9 +85,9 @@ object edtrLayer: TedtrLayer
       OnButtonClick = edMaterialButtonClick
     end
     object edRo: TJvCalcEdit
-      Left = 241
+      Left = 288
       Top = 33
-      Width = 65
+      Width = 57
       Height = 21
       ButtonFlat = True
       TabOrder = 3
@@ -88,7 +95,7 @@ object edtrLayer: TedtrLayer
       OnKeyDown = edMaterialKeyDown
     end
     object edH: TJvCalcEdit
-      Left = 23
+      Left = 41
       Top = 33
       Width = 70
       Height = 21
@@ -98,7 +105,7 @@ object edtrLayer: TedtrLayer
       OnKeyDown = edMaterialKeyDown
     end
     object edSigma: TJvCalcEdit
-      Left = 140
+      Left = 150
       Top = 33
       Width = 65
       Height = 21
@@ -112,13 +119,14 @@ object edtrLayer: TedtrLayer
     AlignWithMargins = True
     Left = 3
     Top = 71
-    Width = 314
+    Width = 352
     Height = 41
     Align = alBottom
     BorderOuter = fsFlatRounded
     TabOrder = 1
+    ExplicitWidth = 314
     object btnOK: TRzBitBtn
-      Left = 155
+      Left = 201
       Top = 10
       Width = 66
       TabOrder = 2
@@ -127,7 +135,7 @@ object edtrLayer: TedtrLayer
       Kind = bkOK
     end
     object btnCancel: TRzBitBtn
-      Left = 236
+      Left = 273
       Top = 10
       Width = 72
       TabOrder = 3

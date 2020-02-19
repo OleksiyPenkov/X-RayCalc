@@ -378,6 +378,7 @@ type
     procedure WMStartEditing(var Message: TMessage); message WM_STARTEDITING;
     procedure FillExtensionPeriods(var Periods: TCombobox);
     procedure SaveData;
+    procedure OpenHelpFile(FileName: string);
 
   public
     { Public declarations }
@@ -1295,8 +1296,13 @@ begin
 
   if ParamCount <> 0 then
   begin
-    FProjectFileName := ParamStr(1);
-    LoadProject(FProjectFileName);
+    if FileExists(ParamStr(1)) then
+    begin
+      FProjectFileName := ParamStr(1);
+      LoadProject(FProjectFileName);
+    end
+    else
+      CreateDefaultProject;
   end
   else
     CreateDefaultProject;
@@ -1386,7 +1392,7 @@ end;
 
 procedure TfrmMain.HelpContentExecute(Sender: TObject);
 begin
-  HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 0)
+  OpenHelpFile('Manual.pdf');
 end;
 
 procedure TfrmMain.HelpHelpExecute(Sender: TObject);
@@ -2114,12 +2120,12 @@ end;
 
 procedure TfrmMain.actHelpFittingExecute(Sender: TObject);
 begin
-  HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 200)
+  OpenHelpFile('Fitting_Manual.pdf');
 end;
 
 procedure TfrmMain.actHelpStructureExecute(Sender: TObject);
 begin
-  HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 100)
+  OpenHelpFile('Structure_Manual.pdf');
 end;
 
 procedure TfrmMain.actHomePageExecute(Sender: TObject);
@@ -2129,7 +2135,15 @@ end;
 
 procedure TfrmMain.actQuickStartExecute(Sender: TObject);
 begin
-  HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 99)
+  OpenHelpFile('Getting_Started.pdf');
+end;
+
+procedure TfrmMain.OpenHelpFile(FileName: string);
+var
+  FullPath: string;
+begin
+  FullPath := Settings.AppPath + 'docs\' + FileName;
+  SimpleShellExecute(Handle, FullPath);
 end;
 
 procedure TfrmMain.actShowLibraryExecute(Sender: TObject);

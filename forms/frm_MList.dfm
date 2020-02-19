@@ -33,7 +33,7 @@ object frmMaterialList: TfrmMaterialList
     Top = 8
     Width = 185
     Height = 365
-    Caption = 'New material'
+    Caption = 'Create new compound'
     TabOrder = 1
     object Label3: TLabel
       Left = 18

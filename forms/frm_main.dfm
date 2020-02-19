@@ -121,7 +121,7 @@ object frmMain: TfrmMain
       Header.Background = 16765595
       Header.Height = 20
       Header.MainColumn = 1
-      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs]
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
       NodeAlignment = naFromTop
       ParentFont = False
       PopupMenu = pmProject
@@ -147,6 +147,7 @@ object frmMain: TfrmMain
         end
         item
           Position = 1
+          Text = 'Project Items'
           Width = 180
         end>
     end
@@ -251,7 +252,7 @@ object frmMain: TfrmMain
               Color = clCream
               Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coResizable, coShowDropMark, coVisible, coAllowFocus]
               Position = 0
-              Text = 'Material'
+              Text = 'Stack / Material'
               Width = 334
             end
             item
@@ -278,10 +279,6 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -566,10 +563,6 @@ object frmMain: TfrmMain
       object TabSheet1: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Gradients'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
@@ -630,68 +623,6 @@ object frmMain: TfrmMain
       1206
       143)
     StyleName = 'Ribbon - Luna'
-    object rbStructure: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Project'
-      Index = 0
-      object RibbonGroup1: TRibbonGroup
-        Left = 484
-        Top = 3
-        Width = 68
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Period'
-        GroupIndex = 2
-      end
-      object RibbonGroup2: TRibbonGroup
-        Left = 554
-        Top = 3
-        Width = 134
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Layer'
-        GroupIndex = 3
-      end
-      object RibbonGroup13: TRibbonGroup
-        Left = 270
-        Top = 3
-        Width = 212
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project Items'
-        GroupIndex = 1
-      end
-      object RibbonGroup6: TRibbonGroup
-        Left = 690
-        Top = 3
-        Width = 139
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Data'
-        GroupIndex = 4
-      end
-      object rbngrpProject: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 264
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project'
-        GroupIndex = 0
-      end
-      object grpMaterial: TRibbonGroup
-        Left = 831
-        Top = 3
-        Width = 51
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Materials'
-        GroupIndex = 5
-      end
-    end
     object rbnpgCalc: TRibbonPage
       Left = 0
       Top = 50
@@ -1026,6 +957,68 @@ object frmMain: TfrmMain
         GroupIndex = 7
       end
     end
+    object rbStructure: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Project'
+      Index = 0
+      object RibbonGroup1: TRibbonGroup
+        Left = 484
+        Top = 3
+        Width = 68
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Stack'
+        GroupIndex = 2
+      end
+      object RibbonGroup2: TRibbonGroup
+        Left = 554
+        Top = 3
+        Width = 134
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Layer'
+        GroupIndex = 3
+      end
+      object RibbonGroup13: TRibbonGroup
+        Left = 270
+        Top = 3
+        Width = 212
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project Items'
+        GroupIndex = 1
+      end
+      object RibbonGroup6: TRibbonGroup
+        Left = 690
+        Top = 3
+        Width = 139
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Data'
+        GroupIndex = 4
+      end
+      object rbngrpProject: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 264
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project'
+        GroupIndex = 0
+      end
+      object grpMaterial: TRibbonGroup
+        Left = 831
+        Top = 3
+        Width = 51
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Materials'
+        GroupIndex = 5
+      end
+    end
     object rbnpgHelp: TRibbonPage
       Left = 0
       Top = 50
@@ -1034,9 +1027,9 @@ object frmMain: TfrmMain
       Caption = 'Help'
       Index = 2
       object rbngrpHelp: TRibbonGroup
-        Left = 365
+        Left = 371
         Top = 3
-        Width = 97
+        Width = 94
         Height = 86
         ActionManager = ActionManager
         Caption = 'Help'
@@ -1054,7 +1047,7 @@ object frmMain: TfrmMain
       object rbngrpTutorials: TRibbonGroup
         Left = 202
         Top = 3
-        Width = 161
+        Width = 167
         Height = 86
         ActionManager = ActionManager
         Caption = 'Tutorials'
@@ -6389,7 +6382,7 @@ object frmMain: TfrmMain
             Caption = '&ActionClientItem0'
             CommandStyle = csControl
             CommandProperties.Width = 150
-            CommandProperties.ContainedControl = DockSite3.DockTab
+            CommandProperties.ContainedControl = edtrPeriod.RzPanel2
           end>
       end
       item
@@ -6573,7 +6566,7 @@ object frmMain: TfrmMain
         Items = <
           item
             Action = HelpContent
-            Caption = '&Help content'
+            Caption = '&Manual'
             ImageIndex = 26
             ShortCut = 112
             CommandProperties.ButtonSize = bsLarge
@@ -6618,7 +6611,7 @@ object frmMain: TfrmMain
         Items = <
           item
             Action = actQuickStart
-            Caption = '&Quick Start'
+            Caption = '&Getting started'
             ImageIndex = 23
             CommandProperties.ButtonSize = bsLarge
           end
@@ -6946,7 +6939,7 @@ object frmMain: TfrmMain
     end
     object actQuickStart: TAction
       Category = 'Help'
-      Caption = 'Quick'#13#10'Start'
+      Caption = 'Getting Started'
       OnExecute = actQuickStartExecute
     end
     object actHelpStructure: TAction
@@ -7071,19 +7064,19 @@ object frmMain: TfrmMain
       item
         Action = PeriodAdd
         Description.Strings = (
-          'Add new period (group of layers)')
+          'Add new stack (group of layers)')
         Header = 'Add'
       end
       item
         Action = PeriodInsert
         Description.Strings = (
-          'Insert new period')
+          'Insert new stack')
         Header = 'Insert'
       end
       item
         Action = PeriodDelete
         Description.Strings = (
-          'Delete selected period')
+          'Delete selected stack')
         Header = 'Delete'
       end
       item
@@ -7241,6 +7234,54 @@ object frmMain: TfrmMain
       item
         Action = HelpContent
         Header = 'Help content'
+      end
+      item
+        Action = actHomePage
+        Header = 'Home'#13#10'Page'
+      end
+      item
+        Action = actCheckUpdate
+        Header = 'Check for'#13#10'Update'
+      end
+      item
+        Action = actWiki
+        Header = 'Wiki'
+      end
+      item
+        Action = actSupport
+        Header = 'Support'
+      end
+      item
+        Action = actQuickStart
+        Header = 'Quick'#13#10'Start'
+      end
+      item
+        Action = actHelpStructure
+        Header = 'Multilayer'#13#10'Structure'
+      end
+      item
+        Action = actHelpFitting
+        Header = 'Fitting'
+      end
+      item
+        Action = ProjectItemExtension
+        Header = 'New extension'
+      end
+      item
+        Action = DataCopyClpbrd
+        Header = 'DataCopyClpbrd'
+      end
+      item
+        Action = DataExport
+        Header = 'DataExport'
+      end
+      item
+        Action = CalcFitting
+        Header = 'Fitting'
+      end
+      item
+        Action = actShowLibrary
+        Header = 'Show Library'
       end>
     Left = 608
     Top = 376
