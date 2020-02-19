@@ -2,7 +2,7 @@
   *
   *   X-Ray Calc 2
   *
-  *   Copyright (C) 2001-2018 Oleksiy Penkov
+  *   Copyright (C) 2001-2020 Oleksiy Penkov
   *   e-mail: oleksiy.penkov@gmail.com
   *
   ****************************************************************************** *)
