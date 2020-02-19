@@ -198,12 +198,12 @@ object frmMain: TfrmMain
       Width = 954
       Height = 489
       Hint = ''
-      ActivePage = tsStructure
+      ActivePage = tsCalc
       Align = alClient
       Color = clSkyBlue
       UseColoredTabs = True
       ParentColor = False
-      TabIndex = 0
+      TabIndex = 1
       TabOrder = 0
       OnChange = PagesChange
       FixedDimension = 19
@@ -237,6 +237,7 @@ object frmMain: TfrmMain
           TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toUseExplorerTheme]
           TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect, toMultiSelect, toRightClickSelect]
           OnBeforeCellPaint = TreeBeforeCellPaint
+          OnChange = TreeChange
           OnClick = TreeClick
           OnCreateEditor = TreeCreateEditor
           OnDblClick = TreeDblClick
@@ -318,6 +319,7 @@ object frmMain: TfrmMain
           Title.Text.Strings = (
             'TChart')
           Title.Visible = False
+          OnAllowScroll = ChartAllowScroll
           OnClickLegend = ChartClickLegend
           OnZoom = ChartZoom
           DepthAxis.Automatic = False
@@ -458,6 +460,7 @@ object frmMain: TfrmMain
             Left = 221
             Top = 4
             Width = 25
+            Visible = False
             Alignment = taRightJustify
             Caption = 'Ri'
           end
@@ -465,6 +468,7 @@ object frmMain: TfrmMain
             Left = 221
             Top = 28
             Width = 25
+            Visible = False
             Alignment = taRightJustify
             Caption = 'S'
           end
@@ -478,6 +482,7 @@ object frmMain: TfrmMain
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
+            Visible = False
             Caption = '0.00'
           end
           object StatusRi: TRzStatusPane
@@ -490,12 +495,14 @@ object frmMain: TfrmMain
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
+            Visible = False
             Caption = '0.00'
           end
           object RzStatusPane8: TRzStatusPane
             Left = 325
             Top = 4
             Width = 25
+            Visible = False
             Alignment = taRightJustify
             Caption = 'D'
           end
@@ -509,6 +516,7 @@ object frmMain: TfrmMain
             Font.Name = 'Symbol'
             Font.Style = []
             ParentFont = False
+            Visible = False
             Alignment = taRightJustify
             Caption = 'd'
           end
@@ -522,6 +530,7 @@ object frmMain: TfrmMain
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
+            Visible = False
             Caption = '0.00'
           end
           object StatusD: TRzStatusPane
@@ -534,6 +543,7 @@ object frmMain: TfrmMain
             Font.Name = 'MS Sans Serif'
             Font.Style = [fsBold]
             ParentFont = False
+            Visible = False
             Caption = '0.00'
           end
           object btnChartScale: TRzBitBtn
@@ -562,6 +572,7 @@ object frmMain: TfrmMain
       end
       object TabSheet1: TRzTabSheet
         Color = clSkyBlue
+        TabVisible = False
         Caption = 'Gradients'
         object chGradients: TChart
           AlignWithMargins = True
@@ -7346,6 +7357,7 @@ object frmMain: TfrmMain
     Top = 465
   end
   object pmStructure: TPopupMenu
+    OnPopup = pmStructurePopup
     Left = 712
     Top = 368
     object Edit1: TMenuItem
@@ -7356,29 +7368,37 @@ object frmMain: TfrmMain
     object N4: TMenuItem
       Caption = '-'
     end
-    object Copy1: TMenuItem
+    object miCopy: TMenuItem
       Action = LayerCopy
     end
-    object Cut1: TMenuItem
+    object miCut: TMenuItem
       Action = LayerCut
     end
     object N2: TMenuItem
       Caption = '-'
     end
-    object Add1: TMenuItem
+    object miAddStack: TMenuItem
+      Action = PeriodAdd
+      Caption = 'Add stack'
+    end
+    object miAdd: TMenuItem
       Action = LayerAdd
       Caption = 'Add layer'
     end
-    object Insert1: TMenuItem
+    object miInsert: TMenuItem
       Action = LayerInsert
       Caption = 'Insert layer'
     end
     object N3: TMenuItem
       Caption = '-'
     end
-    object Delete1: TMenuItem
+    object miDelete: TMenuItem
       Action = LayerDelete
       Caption = 'Delete layer'
+    end
+    object miDeleteStack: TMenuItem
+      Action = PeriodDelete
+      Caption = 'Delete stack'
     end
   end
   object UnZip: TAbUnZipper

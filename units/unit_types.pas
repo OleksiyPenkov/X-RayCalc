@@ -23,7 +23,7 @@ type
 
   // Inteface Data types
 
-  TRowType = (rtPeriod, rtLayer, rtSubstrate);
+  TRowType = (rtStack, rtLayer, rtSubstrate);
   TProjectGroupType = (gtModel, gtData);
   TProjRowType = (prGroup, prItem, prFolder, prExtension);
   TExtentionType = (etNone, etGradient, etProfile);
@@ -76,7 +76,7 @@ type
           s: string[40];
           r: string[40];
           Fixed: boolean);
-      rtPeriod:
+      rtStack:
         (N: integer);
 
   end;
@@ -184,7 +184,7 @@ end;
 
 function TRowData.IsPeriod: boolean;
 begin
-  Result := (RowType = rtPeriod);
+  Result := (RowType = rtStack);
 end;
 
 end.

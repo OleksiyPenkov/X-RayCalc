@@ -152,11 +152,11 @@ type
     FileAppend: TAction;
     CalcGenetic: TAction;
     pmStructure: TPopupMenu;
-    Add1: TMenuItem;
-    Copy1: TMenuItem;
-    Cut1: TMenuItem;
-    Delete1: TMenuItem;
-    Insert1: TMenuItem;
+    miAdd: TMenuItem;
+    miCopy: TMenuItem;
+    miCut: TMenuItem;
+    miDelete: TMenuItem;
+    miInsert: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
     Edit1: TMenuItem;
@@ -195,6 +195,8 @@ type
     actShowLibrary: TAction;
     UnZip: TAbUnZipper;
     Zip: TAbZipper;
+    miAddStack: TMenuItem;
+    miDeleteStack: TMenuItem;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -318,6 +320,10 @@ type
     procedure DataExportExecute(Sender: TObject);
     procedure CalcFittingExecute(Sender: TObject);
     procedure actShowLibraryExecute(Sender: TObject);
+    procedure TreeChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure pmStructurePopup(Sender: TObject);
+    procedure ChartAllowScroll(Sender: TChartAxis; var AMin, AMax: Double;
+      var AllowScroll: Boolean);
   private
     { Private declarations }
     FSubstrate: PVirtualNode;
@@ -341,6 +347,9 @@ type
 
     FVersionChecker: TVersionCheckerThread;
     FProjectVersion: Byte;
+    IsStack: Boolean;
+    IsLayer: Boolean;
+    IsSubs: Boolean;
 
     procedure FillLayerCombos;
     procedure EditRow;
@@ -455,7 +464,7 @@ begin
     Data := Tree.GetNodeData(Node);
     if Data.RowType = rtLayer then
        frmFitWin.SetData(Data);
-    if (Data.RowType = rtPeriod) and (Node <> Tree.GetFirst) then
+    if (Data.RowType = rtStack) and (Node <> Tree.GetFirst) then
        frmFitWin.AddSeparator;
     Node := Tree.GetPrevious(Node);
   end;
@@ -631,6 +640,12 @@ begin
 
   StatusMaxX.Caption := FloatToStrF(mx, ffFixed, 5, 4);
   StatusRi.Caption := FloatToStrF(RI, ffFixed, 7, 4);
+end;
+
+procedure TfrmMain.ChartAllowScroll(Sender: TChartAxis; var AMin, AMax: Double;
+  var AllowScroll: Boolean);
+begin
+  AllowScroll := False;
 end;
 
 procedure TfrmMain.ChartClickLegend(Sender: TCustomChart; Button: TMouseButton;
@@ -1012,7 +1027,7 @@ begin
         edtrLayer.ShowModal;
         Tree.RepaintNode(Tree.FocusedNode);
       end;
-    rtPeriod:
+    rtStack:
       begin
         edtrPeriod.Data := Data;
         if edtrPeriod.ShowModal = mrOk then
@@ -1262,7 +1277,7 @@ begin
   MP := Tree.AddChild(Nil);
   Data := Tree.GetNodeData(MP);
   Data.Text := 'Main';
-  Data.RowType := rtPeriod;
+  Data.RowType := rtStack;
   Data.N := 200;
 
   ML := Tree.AddChild(MP);
@@ -1490,7 +1505,7 @@ begin
     Exit;
 
   Data := Tree.GetNodeData(Node);
-  if Data.RowType = rtPeriod then
+  if Data.RowType = rtStack then
     Node := Tree.GetFirstChild(Node);
 
   if Node <> nil then
@@ -1569,7 +1584,7 @@ begin
 
   Node := Tree.InsertNode(FSubstrate, amInsertBefore);
   Data := Tree.GetNodeData(Node);
-  Data.RowType := rtPeriod;
+  Data.RowType := rtStack;
   Data.Text := Text;
   Data.N := 1;
 
@@ -1620,7 +1635,7 @@ begin
   Data := Tree.GetNodeData(Node);
   Data.Text := Text;
   Data.N := 1;
-  Data.RowType := rtPeriod;
+  Data.RowType := rtStack;
   Tree.Refresh;
 end;
 
@@ -1662,6 +1677,21 @@ begin
   pmiLinked.Visible := IsData and IsItem;
   if pmiLinked.Visible then
     pmiLinked.Checked := LastData = FLinkedData;
+end;
+
+procedure TfrmMain.pmStructurePopup(Sender: TObject);
+begin
+  miAddStack.Visible := IsSubs;
+
+  miInsert.Visible   := IsStack or IsLayer;
+  miAdd.Visible      := IsStack or IsLayer;
+  miDelete.Visible   := IsStack or IsLayer;
+  miInsert.Visible   := IsStack or IsLayer;
+  miCut.Visible      := IsLayer;
+  miCopy.Visible     := IsLayer;
+
+  miDeleteStack.Visible := IsStack;
+  miDelete.Visible      := IsLayer;
 end;
 
 procedure TfrmMain.ProjectAddFolderExecute(Sender: TObject);
@@ -2552,6 +2582,20 @@ begin
   end;
 end;
 
+procedure TfrmMain.TreeChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+var
+  Data: PRowData;
+begin
+  Data := Tree.GetNodeData(Node);
+
+  if Data <> nil then
+  begin
+    IsStack := Data.RowType = rtStack;
+    IsLayer := Data.RowType = rtLayer;
+    IsSubs  := Data.RowType = rtSubstrate;
+  end;
+end;
+
 procedure TfrmMain.TreeClick(Sender: TObject);
 begin
 //  Tree.EditNode(Tree.FocusedNode, Tree.FocusedColumn);
@@ -2577,7 +2621,6 @@ end;
 procedure TfrmMain.TreeFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   Data: PRowData;
-
 begin
   Data := Sender.GetNodeData(Node);
   Finalize(Data^);
@@ -2589,7 +2632,7 @@ var
   Data: PRowData;
 begin
   Data := Tree.GetNodeData(Node);
-  if Data.RowType = rtPeriod then
+  if Data.RowType = rtStack then
   begin
     case Column of
       0:
@@ -2655,7 +2698,7 @@ var
   Data: PRowData;
 begin
   Data := Tree.GetNodeData(Node);
-  if Data.RowType = rtPeriod then
+  if Data.RowType = rtStack then
     TargetCanvas.Font.Style := [fsBold];
 end;
 

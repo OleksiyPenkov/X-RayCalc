@@ -175,7 +175,7 @@ begin
   while Period <> Nil do
   begin
     Data := Tree.GetNodeData(Period);
-    if Data.RowType = rtPeriod then
+    if Data.RowType = rtStack then
       inc(LayersCount, Period.ChildCount * Data.N);
     Period := Tree.GetNextSibling(Period);
   end;
@@ -198,7 +198,7 @@ begin
   while Period <> Nil do
   begin
     Data := Tree.GetNodeData(Period);
-    if Data.RowType = rtPeriod then
+    if Data.RowType = rtStack then
     begin
       NL := Data.N;
 
