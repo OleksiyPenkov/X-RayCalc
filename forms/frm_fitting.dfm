@@ -138,5 +138,15 @@ object frmFitWin: TfrmFitWin
         '0.01'
         '0.001')
     end
+    object btnHelp: TRzButton
+      Left = 8
+      Top = 5
+      Caption = 'Help'
+      ParentColor = True
+      TextHighlightColor = 16776176
+      TextShadowColor = 16776176
+      TabOrder = 1
+      OnClick = btnHelpClick
+    end
   end
 end

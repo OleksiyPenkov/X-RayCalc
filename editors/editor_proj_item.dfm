@@ -5,7 +5,7 @@ object edtrProjectItem: TedtrProjectItem
   Caption = 'Properties'
   ClientHeight = 216
   ClientWidth = 382
-  Color = clBtnFace
+  Color = 16765595
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -24,11 +24,13 @@ object edtrProjectItem: TedtrProjectItem
     Height = 41
     Align = alBottom
     BorderOuter = fsFlatRounded
+    ParentColor = True
     TabOrder = 0
     object btnOK: TRzBitBtn
       Left = 19
       Top = 10
       Width = 102
+      ParentColor = True
       TabOrder = 0
       TabStop = False
       OnClick = btnOKClick
@@ -38,6 +40,7 @@ object edtrProjectItem: TedtrProjectItem
       Left = 244
       Top = 10
       Width = 109
+      Color = 16765595
       TabOrder = 1
       TabStop = False
       Kind = bkCancel
@@ -51,6 +54,7 @@ object edtrProjectItem: TedtrProjectItem
     Height = 163
     Align = alClient
     BorderOuter = fsFlatRounded
+    ParentColor = True
     TabOrder = 1
     object Color: TLabel
       Left = 257
@@ -82,10 +86,37 @@ object edtrProjectItem: TedtrProjectItem
       Top = 24
       Width = 111
       Height = 22
+      CustomColors.Strings = (
+        'Default'
+        'Black'
+        'Maroon'
+        'Green'
+        'Olive'
+        'Navy'
+        'Purple'
+        'Teal'
+        'Gray'
+        'Silver'
+        'Red'
+        'Lime'
+        'Yellow'
+        'Blue'
+        'Fuchsia'
+        'Aqua')
       ColorDlgOptions = [cdFullOpen, cdSolidColor]
       DefaultColor = clBlue
-      SelectedColor = clBlue
+      ShowDefaultColor = False
+      ShowSysColors = False
       TabOrder = 2
     end
+  end
+  object rzfrmcntrlr1: TRzFrameController
+    FlatButtonColor = 16765595
+    FocusColor = 16776176
+    FrameVisible = True
+    FramingPreference = fpCustomFraming
+    ParentColor = True
+    Left = 179
+    Top = 91
   end
 end

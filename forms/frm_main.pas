@@ -391,7 +391,6 @@ type
     procedure WMStartEditing(var Message: TMessage); message WM_STARTEDITING;
     procedure FillExtensionPeriods(var Periods: TCombobox);
     procedure SaveData;
-    procedure OpenHelpFile(FileName: string);
     procedure MoveModels(const OldPath, NewPath: string);
 
   public
@@ -1372,7 +1371,7 @@ end;
 
 procedure TfrmMain.HelpHelpExecute(Sender: TObject);
 begin
-  //
+  OpenHelpFile('Manual.pdf');
 end;
 
 procedure TfrmMain.LayerAddExecute(Sender: TObject);
@@ -2163,14 +2162,6 @@ end;
 procedure TfrmMain.actQuickStartExecute(Sender: TObject);
 begin
   OpenHelpFile('Getting_Started.pdf');
-end;
-
-procedure TfrmMain.OpenHelpFile(FileName: string);
-var
-  FullPath: string;
-begin
-  FullPath := Settings.AppPath + 'docs\' + FileName;
-  SimpleShellExecute(Handle, FullPath);
 end;
 
 procedure TfrmMain.actShowLibraryExecute(Sender: TObject);

@@ -678,7 +678,7 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 1
+    TabIndex = 2
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -746,41 +746,6 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Materials'
         GroupIndex = 5
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 315
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 140
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 146
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
       end
     end
     object rbnpgCalc: TRibbonPage
@@ -1115,6 +1080,41 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
+      end
+    end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 315
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 140
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 146
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
       end
     end
   end
@@ -6916,17 +6916,17 @@ object frmMain: TfrmMain
       OnExecute = DataNormExecute
     end
     object FilePlotToFile: TAction
-      Category = 'Help'
+      Category = 'Materials'
       Caption = 'Save plot as file ...'
       OnExecute = FilePlotToFileExecute
     end
     object FileCopyPlotBMP: TAction
-      Category = 'Help'
+      Category = 'Plot'
       Caption = 'Copy as BMP'
       OnExecute = FileCopyPlotBMPExecute
     end
     object FilePlotCopyWMF: TAction
-      Category = 'Help'
+      Category = 'Plot'
       Caption = 'Copy as WMF'
       OnExecute = FilePlotCopyWMFExecute
     end

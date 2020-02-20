@@ -17,7 +17,9 @@ uses
   RibbonActnMenus,
   Vcl.ActnMan,
   StdCtrls,
-  Windows;
+  Windows,
+  Messages,
+  Dialogs;
 
 function ClearDir(const DirectoryName: string; Full: boolean = False): boolean;
 
@@ -35,6 +37,7 @@ procedure Normalize(K: single;  var Series: TLineSeries);
 procedure FillElementsList(Path: string; var List: TListBox);
 
 function RecentItemsToString(Items: TActionClients): string;
+procedure OpenHelpFile(FileName: string);
 
 function SimpleShellExecute(
   hWnd: HWND;
@@ -54,13 +57,25 @@ uses
   ShellApi,
   System.Character,
   Vcl.Forms,
-  VCLTee.TeEngine;
+  VCLTee.TeEngine,
+  frm_main,
+  unit_settings;
 
 const
   TabSeparator = #9;
 
 
 
+procedure OpenHelpFile(FileName: string);
+var
+  FullPath: string;
+begin
+  FullPath := Settings.AppPath + 'docs\' + FileName;
+  if FileExists(FullPath) then
+     SimpleShellExecute(frmMain.Handle, FullPath)
+  else
+    MessageDlg('Can''t find help files! Check "docs/" folder!', mtError, [mbOk], 0);
+end;
 
 
 

@@ -5,7 +5,7 @@ object edtrLayer: TedtrLayer
   Caption = 'Layer properties'
   ClientHeight = 115
   ClientWidth = 358
-  Color = clBtnFace
+  Color = 16765595
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -24,8 +24,8 @@ object edtrLayer: TedtrLayer
     Height = 62
     Align = alClient
     BorderOuter = fsFlatRounded
+    ParentColor = True
     TabOrder = 0
-    ExplicitWidth = 314
     object Label1: TLabel
       Left = 9
       Top = 10
@@ -123,12 +123,13 @@ object edtrLayer: TedtrLayer
     Height = 41
     Align = alBottom
     BorderOuter = fsFlatRounded
+    ParentColor = True
     TabOrder = 1
-    ExplicitWidth = 314
     object btnOK: TRzBitBtn
       Left = 201
       Top = 10
       Width = 66
+      ParentColor = True
       TabOrder = 2
       TabStop = False
       OnClick = btnOKClick
@@ -138,6 +139,7 @@ object edtrLayer: TedtrLayer
       Left = 273
       Top = 10
       Width = 72
+      ParentColor = True
       TabOrder = 3
       TabStop = False
       Kind = bkCancel
@@ -148,6 +150,7 @@ object edtrLayer: TedtrLayer
       Top = 8
       Width = 39
       Caption = '<<'
+      ParentColor = True
       TabOrder = 0
       TabStop = False
       OnClick = btnNextClick
@@ -158,6 +161,7 @@ object edtrLayer: TedtrLayer
       Top = 8
       Width = 39
       Caption = '>>'
+      ParentColor = True
       TabOrder = 1
       TabStop = False
       OnClick = btnNextClick

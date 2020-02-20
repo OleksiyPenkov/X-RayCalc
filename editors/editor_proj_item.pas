@@ -13,7 +13,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, RzButton, ExtCtrls, RzPanel, unit_types, StdCtrls, RzCmboBx;
+  Dialogs, RzButton, ExtCtrls, RzPanel, unit_types, StdCtrls, RzCmboBx, RzCommon;
 
 type
   TedtrProjectItem = class(TForm)
@@ -25,6 +25,7 @@ type
     mmDescription: TMemo;
     Color: TLabel;
     cbColor: TRzColorComboBox;
+    rzfrmcntrlr1: TRzFrameController;
     procedure FormShow(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
   private

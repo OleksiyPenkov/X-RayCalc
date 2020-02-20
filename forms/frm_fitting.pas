@@ -28,10 +28,12 @@ type
     Label4: TLabel;
     cbbStep: TComboBox;
     Label5: TLabel;
+    btnHelp: TRzButton;
     procedure FormCreate(Sender: TObject);
     procedure cbbStepChange(Sender: TObject);
     procedure LinkChecked(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure btnHelpClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -58,6 +60,9 @@ var
 
 implementation
 
+uses
+  unit_helpers;
+
 
 {$R *.dfm}
 
@@ -80,6 +85,11 @@ begin
   Separator.ShowGradient := True;
 
   ClientHeight := ClientHeight + 5;
+end;
+
+procedure TfrmFitWin.btnHelpClick(Sender: TObject);
+begin
+  OpenHelpFile('Getting_Started.pdf');
 end;
 
 procedure TfrmFitWin.cbbStepChange(Sender: TObject);
