@@ -24,7 +24,6 @@ object edtrGradient: TedtrGradient
     Align = alBottom
     BorderOuter = fsFlatRounded
     TabOrder = 0
-    ExplicitTop = 197
     DesignSize = (
       217
       41)
@@ -57,7 +56,6 @@ object edtrGradient: TedtrGradient
     Align = alClient
     BorderOuter = fsFlatRounded
     TabOrder = 1
-    ExplicitHeight = 188
     object Label1: TLabel
       Left = 9
       Top = 10

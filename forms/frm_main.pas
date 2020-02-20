@@ -20,7 +20,7 @@ uses
   RzSpnEdt, RzButton, RzRadChk, RzRadGrp, XPMan, RzStatus, ActiveX, ScreenTips,
   Menus, GestureMgr, System.Actions,
   unit_VersionChecker, Vcl.Buttons, VclTee.TeeGDIPlus, System.ImageList,
-  editor_Gradient, unit_consts, AbBase, AbBrowse, AbZBrows, AbUnzper, AbZipper, AbUtils;
+  editor_Gradient, unit_consts, AbBase, AbBrowse, AbZBrows, AbUnzper, AbZipper, AbUtils, System.IOUtils;
 
 
 type
@@ -143,7 +143,6 @@ type
     FileCopyPlotBMP: TAction;
     FilePlotCopyWMF: TAction;
     cbMinLimit: TRzComboBox;
-    FileAppend: TAction;
     CalcGenetic: TAction;
     pmStructure: TPopupMenu;
     miAdd: TMenuItem;
@@ -287,7 +286,6 @@ type
     procedure FilePlotToFileExecute(Sender: TObject);
     procedure FileCopyPlotBMPExecute(Sender: TObject);
     procedure FilePlotCopyWMFExecute(Sender: TObject);
-    procedure FileAppendExecute(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure CalcGeneticExecute(Sender: TObject);
     procedure FormGesture(Sender: TObject; const EventInfo: TGestureEventInfo;
@@ -394,6 +392,7 @@ type
     procedure FillExtensionPeriods(var Periods: TCombobox);
     procedure SaveData;
     procedure OpenHelpFile(FileName: string);
+    procedure MoveModels(const OldPath, NewPath: string);
 
   public
     { Public declarations }
@@ -789,7 +788,7 @@ begin
   Data.ExtType := etGradient;
   Data.Rate := 0.14;
   Data.ParentLayerName := 'C';
-  Data.ParentPeriodName := 'Main';
+  Data.ParentStackName := 'Main';
   Data.Form := gtLine;
 
   Project.ClearSelection;
@@ -1050,53 +1049,6 @@ begin
   end;
 end;
 
-procedure TfrmMain.FileAppendExecute(Sender: TObject);
-var
-  i: Integer;
-  Data: PProjectData;
-  Node: PVirtualNode;
-  Datas: array of TProjectData;
-begin
-  i := 0;
-  SetLength(Datas, 0);
-  Node := Project.GetFirst;
-  while Node <> nil do
-  begin
-    SetLength(Datas, i + 1);
-    Data := Project.GetNodeData(Node);
-    Datas[i] := Data^;
-    Node := Project.GetNext(Node);
-    inc(i);
-  end;
-
-  if dlgOpenProject.Execute then
-  begin
-    LoadProject(dlgOpenProject.FileName, False);
-    for i := 0 to High(Datas) do
-    begin
-      if Datas[i].RowType <> prGroup then
-      begin
-        if Datas[i].Group = gtModel then
-        begin
-          Node := Project.AddChild(FModelsRoot);
-          Data := Project.GetNodeData(Node);
-          Data^ := Datas[i];
-          Chart.AddSeries(Data.Curve);
-          inc(FLastID);
-        end
-        else
-        begin
-          Node := Project.AddChild(FDataRoot);
-          Data := Project.GetNodeData(Node);
-          Data^ := Datas[i];
-          Chart.AddSeries(Data.Curve);
-        end;
-      end;
-    end;
-  end;
-
-end;
-
 procedure TfrmMain.FileCloseExecute(Sender: TObject);
 begin
   Close;
@@ -1186,12 +1138,12 @@ begin
 end;
 
 procedure TfrmMain.FileSaveAsExecute(Sender: TObject);
+var
+  OldProjectDir: string;
 begin
-{$IFDEF DEMO}
-  ShowMessage('Not available in the demo version!');
-{$ELSE}
   if dlgSaveProject.Execute then
   begin
+    OldProjectDir := FProjectDir;
     FProjectName := ExtractFileName(dlgSaveProject.FileName);
     FProjectDir := IncludeTrailingPathDelimiter
       (Settings.TempPath + FProjectName);
@@ -1201,13 +1153,13 @@ begin
 
     CreateDir(FProjectDir);
     SaveData;
+    MoveModels(OldProjectDir, FProjectDir);
     SaveProject(dlgSaveProject.FileName);
     LoadProject(dlgSaveProject.FileName);
     FProjectFileName := dlgSaveProject.FileName;
 
     AddRecentItem(FProjectFileName, True);
   end;
-{$ENDIF}
 end;
 
 procedure TfrmMain.FileSaveExecute(Sender: TObject);
@@ -1345,7 +1297,7 @@ begin
   if DirectoryExists(Settings.TempDir) then
     ClearDir(Settings.TempDir);
 
-   Settings.RecentFiles := RecentItemsToString(rbngrpProject.Items[3].Items);
+   Settings.RecentFiles := RecentItemsToString(rbngrpProject.Items[2].Items);
 
   Settings.SplitterPosition := Panel.Width;
   Settings.MinLimit := cbMinLimit.Text;
@@ -2053,7 +2005,7 @@ begin
   Stream.Read(Data.ExtType, SizeOf(Data.ExtType));
   Stream.Read(Data.Rate, SizeOf(Data.Rate));
   Data.ParentLayerName := GetString;
-  Data.ParentPeriodName := GetString;
+  Data.ParentStackName := GetString;
   Stream.Read(Data.Form, SizeOf(Data.Form));
   Stream.Read(Data.Subj, SizeOf(Data.Subj));
 end;
@@ -2106,7 +2058,7 @@ begin
   Stream.Write(Data.ExtType, SizeOf(Data.ExtType));
   Stream.Write(Data.Rate, SizeOf(Data.Rate));
   WriteString(Data.ParentLayerName);
-  WriteString(Data.ParentPeriodName);
+  WriteString(Data.ParentStackName);
   Stream.Write(Data.Form, SizeOf(Data.Form));
   Stream.Write(Data.Subj, SizeOf(Data.Subj));
 end;
@@ -2224,19 +2176,19 @@ var
   S: string;
 begin
 
-  for I := 0 to rbngrpProject.Items[3].Items.Count - 1 do
+  for I := 0 to rbngrpProject.Items[2].Items.Count - 1 do
   begin
-    s := rbngrpProject.Items[3].Items[i].Caption;
+    s := rbngrpProject.Items[2].Items[i].Caption;
     s := StringReplace(S, '&', '', []);
     if S = FileName then
     begin
-      rbngrpProject.Items[3].Items[i].Index := 0;
+      rbngrpProject.Items[2].Items[i].Index := 0;
       Exit;
     end;
   end;
 
 
-  Item := rbngrpProject.Items[3].Items.Add;
+  Item := rbngrpProject.Items[2].Items.Add;
 
   if First then Item.Index := 0;
 
@@ -2249,8 +2201,8 @@ begin
     ImageIndex := 20;
   end;
 
-  if rbngrpProject.Items[3].Items.Count > 10 then
-    rbngrpProject.Items[3].Items.Delete(10);
+  if rbngrpProject.Items[2].Items.Count > 10 then
+    rbngrpProject.Items[2].Items.Delete(10);
 
 end;
 
@@ -2296,6 +2248,21 @@ begin
     begin
       SeriesToFile(Data.Curve, DataName(Data));
     end;
+    Node := Project.GetNext(Node);
+  end;
+end;
+
+procedure TfrmMain.MoveModels;
+var
+  Node: PVirtualNode;
+  Data: PProjectData;
+begin
+  Node := Project.GetFirst;
+  while Node <> nil do
+  begin
+    Data := Project.GetNodeData(Node);
+    if Data.IsModel then
+       TFile.Move(Format('%smodel_%d.bin', [OldPath, Data.ID]), ModelName(Data));
     Node := Project.GetNext(Node);
   end;
 end;

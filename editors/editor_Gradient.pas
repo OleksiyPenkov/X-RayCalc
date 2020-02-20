@@ -46,7 +46,7 @@ uses frm_main;
 procedure TedtrGradient.btnOKClick(Sender: TObject);
 begin
   FData.Title := edTitle.Text;
-  FData.ParentPeriodName := cbPeriod.Text;
+  FData.ParentStackName := cbPeriod.Text;
   FData.ParentLayerName := cbLayer.Text;
   FData.Rate := edRate.Value;
   FData.Form := gtLine;
@@ -62,7 +62,7 @@ end;
 procedure TedtrGradient.FormShow(Sender: TObject);
 begin
   edTitle.Text := string(FData.Title);
-  cbPeriod.Text := string(FData.ParentPeriodName);
+  cbPeriod.Text := string(FData.ParentStackName);
   cbLayer.Text := string(FData.ParentLayerName);
   edRate.Value := FData.Rate;
   rgSubject.ItemIndex := Ord(FData.Subj);

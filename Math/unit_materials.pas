@@ -51,7 +51,7 @@ begin
     begin
       SetLength(Result, Count + 1);
       Result[Count].Rate := Data.Rate;
-      Result[Count].ParentPeriod := Data.ParentPeriodName;
+      Result[Count].ParentPeriod := Data.ParentStackName;
       Result[Count].ParentLayer := Data.ParentLayerName;
       Result[Count].Form := Data.Form;
       Result[Count].Subj := Data.Subj;

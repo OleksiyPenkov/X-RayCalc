@@ -54,7 +54,7 @@ object edtrPeriod: TedtrPeriod
       Width = 112
       Height = 21
       TabOrder = 1
-      Text = 'edTitle'
+      Text = 'Stack'
     end
   end
   object RzPanel2: TRzPanel

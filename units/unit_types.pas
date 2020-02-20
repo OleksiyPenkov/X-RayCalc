@@ -35,6 +35,9 @@ type
     Title: string;
     Group: TProjectGroupType;
     Description: string;
+
+    function IsModel:Boolean;
+
     case RowType: TProjRowType of
       prGroup, prFolder:
         ();
@@ -49,7 +52,7 @@ type
           case ExtType: TExtentionType of
             etGradient:
               (ParentLayerName: string [40];
-               ParentPeriodName: string [40];
+               ParentStackName: string [40];
                Rate: single;
                Form: TGradientForm;
                Subj: TGradientSubject;
@@ -171,6 +174,11 @@ type
 implementation
 
 { TRowData }
+
+function TProjectData.IsModel:Boolean;
+begin
+  Result := (Group = gtModel) and (RowType = prItem);
+end;
 
 function TRowData.HV: single;
 begin

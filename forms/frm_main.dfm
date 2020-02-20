@@ -678,7 +678,6 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 1
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -686,103 +685,6 @@ object frmMain: TfrmMain
       1206
       143)
     StyleName = 'Ribbon - Luna'
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 371
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 196
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 202
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
-      end
-    end
-    object rbStructure: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Project'
-      Index = 0
-      object RibbonGroup1: TRibbonGroup
-        Left = 484
-        Top = 3
-        Width = 68
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Stack'
-        GroupIndex = 2
-      end
-      object RibbonGroup2: TRibbonGroup
-        Left = 554
-        Top = 3
-        Width = 134
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Layer'
-        GroupIndex = 3
-      end
-      object RibbonGroup13: TRibbonGroup
-        Left = 270
-        Top = 3
-        Width = 212
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project Items'
-        GroupIndex = 1
-      end
-      object RibbonGroup6: TRibbonGroup
-        Left = 690
-        Top = 3
-        Width = 139
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Data'
-        GroupIndex = 4
-      end
-      object rbngrpProject: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 264
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project'
-        GroupIndex = 0
-      end
-      object grpMaterial: TRibbonGroup
-        Left = 831
-        Top = 3
-        Width = 51
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Materials'
-        GroupIndex = 5
-      end
-    end
     object rbnpgCalc: TRibbonPage
       Left = 0
       Top = 50
@@ -1115,6 +1017,103 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
+      end
+    end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 315
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 140
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 146
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
+      end
+    end
+    object rbStructure: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Project'
+      Index = 0
+      object RibbonGroup1: TRibbonGroup
+        Left = 460
+        Top = 3
+        Width = 68
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Stack'
+        GroupIndex = 2
+      end
+      object RibbonGroup2: TRibbonGroup
+        Left = 530
+        Top = 3
+        Width = 134
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Layer'
+        GroupIndex = 3
+      end
+      object RibbonGroup13: TRibbonGroup
+        Left = 246
+        Top = 3
+        Width = 212
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project Items'
+        GroupIndex = 1
+      end
+      object RibbonGroup6: TRibbonGroup
+        Left = 666
+        Top = 3
+        Width = 139
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Data'
+        GroupIndex = 4
+      end
+      object rbngrpProject: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 240
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project'
+        GroupIndex = 0
+      end
+      object grpMaterial: TRibbonGroup
+        Left = 807
+        Top = 3
+        Width = 51
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Materials'
+        GroupIndex = 5
       end
     end
   end
@@ -6176,10 +6175,6 @@ object frmMain: TfrmMain
                 ShortCut = 114
               end
               item
-                Visible = False
-                Action = FileAppend
-              end
-              item
                 Items = <
                   item
                     Action = FileSave
@@ -6445,7 +6440,6 @@ object frmMain: TfrmMain
             Caption = '&ActionClientItem0'
             CommandStyle = csControl
             CommandProperties.Width = 150
-            CommandProperties.ContainedControl = edtrPeriod.RzPanel2
           end>
       end
       item
@@ -6540,11 +6534,7 @@ object frmMain: TfrmMain
             Action = FileNew
             Caption = '&New'
             ImageIndex = 0
-          end
-          item
-            Action = FileAppend
-            Caption = 'App&end'
-            ImageIndex = 1
+            CommandProperties.ButtonSize = bsLarge
           end
           item
             Caption = '-'
@@ -6661,12 +6651,6 @@ object frmMain: TfrmMain
             Caption = '&Support'
             ImageIndex = 22
             CommandProperties.ButtonSize = bsLarge
-          end
-          item
-            Action = actCheckUpdate
-            Caption = '&Check for'#13#10'Update'
-            ImageIndex = 21
-            CommandProperties.ButtonSize = bsLarge
           end>
         ActionBar = rbngrpWebhelp
       end
@@ -6731,33 +6715,33 @@ object frmMain: TfrmMain
     Top = 256
     StyleName = 'Ribbon - Luna'
     object FileNew: TAction
-      Category = 'Help'
+      Category = 'Project'
       Caption = 'New project'
       ImageIndex = 0
       OnExecute = FileNewExecute
     end
     object FileOpen: TAction
-      Category = 'Help'
+      Category = 'Project'
       Caption = 'Open project ...'
       ImageIndex = 1
       ShortCut = 114
       OnExecute = FileOpenExecute
     end
     object FileSave: TAction
-      Category = 'Help'
+      Category = 'Project'
       Caption = 'Save project'
       ImageIndex = 2
       ShortCut = 16467
       OnExecute = FileSaveExecute
     end
     object FilePrint: TAction
-      Category = 'Help'
+      Category = 'Project'
       Caption = 'Print'
       ImageIndex = 3
       OnExecute = FilePrintExecute
     end
     object FileClose: TAction
-      Category = 'Help'
+      Category = 'Project'
       Caption = 'Exit'
       ImageIndex = 4
       OnExecute = FileCloseExecute
@@ -6875,7 +6859,7 @@ object frmMain: TfrmMain
       OnExecute = ResultCopyExecute
     end
     object FileSaveAs: TAction
-      Category = 'Help'
+      Category = 'Project'
       Caption = 'Save project As ...'
       ImageIndex = 2
       ShortCut = 113
@@ -6944,11 +6928,6 @@ object frmMain: TfrmMain
       Category = 'Help'
       Caption = 'Copy as WMF'
       OnExecute = FilePlotCopyWMFExecute
-    end
-    object FileAppend: TAction
-      Category = 'Help'
-      Caption = 'Append project ...'
-      OnExecute = FileAppendExecute
     end
     object CalcGenetic: TAction
       Category = 'Calc'
@@ -7277,10 +7256,6 @@ object frmMain: TfrmMain
       item
         Action = FilePlotCopyWMF
         Header = 'Copy as WMF'
-      end
-      item
-        Action = FileAppend
-        Header = 'Append project ...'
       end
       item
         Action = CalcGenetic
