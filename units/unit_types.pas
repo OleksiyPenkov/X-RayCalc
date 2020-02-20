@@ -70,8 +70,9 @@ type
 
     function HV: single;
 
-    function IsLayer: boolean;
-    function IsPeriod: boolean;
+    function IsLayer    : boolean;
+    function IsPeriod   : boolean;
+    function IsSubstrate: boolean;
 
     case RowType: TRowType of
       rtLayer:
@@ -193,6 +194,11 @@ end;
 function TRowData.IsPeriod: boolean;
 begin
   Result := (RowType = rtStack);
+end;
+
+function TRowData.IsSubstrate: boolean;
+begin
+  Result := (RowType = rtSubstrate);
 end;
 
 end.

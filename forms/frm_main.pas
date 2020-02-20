@@ -1488,10 +1488,12 @@ var
   Data: PRowData;
 begin
   Node := Tree.GetFirstSelected;
-  if (Node = nil) or (Node = FSubstrate) then
-    Exit;
+  if (Node = nil) then Exit;
 
   Data := Tree.GetNodeData(Node);
+
+  if Data.RowType = rtSubstrate then Exit;
+
 
   if Data.IsLayer then
     Node := Node.Parent;
@@ -1531,25 +1533,6 @@ begin
     FillLayerCombos;
 end;
 
-procedure TfrmMain.PeriodAddExecute(Sender: TObject);
-var
-  Data: PRowData;
-  Node: PVirtualNode;
-  Text: string;
-begin
-  Text := 'Period';
-
-  if not InputQuery('New period', 'Input a title', Text) then
-    Exit;
-
-  Node := Tree.InsertNode(FSubstrate, amInsertBefore);
-  Data := Tree.GetNodeData(Node);
-  Data.RowType := rtStack;
-  Data.Text := Text;
-  Data.N := 1;
-
-  Tree.Repaint;
-end;
 
 procedure TfrmMain.PeriodDeleteExecute(Sender: TObject);
 var
@@ -1580,23 +1563,59 @@ var
   Data: PRowData;
   Text: string;
 begin
-  Text := 'Period';
-  if not InputQuery('New period', 'Input a title', Text) then
+  Text := 'Stack';
+  if not InputQuery('New Stack', 'Input a title', Text) then
     Exit;
 
   Node := Tree.GetFirstSelected;
+  if Node = Nil then Node := Tree.GetFirst;
+
   Data := Tree.GetNodeData(Node);
 
   if Data.IsLayer then
     Node := Tree.InsertNode(Node.Parent, amInsertBefore)
   else
-    Node := Tree.InsertNode(Tree.GetFirstSelected, amInsertBefore);
+    Node := Tree.InsertNode(Node, amInsertBefore);
 
   Data := Tree.GetNodeData(Node);
   Data.Text := Text;
   Data.N := 1;
   Data.RowType := rtStack;
   Tree.Refresh;
+end;
+
+procedure TfrmMain.PeriodAddExecute(Sender: TObject);
+var
+  Data: PRowData;
+  Node: PVirtualNode;
+  Text: string;
+begin
+  Text := 'Stack';
+
+  if not InputQuery('New stack', 'Input a title', Text) then
+    Exit;
+
+  Node := Tree.GetFirstSelected;
+  if Node = Nil then
+      Node := Tree.GetFirst;
+
+  Data := Tree.GetNodeData(Node);
+
+  if Data.IsSubstrate then
+    Node := Tree.InsertNode(FSubstrate, amInsertBefore)
+  else
+    if Data.IsLayer then
+        Node := Tree.InsertNode(Node.Parent, amInsertAfter)
+      else
+        Node := Tree.InsertNode(Node, amInsertAfter);
+
+
+  Data := Tree.GetNodeData(Node);
+  Data.RowType := rtStack;
+  Data.Text := Text;
+  Data.N := 1;
+
+  Tree.Repaint;
 end;
 
 procedure TfrmMain.pmiEnabledClick(Sender: TObject);
