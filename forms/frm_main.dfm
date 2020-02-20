@@ -250,8 +250,6 @@ object frmMain: TfrmMain
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
-        ExplicitTop = 20
-        ExplicitHeight = 466
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -302,7 +300,6 @@ object frmMain: TfrmMain
           OnKeyDown = TreeKeyDown
           OnLoadNode = TreeLoadNode
           OnSaveNode = TreeSaveNode
-          ExplicitHeight = 460
           Columns = <
             item
               Color = clWhite
@@ -339,8 +336,6 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
-        ExplicitTop = 20
-        ExplicitHeight = 466
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -420,7 +415,6 @@ object frmMain: TfrmMain
           OnMouseDown = ChartMouseDown
           OnMouseMove = ChartMouseMove
           OnMouseUp = ChartMouseUp
-          ExplicitHeight = 404
           DefaultCanvas = 'TGDIPlusCanvas'
           PrintMargins = (
             5
@@ -439,7 +433,6 @@ object frmMain: TfrmMain
           BorderOuter = fsFlatRounded
           Color = clSkyBlue
           TabOrder = 1
-          ExplicitTop = 413
           DesignSize = (
             944
             50)
@@ -633,8 +626,6 @@ object frmMain: TfrmMain
         Color = clSkyBlue
         TabVisible = False
         Caption = 'Gradients'
-        ExplicitTop = 20
-        ExplicitHeight = 466
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
@@ -650,7 +641,6 @@ object frmMain: TfrmMain
           ZoomWheel = pmwNormal
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 460
           DefaultCanvas = 'TGDIPlusCanvas'
           ColorPaletteIndex = 13
           object Series1: TPointSeries
@@ -688,6 +678,7 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
+    TabIndex = 1
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -695,6 +686,103 @@ object frmMain: TfrmMain
       1206
       143)
     StyleName = 'Ribbon - Luna'
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 371
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 196
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 202
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
+      end
+    end
+    object rbStructure: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Project'
+      Index = 0
+      object RibbonGroup1: TRibbonGroup
+        Left = 484
+        Top = 3
+        Width = 68
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Stack'
+        GroupIndex = 2
+      end
+      object RibbonGroup2: TRibbonGroup
+        Left = 554
+        Top = 3
+        Width = 134
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Layer'
+        GroupIndex = 3
+      end
+      object RibbonGroup13: TRibbonGroup
+        Left = 270
+        Top = 3
+        Width = 212
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project Items'
+        GroupIndex = 1
+      end
+      object RibbonGroup6: TRibbonGroup
+        Left = 690
+        Top = 3
+        Width = 139
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Data'
+        GroupIndex = 4
+      end
+      object rbngrpProject: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 264
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project'
+        GroupIndex = 0
+      end
+      object grpMaterial: TRibbonGroup
+        Left = 831
+        Top = 3
+        Width = 51
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Materials'
+        GroupIndex = 5
+      end
+    end
     object rbnpgCalc: TRibbonPage
       Left = 0
       Top = 50
@@ -1027,103 +1115,6 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 371
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 196
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 202
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
-      end
-    end
-    object rbStructure: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Project'
-      Index = 0
-      object RibbonGroup1: TRibbonGroup
-        Left = 484
-        Top = 3
-        Width = 68
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Stack'
-        GroupIndex = 2
-      end
-      object RibbonGroup2: TRibbonGroup
-        Left = 554
-        Top = 3
-        Width = 134
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Layer'
-        GroupIndex = 3
-      end
-      object RibbonGroup13: TRibbonGroup
-        Left = 270
-        Top = 3
-        Width = 212
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project Items'
-        GroupIndex = 1
-      end
-      object RibbonGroup6: TRibbonGroup
-        Left = 690
-        Top = 3
-        Width = 139
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Data'
-        GroupIndex = 4
-      end
-      object rbngrpProject: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 264
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project'
-        GroupIndex = 0
-      end
-      object grpMaterial: TRibbonGroup
-        Left = 831
-        Top = 3
-        Width = 51
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Materials'
-        GroupIndex = 5
       end
     end
   end
@@ -6441,7 +6432,7 @@ object frmMain: TfrmMain
                 ImageIndex = 11
               end>
             Action = ResultSave
-            Caption = '&Save'
+            Caption = '&Export'
             ImageIndex = 16
             CommandProperties.ButtonSize = bsLarge
             CommandProperties.ButtonType = btSplit
