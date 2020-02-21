@@ -828,10 +828,10 @@ begin
   MD.H := 'substrate';
 
   Project.ClearSelection;
-  Project.Selected[Node] := True;
   Tree.SaveToFile(ModelName(Data));
   FActiveModel := Data;
   inc(FLastID);
+  Project.Selected[Node] := True;
 end;
 
 procedure TfrmMain.DeleteData(Node: PVirtualNode; Data: PProjectData);
@@ -2376,8 +2376,8 @@ begin
     CreateDir(FProjectDir);
   end;
 
-  UnZip.FileName := FileName;
   UnZip.BaseDirectory := FProjectDir;
+  UnZip.FileName := FileName;
   unZip.OpenArchive(FileName);
   unZip.ExtractFiles('*.*');
   unZip.CloseArchive;
