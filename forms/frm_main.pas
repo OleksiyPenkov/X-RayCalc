@@ -1601,7 +1601,7 @@ begin
   Data := Tree.GetNodeData(Node);
 
   if Data.IsSubstrate then
-    Node := Tree.InsertNode(FSubstrate, amInsertBefore)
+    Node := Tree.InsertNode(Node, amInsertBefore)
   else
     if Data.IsLayer then
         Node := Tree.InsertNode(Node.Parent, amInsertAfter)
