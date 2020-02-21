@@ -1163,14 +1163,10 @@ end;
 
 procedure TfrmMain.FileSaveExecute(Sender: TObject);
 begin
-{$IFDEF DEMO}
-  ShowMessage('Not available in the demo version!');
-{$ELSE}
   if FProjectName = 'noname.xrcx' then
     FileSaveAsExecute(Sender)
   else
     SaveProject(FProjectFileName);
-{$ENDIF}
 end;
 
 procedure TfrmMain.FillLayerCombos;

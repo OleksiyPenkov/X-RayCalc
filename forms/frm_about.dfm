@@ -2,10 +2,10 @@ object frmAbout: TfrmAbout
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = 'X-Ray Calc'
+  Caption = 'About'
   ClientHeight = 286
   ClientWidth = 278
-  Color = clBtnFace
+  Color = 16765595
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,10 +16,12 @@ object frmAbout: TfrmAbout
   PixelsPerInch = 96
   TextHeight = 13
   object RzLabel1: TRzLabel
-    Left = 0
-    Top = 0
-    Width = 278
+    AlignWithMargins = True
+    Left = 3
+    Top = 3
+    Width = 272
     Height = 46
+    Margins.Bottom = 10
     Align = alTop
     Alignment = taCenter
     Caption = 'X-Ray calc'
@@ -30,17 +32,81 @@ object frmAbout: TfrmAbout
     Font.Style = [fsBold]
     ParentFont = False
     TextStyle = tsShadow
-    ExplicitLeft = 40
-    ExplicitTop = 8
+    ExplicitLeft = 0
+    ExplicitTop = 0
     ExplicitWidth = 190
   end
-  object RzVersionInfoStatus1: TRzVersionInfoStatus
-    Left = 88
-    Top = 64
+  object RzVersionInfoStatus2: TRzVersionInfoStatus
+    AlignWithMargins = True
+    Left = 3
+    Top = 62
+    Width = 272
+    Margins.Bottom = 0
     FrameStyle = fsNone
+    Align = alTop
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
     Alignment = taCenter
-    Field = vifProductVersion
+    Field = vifFileVersion
     VersionInfo = RzVersionInfo1
+    ExplicitLeft = 8
+    ExplicitTop = 168
+  end
+  object RzLabel2: TLabel
+    AlignWithMargins = True
+    Left = 3
+    Top = 92
+    Width = 272
+    Height = 16
+    Margins.Top = 10
+    Margins.Bottom = 10
+    Align = alTop
+    Alignment = taCenter
+    Caption = '(c) 2001-2020 Oleksiy Penkov'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ExplicitTop = 79
+    ExplicitWidth = 169
+  end
+  object Label1: TLabel
+    AlignWithMargins = True
+    Left = 3
+    Top = 121
+    Width = 272
+    Height = 32
+    Align = alTop
+    Alignment = taCenter
+    Caption = 'Zhejiang University'#13#10'ZJUI Institute'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ExplicitTop = 94
+    ExplicitWidth = 108
+  end
+  object RzURLLabel1: TRzURLLabel
+    Left = 32
+    Top = 208
+    Width = 220
+    Height = 13
+    Caption = 'https://github.com/OleksiyPenkov/X-RayCalc/'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clNavy
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsUnderline]
+    ParentFont = False
+    URL = 'https://github.com/OleksiyPenkov/X-RayCalc/'
   end
   object BitBtn1: TBitBtn
     Left = 96
@@ -53,7 +119,7 @@ object frmAbout: TfrmAbout
   end
   object RzVersionInfo1: TRzVersionInfo
     FilePath = 'xraycalc.exe'
-    Left = 48
-    Top = 200
+    Left = 16
+    Top = 160
   end
 end

@@ -20,7 +20,10 @@ type
     RzLabel1: TRzLabel;
     BitBtn1: TBitBtn;
     RzVersionInfo1: TRzVersionInfo;
-    RzVersionInfoStatus1: TRzVersionInfoStatus;
+    RzVersionInfoStatus2: TRzVersionInfoStatus;
+    RzLabel2: TLabel;
+    Label1: TLabel;
+    RzURLLabel1: TRzURLLabel;
   private
     { Private declarations }
   public
