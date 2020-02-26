@@ -2142,12 +2142,12 @@ end;
 
 procedure TfrmMain.actHelpFittingExecute(Sender: TObject);
 begin
-  OpenHelpFile('Fitting_Manual.pdf');
+  OpenHelpFile('Fitting_Tutorial.pdf');
 end;
 
 procedure TfrmMain.actHelpStructureExecute(Sender: TObject);
 begin
-  OpenHelpFile('Structure_Manual.pdf');
+  OpenHelpFile('Model_Tutorial.pdf');
 end;
 
 procedure TfrmMain.actHomePageExecute(Sender: TObject);
