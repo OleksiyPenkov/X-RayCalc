@@ -1583,6 +1583,7 @@ procedure TfrmMain.PeriodAddExecute(Sender: TObject);
 var
   Data: PRowData;
   Node: PVirtualNode;
+  LastStack: PVirtualNode;
   Text: string;
 begin
   Text := 'Stack';
@@ -1591,8 +1592,21 @@ begin
     Exit;
 
   Node := Tree.GetFirstSelected;
-  if Node = Nil then
-      Node := Tree.GetFirst;
+  if Node = Nil then //find the last stack
+  begin
+    LastStack:= nil;
+
+    Node := Tree.GetFirst;
+    while node <> nil do
+    begin
+      Data := Tree.GetNodeData(Node);
+      if Data.IsPeriod then LastStack := Node;
+      Node := Tree.GetNext(Node);
+    end;
+
+    if LastStack <> Nil then Node := LastStack
+       else Node := Tree.GetFirst;
+  end;
 
   Data := Tree.GetNodeData(Node);
 
