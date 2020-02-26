@@ -42,7 +42,7 @@ type
     protected
 
     public
-      constructor Create(Free: boolean = True);
+      constructor Create;
       procedure Run;
       //property ResSeries: TLineSeries write SetResSeries;
 
@@ -110,7 +110,7 @@ begin
   end;
 end;
 
-constructor TCalc.Create(Free: boolean);
+constructor TCalc.Create;
 begin
   inherited Create;
   FLimit := 5E-7;

@@ -14,7 +14,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, TeEngine, Series, ExtCtrls, TeeProcs, Chart, StdCtrls, RzLabel,
-  RzButton, Mask, RzEdit, RzTabs, RzPanel, unit_types, math_globals;
+  RzButton, Mask, RzEdit, RzTabs, RzPanel, unit_types, math_globals,
+  VclTee.TeeGDIPlus;
 
 type
   TfrmFit = class(TForm)
@@ -28,7 +29,6 @@ type
     RzButton3: TRzButton;
     procedure RzButton3Click(Sender: TObject);
     procedure RzButton4Click(Sender: TObject);
-    procedure RzButton2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -130,11 +130,6 @@ begin
   end;
 end;
 
-
-procedure TfrmFit.RzButton2Click(Sender: TObject);
-begin
-//
-end;
 
 procedure TfrmFit.RzButton3Click(Sender: TObject);
 begin

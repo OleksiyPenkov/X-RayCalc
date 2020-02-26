@@ -24,20 +24,20 @@ uses
 function ClearDir(const DirectoryName: string; Full: boolean = False): boolean;
 
 procedure SeriesToClipboard(Series: TLineSeries);
-procedure SeriesToFile(Series: TLineSeries; FileName: string);
+procedure SeriesToFile(Series: TLineSeries; const FileName: string);
 
 procedure SeriesFromClipboard(Series: TLineSeries);
-procedure SeriesFromFile(Series: TLineSeries; FileName: string; NoHeader: boolean; out Descr: string); forward;
+procedure SeriesFromFile(Series: TLineSeries; const FileName: string; out Descr: string); forward;
 
 function SeriesToData( Series: TLineSeries): TDataArray;
 procedure AutoMerge( var Series: TLineSeries);
 procedure ManualMerge( X, K: single; var Series: TLineSeries);
 procedure Normalize(K: single;  var Series: TLineSeries);
 
-procedure FillElementsList(Path: string; var List: TListBox);
+procedure FillElementsList(const Path: string; var List: TListBox);
 
 function RecentItemsToString(Items: TActionClients): string;
-procedure OpenHelpFile(FileName: string);
+procedure OpenHelpFile(const FileName: string);
 
 function SimpleShellExecute(
   hWnd: HWND;
@@ -66,7 +66,7 @@ const
 
 
 
-procedure OpenHelpFile(FileName: string);
+procedure OpenHelpFile(const FileName: string);
 var
   FullPath: string;
 begin
@@ -116,7 +116,7 @@ begin
   );
 end;
 
-procedure FillElementsList(Path: string; var List: TListBox);
+procedure FillElementsList(const Path: string; var List: TListBox);
 const
   Mask = '*.bin';
 var
@@ -147,6 +147,7 @@ const
 var
   i : integer;
 begin
+  Result := 0;
   for I := 0 to 1 do
     if (D > DV[i] * 0.5) and (D < DV[i] * 1.5) then
     begin
@@ -298,7 +299,7 @@ begin
   end;
 end;
 
-procedure SeriesToFile(Series: TLineSeries; FileName: string);
+procedure SeriesToFile(Series: TLineSeries; const FileName: string);
 var
   MyStringList: TStringList;
 begin
@@ -324,7 +325,7 @@ begin
   end;
 end;
 
-procedure SeriesFromFile(Series: TLineSeries; FileName: string; NoHeader: boolean; out Descr: string);
+procedure SeriesFromFile(Series: TLineSeries; const FileName: string; out Descr: string);
 var
   MyStringList: TStringList;
   S: string;
@@ -336,7 +337,7 @@ begin
     S :=  MyStringList[0];
     if Pos('Sample', S) > 0 then
     begin
-      for I := 1 to 21 do
+      for i := 1 to 21 do
         MyStringList.Delete(0);
     end;
     while S[1] = '*' do
@@ -357,6 +358,7 @@ var
   SearchRec: TSearchRec;
   ACurrentDir: string;
 begin
+  Result := False;
   ACurrentDir := IncludeTrailingPathDelimiter(DirectoryName);
 
   try

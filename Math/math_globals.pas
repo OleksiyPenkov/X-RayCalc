@@ -270,29 +270,29 @@ begin
     raise EInOutError.Create(Msg);
   end;
   try
-  try
     Stream := TMemoryStream.Create;
-    Stream.LoadFromFile(fn);
+    try
+      Stream.LoadFromFile(fn);
 
-    s := GetString;
-    Size := SizeOf(Na);
+      s := GetString;
+      Size := SizeOf(Na);
 
-    Stream.Read(Na, Size);
-    Stream.Read(Nro, Size);
+      Stream.Read(Na, Size);
+      Stream.Read(Nro, Size);
 
-    e1 := 0;
-    e2 := 0;
-    while (e2 <= E) and (Stream.Position < Stream.Size) do
-    begin
-      e1 := e2;
-      f1 := f2;
-      Stream.Read(e2, Size);
-      Stream.Read(f2.re, Size);
-      Stream.Read(f2.im, Size);
-    end;
-    finally
-      Stream.Free;
-    end;
+      e1 := 0;
+      e2 := 0;
+      while (e2 <= E) and (Stream.Position < Stream.Size) do
+      begin
+        e1 := e2;
+        f1 := f2;
+        Stream.Read(e2, Size);
+        Stream.Read(f2.re, Size);
+        Stream.Read(f2.im, Size);
+      end;
+      finally
+        Stream.Free;
+      end;
   except
     on E: EInOutError do
     begin

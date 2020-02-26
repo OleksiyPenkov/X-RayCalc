@@ -33,7 +33,6 @@ object frmFit: TfrmFit
       Top = 3
       Width = 358
       Height = 265
-      BackWall.Brush.Color = clWhite
       BackWall.Brush.Style = bsClear
       Gradient.EndColor = 8454143
       Gradient.Visible = True
@@ -43,52 +42,35 @@ object frmFit: TfrmFit
       Title.Visible = False
       View3D = False
       TabOrder = 0
+      DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series1: TLineSeries
-        Marks.Arrow.Visible = True
-        Marks.Callout.Brush.Color = clBlack
-        Marks.Callout.Arrow.Visible = True
-        Marks.ShapeStyle = fosRoundRectangle
-        Marks.Visible = False
         SeriesColor = 8421631
         Brush.BackColor = clDefault
         Pointer.InflateMargins = True
         Pointer.Style = psRectangle
-        Pointer.Visible = False
         XValues.Name = 'X'
         XValues.Order = loAscending
         YValues.Name = 'Y'
         YValues.Order = loNone
       end
       object Series2: TLineSeries
-        Marks.Arrow.Visible = True
-        Marks.Callout.Brush.Color = clBlack
-        Marks.Callout.Arrow.Visible = True
-        Marks.ShapeStyle = fosRoundRectangle
-        Marks.Visible = False
         SeriesColor = 8388672
         Brush.BackColor = clDefault
         LinePen.Color = 8388672
         Pointer.InflateMargins = True
         Pointer.Style = psRectangle
-        Pointer.Visible = False
         XValues.Name = 'X'
         XValues.Order = loAscending
         YValues.Name = 'Y'
         YValues.Order = loNone
       end
       object Series3: TPointSeries
-        Marks.Arrow.Visible = True
-        Marks.Callout.Brush.Color = clBlack
-        Marks.Callout.Arrow.Visible = True
-        Marks.ShapeStyle = fosRoundRectangle
-        Marks.Visible = False
         ClickableLine = False
         Pointer.Brush.Gradient.EndColor = 10708548
         Pointer.Gradient.EndColor = 10708548
         Pointer.InflateMargins = True
         Pointer.Style = psRectangle
-        Pointer.Visible = True
         XValues.Name = 'X'
         XValues.Order = loAscending
         YValues.Name = 'Y'

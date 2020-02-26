@@ -889,7 +889,7 @@ begin
   Data.Color := Data.Curve.Color;
   Data.Curve.LinePen.Width := 2;
 
-  SeriesFromFile(Data.Curve, dlgLoadData.FileName, True, Data.Description);
+  SeriesFromFile(Data.Curve, dlgLoadData.FileName, Data.Description);
   Chart.AddSeries(Data.Curve);
 
   SeriesToFile(Data.Curve, DataName(Data));
@@ -2485,7 +2485,7 @@ begin
       Data.Curve.Color := Data.Color;
       Data.Curve.Visible := Data.Visible;
       Data.Curve.LinePen.Width := 2;
-      SeriesFromFile(Data.Curve, DataName(Data), True, s);
+      SeriesFromFile(Data.Curve, DataName(Data), s);
       Chart.AddSeries(Data.Curve);
     end
     else
