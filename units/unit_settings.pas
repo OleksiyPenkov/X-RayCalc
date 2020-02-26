@@ -39,7 +39,6 @@ type
 
     function GetTempPath: string;
     function GetSystemFileName(fileType: TXRCSystemFile): string;
-    function GetDataPath: string;
     function GetSettingsFileName: string;
     function GetWorkPath: string;
   public
@@ -52,7 +51,6 @@ type
     property TempDir: string read FTempDir write FTempDir;
     property TempPath: string read GetTempPath;
     property DataDir: string read FDataDir;
-    property DataPath: string read GetDataPath;
     property WorkDir: string read FWorkDir;
     property WorkPath: string read GetWorkPath;
 
@@ -168,11 +166,6 @@ end;
 function TXRCSettings.GetSettingsFileName: string;
 begin
   Result := WorkPath + FIniFileName;
-end;
-
-function TXRCSettings.GetDataPath: string;
-begin
-
 end;
 
 function TXRCSettings.GetSystemFileName(fileType: TXRCSystemFile): string;

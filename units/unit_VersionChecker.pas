@@ -57,22 +57,23 @@ var
   Stream: TMemoryStream;
   SL: TStringList;
 begin
+
+  Synchronize(SetStatus);
+
+  FIdHTTP := TIdHTTP.Create(nil);
+  //SetProxySettings(FidHTTP);
+  Stream := TMemoryStream.Create;
+  SL := TStringList.Create;
+
   try
-    Synchronize(SetStatus);
-
-    FIdHTTP := TIdHTTP.Create(nil);
-    //SetProxySettings(FidHTTP);
-    Stream := TMemoryStream.Create;
-    SL := TStringList.Create;
-
     FIdHTTP.Get(FURL, Stream);
     Stream.Seek(0, soBeginning);
     SL.LoadFromStream(Stream);
 
     if (SL.Count > 0) and (SL[0] > FOldVersion) then
     begin
+      Form := TfrmNewVersionInfo.Create(Application.MainForm);
       try
-        Form := TfrmNewVersionInfo.Create(Application.MainForm);
         Application.MainForm.Enabled := False;
         Form.lblVersion.Caption := SL[0];
         Form.lblURL.Caption := SL[1];

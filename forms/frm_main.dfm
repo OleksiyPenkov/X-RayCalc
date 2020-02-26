@@ -293,7 +293,6 @@ object frmMain: TfrmMain
           OnAdvancedHeaderDraw = TreeAdvancedHeaderDraw
           OnBeforeCellPaint = TreeBeforeCellPaint
           OnChange = TreeChange
-          OnClick = TreeClick
           OnCreateEditor = TreeCreateEditor
           OnDblClick = TreeDblClick
           OnEditing = TreeEditing
@@ -340,10 +339,6 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Calculation'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3

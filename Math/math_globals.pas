@@ -17,7 +17,7 @@ uses
   unit_types,
   Classes;
 
-procedure ReadHenke(N: string; E, L: single; var f: TComplex;
+procedure ReadHenke(const N: string; E, L: single; var f: TComplex;
   var Na, Nro: single);
 
 procedure Convolute(Width: single; var Series: TLineSeries);
@@ -186,7 +186,7 @@ begin
      Result := f1;
 end;
 
-procedure ReadHenkeTXT(N: string; E, L: single; var f: TComplex;
+procedure ReadHenkeTXT(const N: string; E, L: single; var f: TComplex;
   var Na, Nro: single);
 var
   fl: TextFile;
@@ -236,7 +236,7 @@ begin
   f.im := Interp(e1, e2, f1.im, f2.im, E);
 end;
 
-procedure ReadHenke(N: string; E, L: single; var f: TComplex; var Na, Nro: single);
+procedure ReadHenke(const N: string; E, L: single; var f: TComplex; var Na, Nro: single);
 var
   fn, s, Msg: string;
   e1, e2: single;

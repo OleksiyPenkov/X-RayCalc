@@ -29,7 +29,7 @@ type
     FLayers: TLayers;
     FLimit: single;
 
-    CD: TThreadParams;
+    FCD: TThreadParams;
 
     FTree: TVirtualStringTree;
     FChart: TChart;
@@ -47,7 +47,7 @@ type
       //property ResSeries: TLineSeries write SetResSeries;
 
       property Layers: TLayers write FLayers;
-      property CalcData: TThreadParams write CD;
+      property CalcData: TThreadParams write FCD;
       property ExpValues: TDataArray write FData;
       property Limit: single write FLimit;
       property Results: TDataArray read FResult;
@@ -102,7 +102,7 @@ begin
   for i := 0 to N - 1 do
   begin
     FResult[i].t := StartTeta + i * Step;
-    R := RefCalc((FResult[i].t) / CD.K, CD.Lambda);
+    R := RefCalc((FResult[i].t) / FCD.K, FCD.Lambda);
     if R > FLimit then
       FResult[i].R := R
     else
@@ -118,11 +118,11 @@ end;
 
 procedure TCalc.Run;
 begin
-  case CD.Mode of
+  case FCD.Mode of
     cmTheta:
-      CalcTet(CD.StartT, CD.EndT, CD.N);
+      CalcTet(FCD.StartT, FCD.EndT, FCD.N);
     cmLambda:
-      CalcLambda(CD.StartL, CD.EndL, CD.Theta, CD.N);
+      CalcLambda(FCD.StartL, FCD.EndL, FCD.Theta, FCD.N);
   end;
 end;
 
@@ -132,10 +132,11 @@ var
   i: integer;
   a1, a2, b1, b2, Im: TComplex;
 
-  function RCalc: single;
+  procedure RCalc;
   var
     i: integer;
   begin
+
     for i := High(FLayers) - 1 downto 0 do
     begin
       a1 := MulRZ(FLayers[i + 1].L * 2, FLayers[i + 1].K);
@@ -173,7 +174,7 @@ begin
     s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr(sin_t)));
     // s:=4*Pi*sqrt(cos(t)*sqrt(s1))/Lambda;
     s := c * sqrt(cos_t * sqrt(s1));
-    case CD.RF of
+    case FCD.RF of
       rfError:
         ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
       rfExp:
@@ -194,7 +195,7 @@ begin
   FLayers[ High(FLayers)].R.Im := 0;
   RCalc;
   Rs := sqr(AbsZ(FLayers[0].R));
-  if CD.P = cmSP then
+  if FCD.P = cmSP then
   begin
     { Rp }
     for i := 0 to Length(FLayers) - 2 do
@@ -207,7 +208,7 @@ begin
       s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr(sin_t)));
       // s:=4*Pi*sqrt(cos(t)*sqrt(s1))/Lambda;
       s := c * sqrt(cos_t * sqrt(s1));
-      case CD.RF of
+      case FCD.RF of
         rfError:
           ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
         rfExp:

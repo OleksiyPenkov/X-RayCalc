@@ -310,7 +310,6 @@ type
       Column: TColumnIndex; var Allowed: Boolean);
     procedure TreeFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure Edit1Click(Sender: TObject);
-    procedure TreeClick(Sender: TObject);
     procedure TreeDblClick(Sender: TObject);
     procedure DataCopyClpbrdExecute(Sender: TObject);
     procedure DataExportExecute(Sender: TObject);
@@ -351,6 +350,7 @@ type
 
     FVersionChecker: TVersionCheckerThread;
     FProjectVersion: Byte;
+
     IsStack: Boolean;
     IsLayer: Boolean;
     IsSubs: Boolean;
@@ -363,14 +363,14 @@ type
 
     procedure DeleteModel(Node: PVirtualNode; Data: PProjectData);
 
-    procedure SaveProject(FileName: string);
-    procedure LoadProject(FileName: string; Clear: Boolean = True);
+    procedure SaveProject(const FileName: string);
+    procedure LoadProject(const FileName: string; Clear: Boolean = True);
     procedure PrintMax;
     procedure CreateNewModel(Node: PVirtualNode);
 
     function ModelName(Data: PProjectData): string;
     function DataName(Data: PProjectData): string;
-    procedure DeleteFolder(Node: PVirtualNode; Data: PProjectData);
+    procedure DeleteFolder(Node: PVirtualNode);
     procedure DeleteData(Node: PVirtualNode; Data: PProjectData);
     function TreeToStr: string;
 
@@ -387,7 +387,7 @@ type
       var CallHelp: Boolean): Boolean;
     procedure FinalizeCalc;
     procedure CreateNewExtension(Node: PVirtualNode);
-    procedure DeleteExtension(Node: PVirtualNode; Data: PProjectData);
+    procedure DeleteExtension(Node: PVirtualNode);
     procedure WMStartEditing(var Message: TMessage); message WM_STARTEDITING;
     procedure FillExtensionPeriods(var Periods: TCombobox);
     procedure SaveData;
@@ -400,7 +400,7 @@ type
 
     FActiveModel, FActiveData, FLinkedData: PProjectData;
     procedure GetNextLayer;
-    procedure AddResult(S: string);
+    procedure AddResult(const S: string);
     procedure AddRecentItem(const FileName: string;const First:boolean = False);
     procedure FillExtensionLayres(const Period: string; var Layres: TCombobox);
   end;
@@ -550,7 +550,6 @@ begin
       case rgCalcMode.ItemIndex of
         0:begin
             CD.Mode := cmTheta;
-            CD.Lambda := StrToFloat(edLambda.Text);
             CD.Lambda := StrToFloat(edLambda.Text);
             CD.StartT := StartT;
             CD.EndT   := EndT;
@@ -842,7 +841,7 @@ begin
   Project.Refresh;
 end;
 
-procedure TfrmMain.DeleteExtension(Node: PVirtualNode; Data: PProjectData);
+procedure TfrmMain.DeleteExtension(Node: PVirtualNode);
 begin
   Project.DeleteNode(Node);
   Project.Refresh;
@@ -1342,6 +1341,7 @@ end;
 
 function TfrmMain.OnHelpHandler(Command: Word; Data: NativeInt; var CallHelp: Boolean): Boolean;
 begin
+  Result := True;
   if Data = 1 then
     HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 0)
   else
@@ -1816,7 +1816,7 @@ begin
   EditProjectItem;
 end;
 
-procedure TfrmMain.DeleteFolder(Node: PVirtualNode; Data: PProjectData);
+procedure TfrmMain.DeleteFolder(Node: PVirtualNode);
 begin
   if Node.ChildCount = 0 then
     Project.DeleteNode(Node)
@@ -1976,9 +1976,9 @@ begin
   if IsData and IsItem then
     DeleteData(LastNode, LastData);
   if IsFolder then
-    DeleteFolder(LastNode, LastData);
+    DeleteFolder(LastNode);
   if IsExtension then
-    DeleteExtension(LastNode, LastData);
+    DeleteExtension(LastNode);
   ProjectChange(Tree, Nil);
 end;
 
@@ -2226,7 +2226,7 @@ begin
 
 end;
 
-procedure TfrmMain.AddResult(S: string);
+procedure TfrmMain.AddResult(const S: string);
 begin
   RT.Add(S);
 end;
@@ -2287,13 +2287,13 @@ begin
   end;
 end;
 
-procedure TfrmMain.SaveProject(FileName: string);
+procedure TfrmMain.SaveProject(const FileName: string);
 var
   INF: TMemIniFile;
 begin
-  try
-    INF := TMemIniFile.Create(FProjectDir + PARAMETERS_FILE_NAME);
+  INF := TMemIniFile.Create(FProjectDir + PARAMETERS_FILE_NAME);
 
+  try
     INF.WriteString('PARAMS', 'N', edN.Text);
     INF.WriteInteger('PARAMS', 'Mode', rgCalcMode.ItemIndex);
     INF.WriteInteger('PARAMS', 'Polarisation', rgPolarisation.ItemIndex);
@@ -2361,7 +2361,7 @@ begin
   frmFit.ShowModal;
 end;
 
-procedure TfrmMain.LoadProject(FileName: string; Clear: Boolean);
+procedure TfrmMain.LoadProject(const FileName: string; Clear: Boolean);
 var
   INF: TMemIniFile;
 
@@ -2392,9 +2392,8 @@ begin
   unZip.ExtractFiles('*.*');
   unZip.CloseArchive;
 
+  INF := TMemIniFile.Create(FProjectDir + PARAMETERS_FILE_NAME);
   try
-    INF := TMemIniFile.Create(FProjectDir + PARAMETERS_FILE_NAME);
-
     edN.Text := INF.ReadString('PARAMS', 'N', '1000');
     rgCalcMode.ItemIndex := INF.ReadInteger('PARAMS', 'Mode', 0);
     rgPolarisation.ItemIndex := INF.ReadInteger('PARAMS', 'Polarisation', 0);
@@ -2621,11 +2620,6 @@ begin
     IsLayer := Data.RowType = rtLayer;
     IsSubs  := Data.RowType = rtSubstrate;
   end;
-end;
-
-procedure TfrmMain.TreeClick(Sender: TObject);
-begin
-//  Tree.EditNode(Tree.FocusedNode, Tree.FocusedColumn);
 end;
 
 procedure TfrmMain.TreeCreateEditor(Sender: TBaseVirtualTree;
