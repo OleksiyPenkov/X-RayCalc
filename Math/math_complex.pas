@@ -13,7 +13,8 @@ interface
 
 uses
   Math,
-  SysUtils;
+  SysUtils,
+  System.VarCmplx;
 
 type
   TComplex = record
@@ -32,7 +33,7 @@ function Imag(Z: TComplex): single;
 { Utility functions }
 
 { true if S is a valid complex string }
-function IsValidComplexString(S: string): boolean;
+function IsValidComplexString(const S: string): boolean;
 { true if Z is a valid complex number }
 function IsValidComplexNumber(Z: TComplex): boolean;
 { retun boolean as string }
@@ -40,7 +41,7 @@ function BoolToString(B: boolean): string;
 { convert Complex to a string }
 function ComplexToString(Z: TComplex): string;
 { convert string to a TComplex }
-function StringToComplex(S: String): TComplex;
+function StringToComplex(const S: String): TComplex;
 
 { Standard operators (+,-,*,/) for complex numbers }
 
@@ -133,7 +134,12 @@ function PowRZ(R: single; Z: TComplex): TComplex;
 
 implementation
 
+const
+  Sqrt22 = 0.7071067812;
+
 { Conversion }
+
+
 
 { Convert R and I to complex }
 function ToComplex(R, I: single): TComplex;
@@ -143,7 +149,7 @@ begin
 end;
 
 { true if S is a valid complex string }
-function IsValidComplexString(S: string): boolean;
+function IsValidComplexString(const S: string): boolean;
 begin
   Result := True;
   try
@@ -215,7 +221,7 @@ end;
   To avoid this, call IsValidComplexString first.
 }
 
-function StringToComplex(S: string): TComplex;
+function StringToComplex(const S: string): TComplex;
 begin
   Result.Im := StrToFloat(S);
 end;
@@ -504,24 +510,25 @@ end;
 { return the Square root of Z: sqrt(x+yi) }
 function SqrtZ(Z: TComplex): TComplex;
 var
-  a, B: single;
+  LValue: Single;
 begin
   if (Z.Re = 0) and (Z.Im = 0) then
     Result := ToComplex(1, 0)
-  else
-  begin
-    a := Sqrt((Abs(Z.Re) + AbsZ(Z)) * 0.5);
-    if Z.Re >= 0 then
-      B := Z.Im / (a + a)
+  else begin
+    LValue := AbsZ(Z);
+    if Z.Re > 0 then
+    begin
+      LValue := LValue + Z.Re;
+      Result := ToComplex(Sqrt(LValue / 2), Z.Im / Sqrt(LValue * 2));
+    end
     else
     begin
+      LValue := LValue - Z.Re;
       if Z.Im < 0 then
-        B := -a
+        Result := ToComplex(Abs(Z.Im) / Sqrt(LValue * 2), -Sqrt(LValue / 2))
       else
-        B := a;
-      a := Z.Im / (B + B);
+        Result := ToComplex(Abs(Z.Im) / Sqrt(LValue * 2), Sqrt(LValue / 2));
     end;
-    Result := ToComplex(a, B);
   end;
 end;
 
