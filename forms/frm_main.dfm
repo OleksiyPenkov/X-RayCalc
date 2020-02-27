@@ -177,7 +177,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 45
+          Width = 41
         end
         item
           Position = 1
@@ -232,7 +232,7 @@ object frmMain: TfrmMain
       Width = 954
       Height = 489
       Hint = ''
-      ActivePage = tsCalc
+      ActivePage = tsGradients
       Align = alClient
       Color = clSkyBlue
       UseColoredTabs = True
@@ -243,17 +243,13 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
-      TabIndex = 1
+      TabIndex = 2
       TabOrder = 0
       OnChange = PagesChange
       FixedDimension = 22
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Structure'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -625,14 +621,9 @@ object frmMain: TfrmMain
           end
         end
       end
-      object TabSheet1: TRzTabSheet
+      object tsGradients: TRzTabSheet
         Color = clSkyBlue
-        TabVisible = False
         Caption = 'Gradients'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
@@ -641,6 +632,7 @@ object frmMain: TfrmMain
           Height = 457
           Cursor = crCross
           Legend.Alignment = laTop
+          Legend.Visible = False
           Title.Text.Strings = (
             'TChart')
           Title.Visible = False
@@ -685,7 +677,7 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 2
+    TabIndex = 1
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -753,6 +745,41 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Materials'
         GroupIndex = 5
+      end
+    end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 315
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 140
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 146
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
       end
     end
     object rbnpgCalc: TRibbonPage
@@ -1087,41 +1114,6 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 315
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 140
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 146
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
       end
     end
   end
@@ -6389,11 +6381,17 @@ object frmMain: TfrmMain
       item
         Items = <
           item
+            Items = <
+              item
+                Action = CalcAll
+                ShortCut = 123
+              end>
             Action = CalcRun
             Caption = '&Calc'
             ImageIndex = 9
             ShortCut = 116
             CommandProperties.ButtonSize = bsLarge
+            CommandProperties.ButtonType = btDropDown
           end
           item
             Caption = '-'

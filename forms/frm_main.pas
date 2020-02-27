@@ -1,4 +1,4 @@
-(* *****************************************************************************
+п»ї(* *****************************************************************************
   *
   *   X-Ray Calc 2
   *
@@ -175,7 +175,7 @@ type
     Status: TRzStatusPane;
     ProjectItemExtension: TAction;
     pmiEnabled: TMenuItem;
-    TabSheet1: TRzTabSheet;
+    tsGradients: TRzTabSheet;
     chGradients: TChart;
     Series1: TPointSeries;
     pmCopytoclipboard: TMenuItem;
@@ -442,6 +442,7 @@ begin
     Node := Project.GetFirstChild(FModelsRoot)
   else
     Exit;
+
   while Node <> FDataRoot do
   begin
     Data := Project.GetNodeData(Node);
@@ -536,13 +537,13 @@ begin
       CD.P := cmSP;
 
     Gradients := FillGradients(Project, FLastModel);
-
+    tsGradients.TabVisible := (Length(Gradients) > 0);
 
 
     if rgCalcMode.ItemIndex = 0 then
       Calc.Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
 
-    StatusD.Caption := FloatToStrF(TotalD, ffFixed, 7, 2) + ' Е';
+    StatusD.Caption := FloatToStrF(TotalD, ffFixed, 7, 2) + ' Р•';
 
     if (FLinkedData <> nil) and FActiveData.Curve.Visible then
        Calc.ExpValues := SeriesToData(FLinkedData.Curve);
@@ -725,7 +726,7 @@ begin
   FProjectFileName := FProjectDir + FProjectName;
   CreateDir(FProjectDir);
 
-  // дефолтный проект
+  // РґРµС„РѕР»С‚РЅС‹Р№ РїСЂРѕРµРєС‚
   PG := Project.AddChild(Nil, Nil);
   PD := Project.GetNodeData(PG);
   PD.Title := 'Models';
@@ -734,7 +735,7 @@ begin
 
   FModelsRoot := PG;
 
-  // добавляем модель
+  // РґРѕР±Р°РІР»СЏРµРј РјРѕРґРµР»СЊ
   PL := Project.AddChild(PG, Nil);
   PD := Project.GetNodeData(PL);
   PD.ID := FLastID;
@@ -748,7 +749,7 @@ begin
   PD.Curve.Color := clRed;
   PD.Color := clRed;
   PD.Curve.LinePen.Width := 2;
-  FActiveModel := PD; // делаем ее дефолтной
+  FActiveModel := PD; // РґРµР»Р°РµРј РµРµ РґРµС„РѕР»С‚РЅРѕР№
 
   FSubstrate := Tree.AddChild(Nil);
   Data := Tree.GetNodeData(FSubstrate);
@@ -757,10 +758,10 @@ begin
   Data.s := '5';
   Data.H := 'substrate';
 
-  Tree.SaveToFile(ModelName(PD)); // сохраняем модель
+  Tree.SaveToFile(ModelName(PD)); // СЃРѕС…СЂР°РЅСЏРµРј РјРѕРґРµР»СЊ
   Project.Expanded[PG] := True;
 
-  // данные
+  // РґР°РЅРЅС‹Рµ
   PG := Project.AddChild(Nil, Nil);
   PD := Project.GetNodeData(PG);
   PD.Title := 'Data';
@@ -803,12 +804,12 @@ begin
   Data := Project.GetNodeData(Node);
   Data.ID := FLastID;
   if Data.Title = '' then
-  begin // новая модель
+  begin // РЅРѕРІР°СЏ РјРѕРґРµР»СЊ
     Data.Title := InputBox('New model', 'Model name',
       'Model ' + IntToStr(FLastID));
     Tree.Clear;
   end
-  else // копия
+  else // РєРѕРїРёСЏ
     Data.Title := 'Model ' + IntToStr(FLastID);
 
   Data.Group := gtModel;
@@ -1254,6 +1255,7 @@ procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   Application.OnHelp := OnHelpHandler;
   FormatSettings.DecimalSeparator := '.';
+  tsGradients.TabVisible := False;
 
 
   Tree.NodeDataSize := SizeOf(TRowData);
@@ -1828,7 +1830,7 @@ procedure TfrmMain.ProjectDragDrop(Sender: TBaseVirtualTree; Source: TObject;
   DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
   Pt: TPoint; var Effect: Integer; Mode: TDropMode);
 
-// Определяем как поступать с данными. Перемещать или копировать
+// РћРїСЂРµРґРµР»СЏРµРј РєР°Рє РїРѕСЃС‚СѓРїР°С‚СЊ СЃ РґР°РЅРЅС‹РјРё. РџРµСЂРµРјРµС‰Р°С‚СЊ РёР»Рё РєРѕРїРёСЂРѕРІР°С‚СЊ
   procedure DetermineEffect;
   begin
     if Shift = [ssCtrl] then
@@ -1844,8 +1846,8 @@ var
   i: Integer;
 begin
   Nodes := nil;
-  // Определяем куда добавлять узел в зависимости от того, куда была
-  // брошена ветка.
+  // РћРїСЂРµРґРµР»СЏРµРј РєСѓРґР° РґРѕР±Р°РІР»СЏС‚СЊ СѓР·РµР» РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РѕРіРѕ, РєСѓРґР° Р±С‹Р»Р°
+  // Р±СЂРѕС€РµРЅР° РІРµС‚РєР°.
   case Mode of
     dmAbove:
       Attachmode := amInsertBefore;
@@ -1859,12 +1861,12 @@ begin
 
   if Source = Project then
   begin
-    // Вставка из VT. Можем спокойно пользоваться его методами
-    // копирования и перемещения.
+    // Р’СЃС‚Р°РІРєР° РёР· VT. РњРѕР¶РµРј СЃРїРѕРєРѕР№РЅРѕ РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РµРіРѕ РјРµС‚РѕРґР°РјРё
+    // РєРѕРїРёСЂРѕРІР°РЅРёСЏ Рё РїРµСЂРµРјРµС‰РµРЅРёСЏ.
     DetermineEffect;
-    // Получем список узлов, которые будут участвовать в Drag&Drop
+    // РџРѕР»СѓС‡РµРј СЃРїРёСЃРѕРє СѓР·Р»РѕРІ, РєРѕС‚РѕСЂС‹Рµ Р±СѓРґСѓС‚ СѓС‡Р°СЃС‚РІРѕРІР°С‚СЊ РІ Drag&Drop
     Nodes := Project.GetSortedSelection(True);
-    // И работаем с каждым
+    // Р СЂР°Р±РѕС‚Р°РµРј СЃ РєР°Р¶РґС‹Рј
     if Effect = DROPEFFECT_COPY then
     begin
       for i := 0 to High(Nodes) do
@@ -2379,7 +2381,7 @@ begin
 
   if Clear then
   begin
-    // удаляем папку старого проекта
+    // СѓРґР°Р»СЏРµРј РїР°РїРєСѓ СЃС‚Р°СЂРѕРіРѕ РїСЂРѕРµРєС‚Р°
     if DirectoryExists(FProjectDir) then
       ClearDir(FProjectDir, True);
     //
@@ -2416,13 +2418,13 @@ begin
     INF.Free;
   end;
 
-  // восстанавливаем дерево проектов
+  // РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґРµСЂРµРІРѕ РїСЂРѕРµРєС‚РѕРІ
   Project.LoadFromFile(FProjectDir + PROJECT_FILE_NAME);
 
   FModelsRoot := Project.GetFirst;
   FDataRoot := Project.GetNextSibling(FModelsRoot);
 
-  // для каждой модели нужно создать series
+  // РґР»СЏ РєР°Р¶РґРѕР№ РјРѕРґРµР»Рё РЅСѓР¶РЅРѕ СЃРѕР·РґР°С‚СЊ series
   Chart.SeriesList.Clear;
   FActiveModel := nil;
   First := nil;
