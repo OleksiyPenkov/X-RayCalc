@@ -171,7 +171,7 @@ end;
 function TXRCSettings.GetSystemFileName(fileType: TXRCSystemFile): string;
 begin
   case fileType of
-    sfAppHelp: Result := AppPath + APP_HELP_FILENAME;
+    sfAppHelp: Result := AppPath;
   else
     Assert(False);
   end;

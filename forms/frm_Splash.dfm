@@ -6,7 +6,7 @@ object frmSplash: TfrmSplash
   BorderStyle = bsNone
   Caption = 'frmSplash'
   ClientHeight = 333
-  ClientWidth = 467
+  ClientWidth = 500
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object frmSplash: TfrmSplash
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 467
+    Width = 500
     Height = 333
     Align = alTop
     AutoSize = True
@@ -4664,7 +4664,6 @@ object frmSplash: TfrmSplash
       DE7AA8FD0D3AF83401DD3FD4C54685F076AD3715769ABAE803EA1A504153D8B4
       C71C906BCB1266F8A225AA7217D4D3F5F950BF6498AB21F53CD067E06E84E495
       D7FC1FEB54EC94D65865300000000049454E44AE426082}
-    ExplicitWidth = 500
   end
   object Label1: TLabel
     Left = 216
@@ -4672,11 +4671,5 @@ object frmSplash: TfrmSplash
     Width = 50
     Height = 13
     Caption = 'Loading ...'
-  end
-  object tmMainTimer: TTimer
-    Interval = 1500
-    OnTimer = tmMainTimerTimer
-    Left = 256
-    Top = 8
   end
 end

@@ -25,8 +25,6 @@ uses
   editor_proj_item in 'editors\editor_proj_item.pas' {edtrProjectItem},
   editor_Normalisation in 'editors\editor_Normalisation.pas' {edtrManualNorm},
   editor_Substrate in 'editors\editor_Substrate.pas' {edtrSubstrate},
-  frm_GenParams in 'forms\frm_GenParams.pas' {frmFit},
-  math_Gen in 'Math\math_Gen.pas',
   frm_MList in 'forms\frm_MList.pas' {frmMaterialList},
   frm_Splash in 'forms\frm_Splash.pas' {frmSplash},
   unit_VersionChecker in 'units\unit_VersionChecker.pas',
@@ -34,6 +32,7 @@ uses
   frm_EditorBase in 'forms\frm_EditorBase.pas' {frmEditorBase},
   editor_Gradient in 'editors\editor_Gradient.pas' {edtrGradient},
   Vcl.Themes,
+  Dialogs,
   Vcl.Styles,
   unit_VTEditors in 'units\unit_VTEditors.pas',
   MHLSimplePanel in 'components\MHLSimplePanel.pas',
@@ -49,25 +48,19 @@ begin
   frmSplash := TfrmSplash.Create(Application);
   frmSplash.Show;   // Display the splash screen
   frmSplash.Update; // Update the splash screen to ensure it gets drawn
-  while frmSplash.tmMainTimer.Enabled do
-    Application.ProcessMessages;
-
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmAbout, frmAbout);
   Application.CreateForm(TedtrLayer, edtrLayer);
   Application.CreateForm(TedtrPeriod, edtrPeriod);
   Application.CreateForm(TedtrProjectItem, edtrProjectItem);
   Application.CreateForm(TedtrManualNorm, edtrManualNorm);
   Application.CreateForm(TedtrSubstrate, edtrSubstrate);
-  Application.CreateForm(TfrmFit, frmFit);
   Application.CreateForm(TfrmMaterialList, frmMaterialList);
-  Application.CreateForm(TfrmAbout, frmAbout);
   Application.CreateForm(TfrmEditorBase, frmEditorBase);
   Application.CreateForm(TedtrGradient, edtrGradient);
   Application.CreateForm(TfrmAbout, frmAbout);
   Application.CreateForm(TfrmFitWin, frmFitWin);
   frmSplash.Hide;  // Hide the splash screen
   frmSplash.Free;  // Free the splash screen
-
-
   Application.Run;
 end.

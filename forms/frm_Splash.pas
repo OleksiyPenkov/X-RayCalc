@@ -17,9 +17,7 @@ uses
 type
   TfrmSplash = class(TForm)
     Image1: TImage;
-    tmMainTimer: TTimer;
     Label1: TLabel;
-    procedure tmMainTimerTimer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,10 +30,5 @@ var
 implementation
 
 {$R *.DFM}
-
-procedure TfrmSplash.tmMainTimerTimer(Sender: TObject);
-begin
-  tmMainTimer.Enabled := False;
-end;
 
 end.

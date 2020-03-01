@@ -232,7 +232,7 @@ object frmMain: TfrmMain
       Width = 954
       Height = 489
       Hint = ''
-      ActivePage = tsGradients
+      ActivePage = tsStructure
       Align = alClient
       Color = clSkyBlue
       UseColoredTabs = True
@@ -243,7 +243,7 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
-      TabIndex = 2
+      TabIndex = 0
       TabOrder = 0
       OnChange = PagesChange
       FixedDimension = 22
@@ -677,7 +677,6 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 1
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -685,103 +684,6 @@ object frmMain: TfrmMain
       1206
       143)
     StyleName = 'Ribbon - Luna'
-    object rbStructure: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Project'
-      Index = 0
-      object RibbonGroup1: TRibbonGroup
-        Left = 460
-        Top = 3
-        Width = 68
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Stack'
-        GroupIndex = 2
-      end
-      object RibbonGroup2: TRibbonGroup
-        Left = 530
-        Top = 3
-        Width = 134
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Layer'
-        GroupIndex = 3
-      end
-      object RibbonGroup13: TRibbonGroup
-        Left = 246
-        Top = 3
-        Width = 212
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project Items'
-        GroupIndex = 1
-      end
-      object RibbonGroup6: TRibbonGroup
-        Left = 666
-        Top = 3
-        Width = 139
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Data'
-        GroupIndex = 4
-      end
-      object rbngrpProject: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 240
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Project'
-        GroupIndex = 0
-      end
-      object grpMaterial: TRibbonGroup
-        Left = 807
-        Top = 3
-        Width = 51
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Materials'
-        GroupIndex = 5
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 315
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 140
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 146
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
-      end
-    end
     object rbnpgCalc: TRibbonPage
       Left = 0
       Top = 50
@@ -1114,6 +1016,103 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
+      end
+    end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 315
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 140
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 146
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
+      end
+    end
+    object rbStructure: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Project'
+      Index = 0
+      object RibbonGroup1: TRibbonGroup
+        Left = 460
+        Top = 3
+        Width = 68
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Stack'
+        GroupIndex = 2
+      end
+      object RibbonGroup2: TRibbonGroup
+        Left = 530
+        Top = 3
+        Width = 134
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Layer'
+        GroupIndex = 3
+      end
+      object RibbonGroup13: TRibbonGroup
+        Left = 246
+        Top = 3
+        Width = 212
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project Items'
+        GroupIndex = 1
+      end
+      object RibbonGroup6: TRibbonGroup
+        Left = 666
+        Top = 3
+        Width = 139
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Data'
+        GroupIndex = 4
+      end
+      object rbngrpProject: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 240
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Project'
+        GroupIndex = 0
+      end
+      object grpMaterial: TRibbonGroup
+        Left = 807
+        Top = 3
+        Width = 51
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Materials'
+        GroupIndex = 5
       end
     end
   end
@@ -6384,6 +6383,7 @@ object frmMain: TfrmMain
             Items = <
               item
                 Action = CalcAll
+                Caption = '&Calc all models'
                 ShortCut = 123
               end>
             Action = CalcRun
@@ -6939,7 +6939,6 @@ object frmMain: TfrmMain
       Category = 'Calc'
       Caption = 'Genetic'
       Enabled = False
-      OnExecute = CalcGeneticExecute
     end
     object HelpHelp: TAction
       Category = 'Help'

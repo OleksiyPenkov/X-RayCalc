@@ -287,7 +287,6 @@ type
     procedure FileCopyPlotBMPExecute(Sender: TObject);
     procedure FilePlotCopyWMFExecute(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure CalcGeneticExecute(Sender: TObject);
     procedure FormGesture(Sender: TObject; const EventInfo: TGestureEventInfo;
       var Handled: Boolean);
     procedure RibbonHelpButtonClick(Sender: TObject);
@@ -301,7 +300,6 @@ type
     procedure actHelpFittingExecute(Sender: TObject);
     procedure actQuickStartExecute(Sender: TObject);
     procedure actCheckUpdateExecute(Sender: TObject);
-    procedure btnPeaksClick(Sender: TObject);
     procedure ProjectItemExtensionExecute(Sender: TObject);
     procedure pmiEnabledClick(Sender: TObject);
     procedure TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -425,7 +423,6 @@ uses
   editor_proj_item,
   editor_Normalisation,
   editor_Substrate,
-  frm_GenParams,
   frm_about,
   unit_VTEditors,
   frm_fitting,
@@ -493,11 +490,6 @@ begin
     0: Convolute(StrToFloat(edWidth.Text) * K, FActiveModel.Curve);
     1: Convolute(StrToFloat(edDL.Text), FActiveModel.Curve);
   end;
-end;
-
-procedure TfrmMain.CalcGeneticExecute(Sender: TObject);
-begin
-  frmFit.ShowModal;
 end;
 
 procedure TfrmMain.CalcRunExecute(Sender: TObject);
@@ -1253,7 +1245,6 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
-  Application.OnHelp := OnHelpHandler;
   FormatSettings.DecimalSeparator := '.';
   tsGradients.TabVisible := False;
 
@@ -1343,13 +1334,7 @@ end;
 
 function TfrmMain.OnHelpHandler(Command: Word; Data: NativeInt; var CallHelp: Boolean): Boolean;
 begin
-  Result := True;
-  if Data = 1 then
-    HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_DISPLAY_TOC, 0)
-  else
-    HtmlHelp(Application.Handle, PChar(Settings.SystemFileName[sfAppHelp]), HH_HELP_CONTEXT, Data);
 
-  CallHelp := False;
 end;
 
 procedure TfrmMain.OnMyMessage(var Msg: TMessage);
@@ -2355,12 +2340,6 @@ begin
       FCurrentLayerData.R := (Sender as TRzSpinEdit).Text;
   end;
   CalcRunExecute(Sender);
-end;
-
-procedure TfrmMain.btnPeaksClick(Sender: TObject);
-begin
-  frmFit.Curve := FActiveData.Curve;
-  frmFit.ShowModal;
 end;
 
 procedure TfrmMain.LoadProject(const FileName: string; Clear: Boolean);
