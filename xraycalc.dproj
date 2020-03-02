@@ -119,9 +119,9 @@
         <Icon_MainIcon>Resources\Icons\Icon1.ico</Icon_MainIcon>
         <DCC_ExeOutput>Out/Bin</DCC_ExeOutput>
         <DCC_DcuOutput>Out/Dcu</DCC_DcuOutput>
-        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=2.4.1.114;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=2.4.1.98;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>114</VerInfo_Build>
+        <VerInfo_Build>98</VerInfo_Build>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
         <DCC_IOChecking>false</DCC_IOChecking>
@@ -236,9 +236,11 @@
         <DCCReference Include="components\MHLSimplePanel.pas"/>
         <DCCReference Include="forms\frm_about.pas">
             <Form>frmAbout</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="forms\frm_fitting.pas">
             <Form>frmFitWin</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="components\XRCFittingInput.pas"/>
         <DCCReference Include="units\unit_calc.pas"/>

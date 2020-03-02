@@ -5,7 +5,7 @@ object edtrGradient: TedtrGradient
   Caption = 'Gradient'
   ClientHeight = 269
   ClientWidth = 223
-  Color = clBtnFace
+  Color = 16765595
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -23,12 +23,13 @@ object edtrGradient: TedtrGradient
     Height = 41
     Align = alBottom
     BorderOuter = fsFlatRounded
+    ParentColor = True
     TabOrder = 0
     DesignSize = (
       217
       41)
     object btnOK: TRzBitBtn
-      Left = 55
+      Left = 9
       Top = 10
       Width = 66
       Anchors = [akTop, akRight]
@@ -55,13 +56,14 @@ object edtrGradient: TedtrGradient
     Height = 216
     Align = alClient
     BorderOuter = fsFlatRounded
+    ParentColor = True
     TabOrder = 1
     object Label1: TLabel
       Left = 9
       Top = 10
-      Width = 20
+      Width = 27
       Height = 13
-      Caption = 'Title'
+      Caption = 'Name'
     end
     object Label2: TLabel
       Left = 111
@@ -73,9 +75,9 @@ object edtrGradient: TedtrGradient
     object Label3: TLabel
       Left = 9
       Top = 35
-      Width = 30
+      Width = 26
       Height = 13
-      Caption = 'Period'
+      Caption = 'Stack'
     end
     object Label4: TLabel
       Left = 111
@@ -94,9 +96,9 @@ object edtrGradient: TedtrGradient
       DecimalPlacesAlwaysShown = False
     end
     object edTitle: TEdit
-      Left = 35
+      Left = 42
       Top = 6
-      Width = 173
+      Width = 166
       Height = 21
       TabOrder = 1
       Text = 'Gradient'

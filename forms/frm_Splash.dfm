@@ -16,6 +16,7 @@ object frmSplash: TfrmSplash
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poScreenCenter
+  Scaled = False
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
