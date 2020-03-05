@@ -381,8 +381,6 @@ type
     ThreadsRunning: Integer;
 
     procedure OnMyMessage(var Msg: TMessage); message WM_RECALC;
-    function OnHelpHandler(Command: Word; Data: NativeInt;
-      var CallHelp: Boolean): Boolean;
     procedure FinalizeCalc;
     procedure CreateNewExtension(Node: PVirtualNode);
     procedure DeleteExtension(Node: PVirtualNode);
@@ -1316,11 +1314,6 @@ begin
   Tree.Selected[Node] := True;
 
   edtrLayer.Data := Tree.GetNodeData(Node);
-end;
-
-function TfrmMain.OnHelpHandler(Command: Word; Data: NativeInt; var CallHelp: Boolean): Boolean;
-begin
-
 end;
 
 procedure TfrmMain.OnMyMessage(var Msg: TMessage);

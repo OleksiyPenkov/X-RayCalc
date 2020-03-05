@@ -1,4 +1,4 @@
-(* *****************************************************************************
+Ôªø(* *****************************************************************************
   *
   *   X-Ray Calc 2
   *
@@ -33,13 +33,13 @@ type
     Model: PVirtualNode;
 
     Stack, Layer: PVirtualNode;
-    Data: PRowData;
+    FData: PRowData;
 
     NM, NL, CurrentLayer: integer;
 
     LayersCount: integer;
     Substrate, Material: TMaterial;
-    c, Delta: single;
+    Delta: single;
     Str: string;
     GradientValue: single;
 
@@ -57,7 +57,7 @@ type
     procedure FillStacks;
     procedure FillSubstrate;
     procedure PrepareMaterials;
-    function FindMaterial(Name: string): TMaterial;
+    function FindMaterial(const Name: string): TMaterial;
     procedure AddMaterial(Data: PRowData; Lambda: single);
     function SetFun(a: string): TFunctionRec;
     function FillGradients: TGradients;
@@ -162,7 +162,7 @@ begin
   end;
 end;
 
-function TLayeredModel.FindMaterial(Name: string): TMaterial;
+function TLayeredModel.FindMaterial(const Name: string): TMaterial;
 var
   i: integer;
 begin
@@ -197,13 +197,13 @@ end;
 
 procedure TLayeredModel.FillMaterial;
 begin
-  Material := FindMaterial(Data.Text);
+  Material := FindMaterial(FData.Text);
 
-  if Data.r <> '' then
-      Material.ro := StrToFloat(Data.r);
-  if Data.s <> '' then
+  if FData.r <> '' then
+      Material.ro := StrToFloat(FData.r);
+  if FData.s <> '' then
   begin
-    Material.s := SetFun(Data.s);
+    Material.s := SetFun(FData.s);
     Material.s.a := Material.s.a / 1.41;
     Material.s.b := Material.s.b / 1.41;
   end
@@ -217,17 +217,18 @@ end;
 procedure TLayeredModel.FillLayer(i: Integer);
 var
   g: integer;
+  c: Single;
 begin
   with FLayers[CurrentLayer] do
   begin
-    L := StrToFloat(Data.H);
+    L := StrToFloat(FData.H);
 
     if (i = 1) and InsideMain then
       FTotalD := FTotalD + L;
 
     for g := 0 to High(Gradients) do
     begin
-      if Inside and (Data.Text = Gradients[g].ParentLayer) then
+      if Inside and (FData.Text = Gradients[g].ParentLayer) then
       begin
         case Gradients[g].Subj of
           gsL : case Gradients[g].Form of
@@ -263,16 +264,18 @@ begin
 end;
 
 procedure TLayeredModel.FillSubstrate;
+var
+    c: Single;
 begin
-  with Substrate do // ÔÓ‰ÎÓÊÍ‡
+  with Substrate do // –ø–æ–¥–ª–æ–∂–∫–∞
   begin
-    Data := Tree.GetNodeData(Tree.GetLast);
-    if Data.RowType = rtSubstrate then
+    FData := Tree.GetNodeData(Tree.GetLast);
+    if FData.RowType = rtSubstrate then
     begin
-      ReadHenke(Data.Text, 0, FLambda, f, am, ro);
-      if Data.r <> '' then ro := StrToFloat(Data.r);
-      if Data.s <> '' then
-        s := SetFun(Data.s)
+      ReadHenke(FData.Text, 0, FLambda, f, am, ro);
+      if FData.r <> '' then ro := StrToFloat(FData.r);
+      if FData.s <> '' then
+        s := SetFun(FData.s)
       else
         s.a := 0;
     end
@@ -296,9 +299,9 @@ begin
   Stack := Tree.GetFirst;
   while Stack <> Nil do
   begin
-    Data := Tree.GetNodeData(Stack);
-    if Data.RowType = rtStack then
-      inc(Result, Stack.ChildCount * Data.N);
+    FData := Tree.GetNodeData(Stack);
+    if FData.RowType = rtStack then
+      inc(Result, Stack.ChildCount * FData.N);
     Stack := Tree.GetNextSibling(Stack);
   end;
 end;
@@ -311,20 +314,20 @@ begin
   Stack := Tree.GetFirst;
   while Stack <> Nil do
   begin
-    Data := Tree.GetNodeData(Stack);
-    if Data.RowType = rtStack then
+    FData := Tree.GetNodeData(Stack);
+    if FData.RowType = rtStack then
     begin
-      NL := Data.N;
+      NL := FData.N;
 
       Inside := False;
       for g := 0 to High(Gradients) do
-        if Data.Text = Gradients[g].ParentPeriod then
+        if FData.Text = Gradients[g].ParentPeriod then
         begin
           Inside := True;
           Break;
         end;
 
-      InsideMain := Pos('Main', Data.Text) <> 0;
+      InsideMain := Pos('Main', FData.Text) <> 0;
       if InsideMain then FTotalD := 0;
 
       for i := 1 to NL do
@@ -332,7 +335,7 @@ begin
         Layer := Stack.FirstChild;
         for j := 0 to Stack.ChildCount - 1 do
         begin
-          Data := Tree.GetNodeData(Layer);
+          FData := Tree.GetNodeData(Layer);
 
           FillMaterial;
           FillLayer(i);
@@ -351,9 +354,9 @@ begin
   Stack := Tree.GetFirst;
   while Stack <> Nil do
   begin
-    Data := Tree.GetNodeData(Stack);
-    if Data.RowType = rtLayer then
-      AddMaterial(Data, FLambda);
+    FData := Tree.GetNodeData(Stack);
+    if FData.RowType = rtLayer then
+      AddMaterial(FData, FLambda);
     Stack := Tree.GetNext(Stack);
   end;
 end;
