@@ -17,25 +17,68 @@ uses
   unit_types,
   math_globals;
 
-function FillLayers(Tree: TVirtualStringTree; Lambda: single; Chart: TChart): TLayers;
-function FillGradients(Tree: TVirtualStringTree; Model: PVirtualNode): TGradients;
 
 
-var
-  Gradients: TGradients;
-  TotalD: single;
+
+
+type
+
+  TLayeredModel = class
+  private
+    Materials: array of TMaterial;
+    Gradients: TGradients;
+
+    Chart: TChart;
+    Tree: TVirtualStringTree;
+    Model: PVirtualNode;
+
+    Stack, Layer: PVirtualNode;
+    Data: PRowData;
+
+    NM, NL, CurrentLayer: integer;
+
+    LayersCount: integer;
+    Substrate, Material: TMaterial;
+    c, Delta: single;
+    Str: string;
+    GradientValue: single;
+
+    Inside: boolean;
+    InsideMain: Boolean;
+
+    FLayers: TLayers;
+    FLambda: Single;
+    FTotalD: single;
+
+    function GetLayers: TLayers;
+    function CountLayers: Integer;
+    procedure FillLayer(i: Integer);
+    procedure FillMaterial;
+    procedure FillStacks;
+    procedure FillSubstrate;
+    procedure PrepareMaterials;
+    function FindMaterial(Name: string): TMaterial;
+    procedure AddMaterial(Data: PRowData; Lambda: single);
+    function SetFun(a: string): TFunctionRec;
+    function FillGradients: TGradients;
+    procedure PrepareChart(var Chart: TChart);
+    function IfHasGradients: Boolean;
+  published
+    constructor Create(ATree: TVirtualStringTree; AChart: TChart; AModel: PVirtualNode);
+
+    property Layers:TLayers Read GetLayers;
+    property TotalD:Single read FTotalD;
+    property Lamda:single write FLambda;
+    property HasGradients:Boolean read IfHasGradients;
+  end;
 
 implementation
 
 const
   kk = 0.54014E-5;
 
-var
-  Materials: array of TMaterial;
 
-
-
-function FillGradients(Tree: TVirtualStringTree; Model: PVirtualNode): TGradients;
+function TLayeredModel.FillGradients: TGradients;
 var
   Item: PVirtualNode;
   Data: PProjectData;
@@ -63,7 +106,7 @@ end;
 
 
 
-function SetFun(a: string): TFunctionRec;
+function TLayeredModel.SetFun(a: string): TFunctionRec;
 var
   f: TFunctionRec;
   c: char;
@@ -101,7 +144,7 @@ begin
   Result := f;
 end;
 
-procedure AddMaterial(Data: PRowData; Lambda: single);
+procedure TLayeredModel.AddMaterial(Data: PRowData; Lambda: single);
 var
   i, size: integer;
 begin
@@ -119,7 +162,7 @@ begin
   end;
 end;
 
-function FindMaterial(Name: string): TMaterial;
+function TLayeredModel.FindMaterial(Name: string): TMaterial;
 var
   i: integer;
 begin
@@ -130,7 +173,7 @@ begin
 end;
 
 
-procedure PrepareChart(var Chart: TChart);
+procedure TLayeredModel.PrepareChart(var Chart: TChart);
 var
   i: integer;
   Series: TPointSeries;
@@ -151,201 +194,206 @@ begin
   end;
 end;
 
-function FillLayers(Tree: TVirtualStringTree; Lambda: single;  Chart: TChart): TLayers;
-var
-  Stack, Layer: PVirtualNode;
-  Data: PRowData;
 
-  NM, NL, CurrentLayer: integer;
+procedure TLayeredModel.FillMaterial;
+begin
+  Material := FindMaterial(Data.Text);
 
-  LayersCount: integer;
-  Substrate, Material: TMaterial;
-  c, Delta: single;
-  Str: string;
-  GradientValue: single;
-
-  Inside: boolean;
-  InsideMain: Boolean;
-
-  procedure FillMaterial;
+  if Data.r <> '' then
+      Material.ro := StrToFloat(Data.r);
+  if Data.s <> '' then
   begin
-    Material := FindMaterial(Data.Text);
+    Material.s := SetFun(Data.s);
+    Material.s.a := Material.s.a / 1.41;
+    Material.s.b := Material.s.b / 1.41;
+  end
+  else
+  begin
+    Material.s.a := 0;
+    Material.s.b := 0;
+  end;
+end;
 
-    if Data.r <> '' then
-        Material.ro := StrToFloat(Data.r);
-    if Data.s <> '' then
+procedure TLayeredModel.FillLayer(i: Integer);
+var
+  g: integer;
+begin
+  with FLayers[CurrentLayer] do
+  begin
+    L := StrToFloat(Data.H);
+
+    if (i = 1) and InsideMain then
+      FTotalD := FTotalD + L;
+
+    for g := 0 to High(Gradients) do
     begin
-      Material.s := SetFun(Data.s);
-      Material.s.a := Material.s.a / 1.41;
-      Material.s.b := Material.s.b / 1.41;
+      if Inside and (Data.Text = Gradients[g].ParentLayer) then
+      begin
+        case Gradients[g].Subj of
+          gsL : case Gradients[g].Form of
+                  gtLine : begin
+                             L := L * (1 + i/(NL)* Gradients[g].Rate);
+                             GradientValue := L;
+                           end;
+                end;
+          gsS : case Gradients[g].Form of
+                  gtLine :begin
+                            Material.s.a  := Material.s.a * (1 + i/(NL)* Gradients[g].Rate);
+                            Material.s.b  := Material.s.a * (1 + i/(NL)* Gradients[g].Rate);
+                            GradientValue := Material.s.a;
+                          end;
+                end;
+          gsRo: case Gradients[g].Form of
+                  gtLine : Material.ro := Material.ro * (1 + i/(NL)* Gradients[g].Rate)
+                end;
+
+        end;
+        Chart.Series[g].AddXY(i, GradientValue);
+      end;
+    end;
+
+    c := kk * Material.ro / Material.am * sqr(FLambda);
+    Delta := Delta + c * Material.f.re / 2 * Material.h.a;
+    Material.f.re := 1 - Material.f.re * c;
+    Material.f.im := Material.f.im * c;
+
+    e := Material.f;
+    s := Material.s.a;
+  end;
+end;
+
+procedure TLayeredModel.FillSubstrate;
+begin
+  with Substrate do // подложка
+  begin
+    Data := Tree.GetNodeData(Tree.GetLast);
+    if Data.RowType = rtSubstrate then
+    begin
+      ReadHenke(Data.Text, 0, FLambda, f, am, ro);
+      if Data.r <> '' then ro := StrToFloat(Data.r);
+      if Data.s <> '' then
+        s := SetFun(Data.s)
+      else
+        s.a := 0;
     end
     else
     begin
-      Material.s.a := 0;
-      Material.s.b := 0;
+      ReadHenke('Si', 0, FLambda, f, am, ro);
+      s.a := 5;
+      s.b := 0;
     end;
+    c := kk * (ro / am) * sqr(FLambda);
+    FLayers[LayersCount + 1].L := 1E8;
+    FLayers[LayersCount + 1].s := s.a;
+    FLayers[LayersCount + 1].e.re := 1 - f.re * c;
+    FLayers[LayersCount + 1].e.im := f.im * c;
   end;
+end;
 
-  procedure FillLayer;
-  var
-    g, i: integer;
-  begin
-    with Result[CurrentLayer] do
-    begin
-      L := StrToFloat(Data.H);
-
-      if (i = 1) and InsideMain then TotalD := TotalD + L;
-
-      for g := 0 to High(Gradients) do
-      begin
-        if Inside and (Data.Text = Gradients[g].ParentLayer) then
-        begin
-          case Gradients[g].Subj of
-            gsL : case Gradients[g].Form of
-                    gtLine : begin
-                               L := L * (1 + i/(NL)* Gradients[g].Rate);
-                               GradientValue := L;
-                             end;
-                  end;
-            gsS : case Gradients[g].Form of
-                    gtLine :begin
-                              Material.s.a  := Material.s.a * (1 + i/(NL)* Gradients[g].Rate);
-                              Material.s.b  := Material.s.a * (1 + i/(NL)* Gradients[g].Rate);
-                              GradientValue := Material.s.a;
-                            end;
-                  end;
-            gsRo: case Gradients[g].Form of
-                    gtLine : Material.ro := Material.ro * (1 + i/(NL)* Gradients[g].Rate)
-                  end;
-
-          end;
-          Chart.Series[g].AddXY(i, GradientValue);
-        end;
-      end;
-
-      c := kk * Material.ro / Material.am * sqr(Lambda);
-      Delta := Delta + c * Material.f.re / 2 * Material.h.a;
-      Material.f.re := 1 - Material.f.re * c;
-      Material.f.im := Material.f.im * c;
-
-      e := Material.f;
-      s := Material.s.a;
-    end;
-  end;
-
-  procedure FillSubstrate;
-  begin
-    with Substrate do // подложка
-    begin
-      Data := Tree.GetNodeData(Tree.GetLast);
-      if Data.RowType = rtSubstrate then
-      begin
-        ReadHenke(Data.Text, 0, Lambda, f, am, ro);
-        if Data.r <> '' then ro := StrToFloat(Data.r);
-        if Data.s <> '' then
-          s := SetFun(Data.s)
-        else
-          s.a := 0;
-      end
-      else
-      begin
-        ReadHenke('Si', 0, Lambda, f, am, ro);
-        s.a := 5;
-        s.b := 0;
-      end;
-      c := kk * (ro / am) * sqr(Lambda);
-      Result[LayersCount + 1].L := 1E8;
-      Result[LayersCount + 1].s := s.a;
-      Result[LayersCount + 1].e.re := 1 - f.re * c;
-      Result[LayersCount + 1].e.im := f.im * c;
-    end;
-  end;
-
-  function CountLayers: Integer;
-  begin
-    Result := 0;
-    Stack := Tree.GetFirst;
-    while Stack <> Nil do
-    begin
-      Data := Tree.GetNodeData(Stack);
-      if Data.RowType = rtStack then
-        inc(Result, Stack.ChildCount * Data.N);
-      Stack := Tree.GetNextSibling(Stack);
-    end;
-  end;
-
-
-  procedure FillStacks;
-  var
-    g, i, j: Integer;
-  begin
-    Stack := Tree.GetFirst;
-    while Stack <> Nil do
-    begin
-      Data := Tree.GetNodeData(Stack);
-      if Data.RowType = rtStack then
-      begin
-        NL := Data.N;
-
-        Inside := False;
-        for g := 0 to High(Gradients) do
-          if Data.Text = Gradients[g].ParentPeriod then
-          begin
-            Inside := True;
-            Break;
-          end;
-
-        InsideMain := Pos('Main', Data.Text) <> 0;
-        if InsideMain then TotalD := 0;
-
-        for i := 1 to NL do
-        begin
-          Layer := Stack.FirstChild;
-          for j := 0 to Stack.ChildCount - 1 do
-          begin
-            Data := Tree.GetNodeData(Layer);
-
-            FillMaterial;
-            FillLayer;
-
-            Layer := Tree.GetNextSibling(Layer);
-            inc(CurrentLayer);
-          end;
-        end;
-      end;
-      Stack := Tree.GetNextSibling(Stack);
-    end;
-  end;
-
-  procedure PrepareMaterials;
-  begin
-    Stack := Tree.GetFirst;
-    while Stack <> Nil do
-    begin
-      Data := Tree.GetNodeData(Stack);
-      if Data.RowType = rtLayer then
-        AddMaterial(Data, Lambda);
-      Stack := Tree.GetNext(Stack);
-    end;
-  end;
-
+function TLayeredModel.CountLayers: Integer;
 begin
+  Result := 0;
+  Stack := Tree.GetFirst;
+  while Stack <> Nil do
+  begin
+    Data := Tree.GetNodeData(Stack);
+    if Data.RowType = rtStack then
+      inc(Result, Stack.ChildCount * Data.N);
+    Stack := Tree.GetNextSibling(Stack);
+  end;
+end;
+
+
+procedure TLayeredModel.FillStacks;
+var
+  g, i, j: Integer;
+begin
+  Stack := Tree.GetFirst;
+  while Stack <> Nil do
+  begin
+    Data := Tree.GetNodeData(Stack);
+    if Data.RowType = rtStack then
+    begin
+      NL := Data.N;
+
+      Inside := False;
+      for g := 0 to High(Gradients) do
+        if Data.Text = Gradients[g].ParentPeriod then
+        begin
+          Inside := True;
+          Break;
+        end;
+
+      InsideMain := Pos('Main', Data.Text) <> 0;
+      if InsideMain then FTotalD := 0;
+
+      for i := 1 to NL do
+      begin
+        Layer := Stack.FirstChild;
+        for j := 0 to Stack.ChildCount - 1 do
+        begin
+          Data := Tree.GetNodeData(Layer);
+
+          FillMaterial;
+          FillLayer(i);
+
+          Layer := Tree.GetNextSibling(Layer);
+          inc(CurrentLayer);
+        end;
+      end;
+    end;
+    Stack := Tree.GetNextSibling(Stack);
+  end;
+end;
+
+procedure TLayeredModel.PrepareMaterials;
+begin
+  Stack := Tree.GetFirst;
+  while Stack <> Nil do
+  begin
+    Data := Tree.GetNodeData(Stack);
+    if Data.RowType = rtLayer then
+      AddMaterial(Data, FLambda);
+    Stack := Tree.GetNext(Stack);
+  end;
+end;
+
+
+{ TLayeredModel }
+
+constructor TLayeredModel.Create;
+begin
+  Tree    := ATree;
+  Chart   := AChart;
+  Model   := AModel;
+end;
+
+function TLayeredModel.GetLayers: TLayers;
+begin
+  Gradients := FillGradients;
   LayersCount := CountLayers;
 
-  SetLength(Result, 0);
+  SetLength(FLayers, 0);
   SetLength(Materials, 0);
 
   PrepareChart(Chart);
-  SetLength(Result, LayersCount + 2);
+  SetLength(FLayers, LayersCount + 2);
   CurrentLayer := 1;
 
   PrepareMaterials;
   FillStacks;
   FillSubstrate;
 
-  Result[0].L := 1E10;
-  Result[0].e.re := 1;
-  Result[0].e.im := 0;
+  FLayers[0].L := 1E10;
+  FLayers[0].e.re := 1;
+  FLayers[0].e.im := 0;
+
+  Result := FLayers;
+end;
+
+function TLayeredModel.IfHasGradients: Boolean;
+begin
+  Result := Length(Gradients) > 0;
 end;
 
 end.

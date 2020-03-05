@@ -39,7 +39,7 @@ uses
   frm_about in 'forms\frm_about.pas' {frmAbout},
   frm_fitting in 'forms\frm_fitting.pas' {frmFitWin},
   XRCFittingInput in 'components\XRCFittingInput.pas',
-  unit_calc in 'units\unit_calc.pas';
+  unit_calc in 'Math\unit_calc.pas';
 
 {$R *.res}
 

@@ -3,7 +3,7 @@
         <ProjectGuid>{6283BDEA-4CD8-499D-909F-C78CBC8867A2}</ProjectGuid>
         <ProjectVersion>18.8</ProjectVersion>
         <MainSource>xraycalc.dpr</MainSource>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
         <Base>True</Base>
         <AppType>Application</AppType>
@@ -119,9 +119,9 @@
         <Icon_MainIcon>Resources\Icons\Icon1.ico</Icon_MainIcon>
         <DCC_ExeOutput>Out/Bin</DCC_ExeOutput>
         <DCC_DcuOutput>Out/Dcu</DCC_DcuOutput>
-        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=2.4.1.100;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=2.4.1.103;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>100</VerInfo_Build>
+        <VerInfo_Build>103</VerInfo_Build>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
         <DCC_IOChecking>false</DCC_IOChecking>
@@ -243,7 +243,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="components\XRCFittingInput.pas"/>
-        <DCCReference Include="units\unit_calc.pas"/>
+        <DCCReference Include="Math\unit_calc.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

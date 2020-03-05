@@ -1,4 +1,4 @@
- (* *****************************************************************************
+п»ї (* *****************************************************************************
   *
   *   X-Ray Calc 2
   *
@@ -33,8 +33,11 @@ type
 
     FTree: TVirtualStringTree;
     FChart: TChart;
+    FTotalD: single;
+    FModel: PVirtualNode;
+    FHasGradients: Boolean;
 
-    function RefCalc(t, Lambda: single): single;
+    function  RefCalc(t, Lambda: single): single;
     procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
     procedure CalcTet(StartTeta, EndTeta: single; N: integer);
 
@@ -53,6 +56,9 @@ type
       property Results: TDataArray read FResult;
       property Chart: TChart read FChart write FChart;
       property Tree: TVirtualStringTree read FTree write FTree;
+      property TotalD: single read FTotalD;
+      property Model: PVirtualNode write FModel;
+      property HasGradients:Boolean read FHasGradients;
   end;
 
 var
@@ -74,19 +80,28 @@ var
   Step: single;
   R: single;
   L: single;
+  LayeredModel: TLayeredModel;
 begin
-  Step := (EndL - StartL) / N;
-  SetLength(FResult, N);
-  for i := 0 to N - 1 do
-  begin
-    L := StartL + i * Step;
-    FLayers := FillLayers(FTree, L, FChart);
-    FResult[i].t := L;
-    R := RefCalc(Theta, L);
-    if R > FLimit then
-      FResult[i].R := R
-    else
-      FResult[i].R := FLimit;
+  LayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
+  try
+    Step := (EndL - StartL) / N;
+    SetLength(FResult, N);
+    for i := 0 to N - 1 do
+    begin
+      L := StartL + i * Step;
+      LayeredModel.Lamda := L;
+      FLayers := LayeredModel.Layers;
+      FResult[i].t := L;
+      R := RefCalc(Theta, L);
+      if R > FLimit then
+        FResult[i].R := R
+      else
+        FResult[i].R := FLimit;
+    end;
+    FTotalD := LayeredModel.TotalD;
+    FHasGradients := LayeredModel.HasGradients;
+  finally
+    LayeredModel.Free;
   end;
 end;
 
@@ -95,18 +110,28 @@ var
   i: integer;
   Step: single;
   R: single;
+  LayeredModel: TLayeredModel;
 begin
-  Step := (EndTeta - StartTeta) / N;
-  SetLength(FResult,0);
-  SetLength(FResult, N);
-  for i := 0 to N - 1 do
-  begin
-    FResult[i].t := StartTeta + i * Step;
-    R := RefCalc((FResult[i].t) / FCD.K, FCD.Lambda);
-    if R > FLimit then
-      FResult[i].R := R
-    else
-      FResult[i].R := FLimit;
+  LayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
+  try
+    LayeredModel.Lamda := FCD.Lambda;
+    FLayers := LayeredModel.Layers;
+    Step := (EndTeta - StartTeta) / N;
+    SetLength(FResult,0);
+    SetLength(FResult, N);
+    for i := 0 to N - 1 do
+    begin
+      FResult[i].t := StartTeta + i * Step;
+      R := RefCalc((FResult[i].t) / FCD.K, FCD.Lambda);
+      if R > FLimit then
+        FResult[i].R := R
+      else
+        FResult[i].R := FLimit;
+    end;
+    FTotalD := LayeredModel.TotalD;
+    FHasGradients := LayeredModel.HasGradients;
+  finally
+    LayeredModel.Free;
   end;
 end;
 
@@ -136,7 +161,6 @@ var
   var
     i: integer;
   begin
-
     for i := High(FLayers) - 1 downto 0 do
     begin
       a1 := MulRZ(FLayers[i + 1].L * 2, FLayers[i + 1].K);
@@ -155,7 +179,7 @@ begin
   t := Pi / 2 - Pi * t / 180;
   Im.re := 0;
   Im.Im := 1;
-  c := 2 * Pi / Lambda; { волновое число }
+  c := 2 * Pi / Lambda; { РІРѕР»РЅРѕРІРѕРµ С‡РёСЃР»Рѕ }
   sin_t := sin(t);
   cos_t := cos(t);
   for i := 0 to Length(FLayers) - 1 do
@@ -163,8 +187,8 @@ begin
     a1 := SqrtZ(AddZR(FLayers[i].e, -sqr(sin_t)));
     FLayers[i].K := MulRZ(c, a1);
   end;
-  { Френелевские коэффициенты (p-p) }
-  c := 4 * Pi / Lambda; { волновое число }
+  { Р¤СЂРµРЅРµР»РµРІСЃРєРёРµ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ (p-p) }
+  c := 4 * Pi / Lambda; { РІРѕР»РЅРѕРІРѕРµ С‡РёСЃР»Рѕ }
 
   for i := 0 to Length(FLayers) - 2 do
   begin
@@ -190,7 +214,7 @@ begin
     end;
     FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
   end;
-  { Коэффициент отражения Rs }
+  { РљРѕСЌС„С„РёС†РёРµРЅС‚ РѕС‚СЂР°Р¶РµРЅРёСЏ Rs }
   FLayers[ High(FLayers)].R.re := 0;
   FLayers[ High(FLayers)].R.Im := 0;
   RCalc;
@@ -219,7 +243,7 @@ begin
       end;
       FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
     end;
-    { Коэффициент отражения }
+    { РљРѕСЌС„С„РёС†РёРµРЅС‚ РѕС‚СЂР°Р¶РµРЅРёСЏ }
     RCalc;
     Rp := sqr(AbsZ(FLayers[0].R));
     Result := (Rs + Rp) / 2;

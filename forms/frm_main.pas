@@ -497,11 +497,8 @@ var
   CD: TThreadParams;
   StartT, EndT: single;
   Hour, Min, Sec, MSec: Word;
-
 begin
-  if FActiveModel = nil then
-    Exit;
-  if Tree.ChildCount[Nil] = 0 then
+  if (FActiveModel = nil) or (Tree.ChildCount[Nil] = 0) then
     Exit;
 
   StartTime := Now;
@@ -511,9 +508,10 @@ begin
   CalcRun.Enabled := False;
 
   RT.Clear;
+  Calc := TCalc.Create;
 
   try
-    Calc := TCalc.Create;
+    Calc.Model := FLastModel;
 
     StartT := StrToFloat(edStartTeta.Text);
     EndT := StrToFloat(edEndTeta.Text);
@@ -528,51 +526,37 @@ begin
     else
       CD.P := cmSP;
 
-    Gradients := FillGradients(Project, FLastModel);
-    tsGradients.TabVisible := (Length(Gradients) > 0);
-
-
-    if rgCalcMode.ItemIndex = 0 then
-      Calc.Layers := FillLayers(Tree, StrToFloat(edLambda.Text), chGradients);
-
-    StatusD.Caption := FloatToStrF(TotalD, ffFixed, 7, 2) + ' Е';
-
     if (FLinkedData <> nil) and FActiveData.Curve.Visible then
        Calc.ExpValues := SeriesToData(FLinkedData.Curve);
 
-      case rgCalcMode.ItemIndex of
-        0:begin
-            CD.Mode := cmTheta;
-            CD.Lambda := StrToFloat(edLambda.Text);
-            CD.StartT := StartT;
-            CD.EndT   := EndT;
-            CD.RF := rfError;
-            CD.N := StrToInt(edN.Text);
-            Calc.CalcData := CD;
-            Calc.Limit := StrToFloat(cbMinLimit.Text);
-            Calc.Run;
-          end;
+    case rgCalcMode.ItemIndex of
+      0:begin
+          CD.Mode := cmTheta;
+          CD.Lambda := StrToFloat(edLambda.Text);
+          CD.StartT := StartT;
+          CD.EndT   := EndT;
+        end;
 
-        1:
-          begin
-            ThreadsRunning := 1;
-            SetLength(FResults, 1);
-            CD.Mode := cmLambda;
-            CD.Theta := StrToFloat(edTheta.Text);
-            CD.StartL := StrToFloat(edStartL.Text);
-            CD.EndL := StrToFloat(edEndL.Text);
-            CD.DW := StrToFloat(edDL.Text);
-            CD.N := StrToInt(edN.Text);
-            Calc.CalcData := CD;
-            Calc.Limit := StrToFloat(cbMinLimit.Text);
-            Calc.Tree := Tree;
-            Calc.Chart  := chGradients;
-            Calc.Run;
-          end;
-      end;
+      1:
+        begin
+          ThreadsRunning := 1;
+          SetLength(FResults, 1);
+          CD.Mode := cmLambda;
+          CD.Theta := StrToFloat(edTheta.Text);
+          CD.StartL := StrToFloat(edStartL.Text);
+          CD.EndL := StrToFloat(edEndL.Text);
+          CD.DW := StrToFloat(edDL.Text);
+        end;
+    end;
 
-
+    CD.RF := rfError;
+    CD.N := StrToInt(edN.Text);
+    Calc.CalcData := CD;
+    Calc.Limit := StrToFloat(cbMinLimit.Text);
+    Calc.Tree := Tree;
+    Calc.Chart  := chGradients;
     Pages.ActivePage := tsCalc;
+    Calc.Run;
   except
     on E: exception do
     begin
@@ -589,6 +573,8 @@ begin
   spnTime.Caption := Format('Time: %d.%3.3d s.', [60 * Min + Sec, MSec]);
   FActiveModel.Curve.EndUpdate;
   FActiveModel.Curve.Repaint;
+  StatusD.Caption := FloatToStrF(Calc.TotalD, ffFixed, 7, 2);
+  tsGradients.TabVisible := Calc.HasGradients;
   Screen.Cursor := crDefault;
   CalcRun.Enabled := True;
   PrintMax;
