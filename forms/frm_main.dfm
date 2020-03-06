@@ -178,7 +178,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 41
+          Width = 45
         end
         item
           Position = 1
@@ -233,7 +233,7 @@ object frmMain: TfrmMain
       Width = 954
       Height = 489
       Hint = ''
-      ActivePage = tsCalc
+      ActivePage = tsStructure
       Align = alClient
       Color = clSkyBlue
       UseColoredTabs = True
@@ -244,7 +244,7 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
-      TabIndex = 1
+      TabIndex = 0
       TabOrder = 0
       OnChange = PagesChange
       FixedDimension = 22
@@ -340,6 +340,10 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Computation results'
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -846,20 +850,32 @@ object frmMain: TfrmMain
             ParentFont = False
           end
           object edStartTeta: TEdit
-            Left = 20
+            Left = 19
             Top = 13
             Width = 50
             Height = 21
             Alignment = taRightJustify
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 0
             Text = '0.01'
           end
           object edEndTeta: TEdit
-            Left = 20
-            Top = 39
+            Left = 19
+            Top = 40
             Width = 50
             Height = 21
             Alignment = taRightJustify
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 1
             Text = '10'
           end
@@ -869,6 +885,12 @@ object frmMain: TfrmMain
             Width = 37
             Height = 21
             Alignment = taRightJustify
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 2
             Text = '0.015'
           end
@@ -878,6 +900,12 @@ object frmMain: TfrmMain
             Width = 73
             Height = 21
             Alignment = taRightJustify
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 3
             Text = '1.54043'
           end
@@ -919,56 +947,56 @@ object frmMain: TfrmMain
           object Label9: TLabel
             Left = 1
             Top = 40
-            Width = 13
-            Height = 16
+            Width = 8
+            Height = 13
             Caption = 'l2'
             Enabled = False
-            Font.Charset = GREEK_CHARSET
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Symbol'
+            Font.Height = -11
+            Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
           end
           object Label10: TLabel
-            Left = 1
-            Top = 14
-            Width = 13
-            Height = 16
+            Left = 0
+            Top = 17
+            Width = 8
+            Height = 13
             Caption = 'l1'
             Enabled = False
-            Font.Charset = GREEK_CHARSET
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Symbol'
+            Font.Height = -11
+            Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
           end
           object Label11: TLabel
             Left = 69
             Top = 14
-            Width = 7
-            Height = 16
+            Width = 6
+            Height = 13
             Caption = 'q'
             Enabled = False
-            Font.Charset = GREEK_CHARSET
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Symbol'
+            Font.Height = -11
+            Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
           end
           object Label12: TLabel
             Left = 66
             Top = 41
-            Width = 14
-            Height = 16
+            Width = 9
+            Height = 13
             Caption = 'Dl'
             Enabled = False
-            Font.Charset = GREEK_CHARSET
+            Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
-            Font.Height = -13
-            Font.Name = 'Symbol'
+            Font.Height = -11
+            Font.Name = 'Tahoma'
             Font.Style = []
             ParentFont = False
           end
@@ -979,6 +1007,12 @@ object frmMain: TfrmMain
             Height = 21
             Alignment = taRightJustify
             Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 0
             Text = '1'
           end
@@ -989,6 +1023,12 @@ object frmMain: TfrmMain
             Height = 21
             Alignment = taRightJustify
             Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 1
             Text = '10'
           end
@@ -999,6 +1039,12 @@ object frmMain: TfrmMain
             Height = 21
             Alignment = taRightJustify
             Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 2
             Text = '85'
           end
@@ -1009,6 +1055,12 @@ object frmMain: TfrmMain
             Height = 21
             Alignment = taRightJustify
             Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
             TabOrder = 3
             Text = '0'
           end
@@ -1035,6 +1087,12 @@ object frmMain: TfrmMain
             Width = 42
             Height = 26
             Caption = 'Number'#13'of points'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
           end
           object edN: TEdit
             Left = 163
@@ -1042,7 +1100,13 @@ object frmMain: TfrmMain
             Width = 42
             Height = 21
             Alignment = taRightJustify
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
             NumbersOnly = True
+            ParentFont = False
             TabOrder = 0
             Text = '1000'
           end
@@ -1054,10 +1118,16 @@ object frmMain: TfrmMain
             Height = 59
             Align = alLeft
             Caption = 'Polarisation'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
             ItemIndex = 0
             Items.Strings = (
               's - type'
               'sp - type')
+            ParentFont = False
             TabOrder = 1
           end
           object rgCalcMode: TRadioGroup
@@ -1068,10 +1138,16 @@ object frmMain: TfrmMain
             Height = 59
             Align = alLeft
             Caption = 'Mode'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
             ItemIndex = 0
             Items.Strings = (
               'by angle'
               'by wave')
+            ParentFont = False
             TabOrder = 2
             OnClick = rgModeClick
           end

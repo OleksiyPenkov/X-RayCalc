@@ -399,6 +399,8 @@ type
     procedure AddResult(const S: string);
     procedure AddRecentItem(const FileName: string;const First:boolean = False);
     procedure FillExtensionLayres(const Period: string; var Layres: TCombobox);
+    procedure AfterConstruction; override;
+    constructor Create(AOwner: TComponent);
   end;
 
 var
@@ -679,6 +681,11 @@ end;
 procedure TfrmMain.ChartZoom(Sender: TObject);
 begin
   PrintMax;
+end;
+
+constructor TfrmMain.Create(AOwner: TComponent);
+begin
+
 end;
 
 procedure TfrmMain.CreateDefaultProject;
@@ -2195,6 +2202,44 @@ end;
 procedure TfrmMain.AddResult(const S: string);
 begin
   RT.Add(S);
+end;
+
+procedure SetUnaware(const val: Integer);
+type
+  PROCESS_DPI_AWARENESS = 0..2;
+
+var
+  handle : Integer;
+  setProcessDPIAwareness : procedure(val: PROCESS_DPI_AWARENESS)stdcall;
+begin
+  handle := LoadLibrary('shcore.dll');
+  try
+    setProcessDPIAwareness := GetProcAddress(handle, 'SetProcessDpiAwareness');
+    if Assigned(setProcessDPIAwareness) then
+        setProcessDPIAwareness(val);
+  finally
+    FreeLibrary(handle);
+  end;
+end;
+
+
+procedure TfrmMain.AfterConstruction;
+const
+  Default = 96;
+var
+  i: Integer;
+begin
+  inherited;
+
+  if Screen.PixelsPerInch < 150 then
+    SetUnaware(1)  // try to rescale for 125%
+  else
+    SetUnaware(0);  // give up otherwise
+
+  if Screen.PixelsPerInch > Default then //as I’m designing at 96 DPI
+  begin
+    Ribbon.Font.Size := MulDiv(Ribbon.Font.Size, Default, Screen.PixelsPerInch);
+  end;
 end;
 
 procedure TfrmMain.btnChartScaleClick(Sender: TObject);
