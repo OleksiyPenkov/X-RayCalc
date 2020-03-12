@@ -37,6 +37,9 @@ type
     FSplitterPosition: integer;
     FMinLimit: string;
 
+    // System
+    FNumberOfThreads: byte;
+
     function GetTempPath: string;
     function GetSystemFileName(fileType: TXRCSystemFile): string;
     function GetSettingsFileName: string;
@@ -53,6 +56,7 @@ type
     property DataDir: string read FDataDir;
     property WorkDir: string read FWorkDir;
     property WorkPath: string read GetWorkPath;
+    property NumberOfThreads: byte read FNumberOfThreads;
 
     property SystemFileName[fileType: TXRCSystemFile]: string read GetSystemFileName;
 
@@ -197,6 +201,7 @@ begin
     FRecentFiles := iniFile.ReadString('MEMORIES','Recent_files','');
     FSplitterPosition := iniFile.ReadInteger('MEMORIES','Splitter', 240);
     FMinLimit := iniFile.ReadString('MEMORIES','MinLimit','5e-7');
+    FNumberOfThreads := iniFile.ReadInteger('SYSTEM','NumberOfThreads', 4);
   finally
     iniFile.Free;
   end;
@@ -210,7 +215,8 @@ begin
   try
     iniFile.WriteString('MEMORIES','Recent_files', FRecentFiles);
     iniFile.WriteInteger('MEMORIES','Splitter', FSplitterPosition);
-    iniFile.WriteString('MEMORIES','MinLimit', FMinLimit)
+    iniFile.WriteString('MEMORIES','MinLimit', FMinLimit);
+    iniFile.WriteInteger('SYSTEM','NumberOfThreads', FNumberOfThreads );
   finally
     iniFile.Free;
   end;

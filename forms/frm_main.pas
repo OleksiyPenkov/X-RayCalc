@@ -509,6 +509,7 @@ begin
 
   RT.Clear;
   Calc := TCalc.Create;
+  Calc.Threads := Settings.NumberOfThreads;
 
   try
     Calc.Model := FLastModel;
