@@ -17,16 +17,18 @@ uses
   math_complex,
   VirtualTrees,
   TeEngine, Series,
-  TeeProcs, Chart;
+  TeeProcs, Chart,
+  OtlParallel;
 type
 
 
   TCalc = class(TObject)
   private
     FData: TDataArray;
-    FResult: TDataArray;
+    FResult1: TDataArray;
+    FResult2: TDataArray;
 
-    FLayers: TLayers;
+
     FLimit: single;
 
     FCD: TThreadParams;
@@ -37,9 +39,10 @@ type
     FModel: PVirtualNode;
     FHasGradients: Boolean;
 
-    function  RefCalc(t, Lambda: single): single;
+    function  RefCalc(t, Lambda: single;const FLayers: TLayers): single;
     procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
-    procedure CalcTet(StartTeta, EndTeta: single; N: integer);
+    procedure CalcTet(StartTeta, EndTeta: single; StartN, EndN: integer; var FResult: TDataArray);
+    function GetResults: TDataArray;
 
     { Private declarations }
     protected
@@ -49,11 +52,11 @@ type
       procedure Run;
       //property ResSeries: TLineSeries write SetResSeries;
 
-      property Layers: TLayers write FLayers;
+//      property Layers: TLayers write FLayers;
       property CalcData: TThreadParams write FCD;
       property ExpValues: TDataArray write FData;
       property Limit: single write FLimit;
-      property Results: TDataArray read FResult;
+      property Results: TDataArray read GetResults;
       property Chart: TChart read FChart write FChart;
       property Tree: TVirtualStringTree read FTree write FTree;
       property TotalD: single read FTotalD;
@@ -69,7 +72,9 @@ implementation
 uses
   Math,
   unit_materials,
-  math_globals;
+  math_globals,
+  GpLists,
+  OtlSync;
 
 
   { TCalc }
@@ -81,22 +86,23 @@ var
   R: single;
   L: single;
   LayeredModel: TLayeredModel;
-begin
+  FLayers: TLayers;
+ begin
   LayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
   try
     Step := (EndL - StartL) / N;
-    SetLength(FResult, N);
+    SetLength(FResult1, N);
     for i := 0 to N - 1 do
     begin
       L := StartL + i * Step;
       LayeredModel.Lamda := L;
       FLayers := LayeredModel.Layers;
-      FResult[i].t := L;
-      R := RefCalc(Theta, L);
+      FResult1[i].t := L;
+      R := RefCalc(Theta, L,  FLayers);
       if R > FLimit then
-        FResult[i].R := R
+        FResult1[i].R := R
       else
-        FResult[i].R := FLimit;
+        FResult1[i].R := FLimit;
     end;
     FTotalD := LayeredModel.TotalD;
     FHasGradients := LayeredModel.HasGradients;
@@ -105,24 +111,31 @@ begin
   end;
 end;
 
-procedure TCalc.CalcTet(StartTeta, EndTeta: single; N: integer);
+procedure TCalc.CalcTet;
 var
   i: integer;
   Step: single;
   R: single;
   LayeredModel: TLayeredModel;
+  N: Integer;
+  lock: TOmniCS;
+  FLayers: TLayers;
 begin
   LayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
   try
     LayeredModel.Lamda := FCD.Lambda;
     FLayers := LayeredModel.Layers;
+
+    N := EndN - StartN;
     Step := (EndTeta - StartTeta) / N;
-    SetLength(FResult,0);
+
+    SetLength(FResult, 0);
     SetLength(FResult, N);
+
     for i := 0 to N - 1 do
     begin
       FResult[i].t := StartTeta + i * Step;
-      R := RefCalc((FResult[i].t) / FCD.K, FCD.Lambda);
+      R := RefCalc((FResult[i].t) / FCD.K, FCD.Lambda, FLayers);
       if R > FLimit then
         FResult[i].R := R
       else
@@ -141,17 +154,40 @@ begin
   FLimit := 5E-7;
 end;
 
+function TCalc.GetResults: TDataArray;
+var
+  i, N: Integer;
+begin
+  N := Length(FResult1);
+  SetLength(Result, N * 2);
+  for i := 0 to N - 2 do
+  begin
+    Result[i]      := FResult1[i];
+    Result[N + i]  := FResult2[i];
+  end;
+end;
+
 procedure TCalc.Run;
 begin
   case FCD.Mode of
-    cmTheta:
-      CalcTet(FCD.StartT, FCD.EndT, FCD.N);
+    cmTheta:begin
+              Parallel.Join(
+                         procedure
+                          begin
+                            CalcTet(FCD.StartT, FCD.EndT / 2, 0, FCD.N div 2, FResult1);
+                          end,
+                         procedure
+                          begin
+                            CalcTet(FCD.EndT / 2, FCD.EndT, FCD.N div 2 + 1, FCD.N, FResult2);
+                          end).Execute;
+
+             end;
     cmLambda:
       CalcLambda(FCD.StartL, FCD.EndL, FCD.Theta, FCD.N);
   end;
 end;
 
-function TCalc.RefCalc(t, Lambda: single): single;
+function TCalc.RefCalc(t, Lambda: single;const FLayers: TLayers): single;
 var
   c, Rs, Rp, s, s1, ex, sin_t, cos_t: single;
   i: integer;
