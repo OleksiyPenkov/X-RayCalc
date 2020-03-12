@@ -12,14 +12,11 @@ unit unit_materials;
 interface
 
 uses
+  FastMM4,
   VirtualTrees,
   SysUtils, Chart, VCLTee.Series,
   unit_types,
   math_globals;
-
-
-
-
 
 type
 
@@ -65,6 +62,7 @@ type
     function IfHasGradients: Boolean;
   published
     constructor Create(ATree: TVirtualStringTree; AChart: TChart; AModel: PVirtualNode);
+    procedure Generate;
 
     property Layers:TLayers Read GetLayers;
     property TotalD:Single read FTotalD;
@@ -103,8 +101,6 @@ begin
     Item := Tree.GetNextSibling(Item);
   end;
 end;
-
-
 
 function TLayeredModel.SetFun(a: string): TFunctionRec;
 var
@@ -371,7 +367,7 @@ begin
   Model   := AModel;
 end;
 
-function TLayeredModel.GetLayers: TLayers;
+procedure TLayeredModel.Generate;
 begin
   Gradients := FillGradients;
   LayersCount := CountLayers;
@@ -390,8 +386,11 @@ begin
   FLayers[0].L := 1E10;
   FLayers[0].e.re := 1;
   FLayers[0].e.im := 0;
+end;
 
-  Result := FLayers;
+function TLayeredModel.GetLayers: TLayers;
+begin
+  Result := Copy(FLayers, 0, Length(FLayers));
 end;
 
 function TLayeredModel.IfHasGradients: Boolean;

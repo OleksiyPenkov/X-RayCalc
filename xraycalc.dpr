@@ -10,6 +10,7 @@
 program xraycalc;
 
 uses
+  FastMM4,
   Forms,
   SysUtils,
   unit_types in 'units\unit_types.pas',
