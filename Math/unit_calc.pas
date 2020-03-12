@@ -24,9 +24,18 @@ uses
 
 type
 
+  TCalcParams = record
+                  StartTeta, EndTeta: single;
+                  N: integer;
+                  N0: integer
+                end;
 
   TCalc = class(TObject)
   private
+    NThreads : Integer;
+
+    CalcParams: array of TCalcParams;
+
     FData: TDataArray;
     FResult: TDataArray;
 
@@ -44,7 +53,7 @@ type
 
     function  RefCalc(t, Lambda: single; FLayers: TLayers): single;
     procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
-    procedure CalcTet(StartTeta, EndTeta: single; N: integer; N0: integer);
+    procedure CalcTet(const Params: TCalcParams);
     procedure RunThetaThreads;
 
     { Private declarations }
@@ -123,42 +132,115 @@ var
   FLayers: TLayers;
 begin
   FLayers := FLayeredModel.Layers;
-  Step := (EndTeta - StartTeta) / N;
+  Step := (Params.EndTeta - Params.StartTeta) / Params.N;
 
-  for i := 0 to N - 1 do
+  for i := 0 to Params.N - 1 do
   begin
-    FResult[N0 + i].t := StartTeta + i * Step;
-    R := RefCalc((FResult[N0 + i].t) / FCD.K, FCD.Lambda, FLayers);
+    FResult[Params.N0 + i].t := Params.StartTeta + i * Step;
+    R := RefCalc((FResult[Params.N0 + i].t) / FCD.K, FCD.Lambda, FLayers);
     if R > FLimit then
-      FResult[N0 + i].R := R
+      FResult[Params.N0 + i].R := R
     else
-      FResult[N0 + i].R := FLimit;
+      FResult[Params.N0 + i].R := FLimit;
   end;
 end;
 
 constructor TCalc.Create;
 begin
   inherited Create;
-  FLimit := 5E-7;
+  FLimit   := 5E-7;
+  NThreads := 8;
 end;
 
 procedure TCalc.RunThetaThreads;
+var
+  N, i: Integer;
+  dt: single;
+
+  Tasks: array of TProc;
+
 begin
   FLayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
   FLayeredModel.Lamda := FCD.Lambda;
+
   FLayeredModel.Generate;
+
   SetLength(FResult, 0);
   SetLength(FResult, FCD.N);
 
-  Parallel.Join(
-             procedure
-              begin
-                CalcTet(FCD.StartT, FCD.EndT / 2, FCD.N div 2, 0);
-              end,
-             procedure
-              begin
-                CalcTet(FCD.EndT / 2, FCD.EndT, FCD.N div 2, FCD.N div 2);
-              end).Execute;
+  SetLength(Tasks, NThreads);
+  SetLength(CalcParams,  NThreads);
+
+  N := FCD.N div NThreads;
+  dt := (FCD.EndT - FCD.StartT) / NThreads;
+
+  for i := 0 to NThreads - 1 do
+  begin
+    CalcParams[i].StartTeta := FCD.StartT + i * dt;
+    CalcParams[i].EndTeta := FCD.StartT + (i + 1) * dt;
+    CalcParams[i].N0 := N * i;
+    CalcParams[i].N := N;
+  end;
+
+  Tasks[0] := (procedure
+                    begin
+                      CalcTet(CalcParams[0]);
+                    end
+                 );
+
+  if NThreads >= 2 then
+  begin
+      Tasks[1] := (procedure
+                        begin
+                          CalcTet(CalcParams[1]);
+                        end
+                     );
+  end;
+
+  if NThreads >= 4 then
+  begin
+      Tasks[2] := (procedure
+                        begin
+                          CalcTet(CalcParams[2]);
+                        end
+                     );
+
+      Tasks[3] := (procedure
+                        begin
+                          CalcTet(CalcParams[3]);
+                        end
+                     );
+  end;
+
+  if NThreads = 8 then
+  begin
+    Tasks[4] := (procedure
+                      begin
+                        CalcTet(CalcParams[4]);
+                      end
+                   );
+
+    Tasks[5] := (procedure
+                      begin
+                        CalcTet(CalcParams[5]);
+                      end
+                   );
+
+    Tasks[6] := (procedure
+                      begin
+                        CalcTet(CalcParams[6]);
+                      end
+                   );
+
+    Tasks[7] := (procedure
+                      begin
+                        CalcTet(CalcParams[7]);
+                      end
+                   );
+  end;
+
+
+  Parallel.Join(Tasks).Execute;
 
   FTotalD := FLayeredModel.TotalD;
   FHasGradients := FLayeredModel.HasGradients;
