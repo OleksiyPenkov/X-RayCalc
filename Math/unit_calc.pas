@@ -183,6 +183,12 @@ begin
     CalcParams[i].N := N;
   end;
 
+//  for i := 0 to NThreads - 1 do //  <-- Looks nice but doesn't work
+//  begin
+//    Tasks[i] := (procedure begin CalcTet(CalcParams[i]); end);
+//  end;
+
+
   Tasks[0] := (procedure begin CalcTet(CalcParams[0]); end);
 
   if NThreads >= 2 then
@@ -215,6 +221,12 @@ begin
   end;
 
   Parallel.Join(Tasks).Execute;
+
+//  Parallel.ForEach(0, NThreads - 1).Execute(  // Works but too slow; don't use!
+//                        procedure(const elem:Integer)
+//                        begin
+//                          CalcTet(CalcParams[elem]);
+//                        end);
 
   FTotalD := FLayeredModel.TotalD;
   FHasGradients := FLayeredModel.HasGradients;
