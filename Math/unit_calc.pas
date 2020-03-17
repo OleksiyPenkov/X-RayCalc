@@ -44,7 +44,7 @@ type
     FCD: TThreadParams;
 
     FTree: TVirtualStringTree;
-    FChart: TChart;
+    FGradientChart: TChart;
     FTotalD: single;
     FModel: PVirtualNode;
     FHasGradients: Boolean;
@@ -67,7 +67,7 @@ type
       property ExpValues: TDataArray write FData;
       property Limit: single write FLimit;
       property Results: TDataArray read FResult;
-      property Chart: TChart read FChart write FChart;
+      property GradientChart: TChart read FGradientChart write FGradientChart;
       property Tree: TVirtualStringTree read FTree write FTree;
       property TotalD: single read FTotalD;
       property Model: PVirtualNode write FModel;
@@ -98,7 +98,7 @@ var
   LayeredModel: TLayeredModel;
   Layers: TLayers;
  begin
-  LayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
+  LayeredModel := TLayeredModel.Create(FTree, FGradientChart, FModel);
   try
     Step := (EndL - StartL) / N;
     SetLength(FResult, N);
@@ -157,7 +157,7 @@ var
   Tasks: array of TProc;
   NThreads : byte;
 begin
-  FLayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
+  FLayeredModel := TLayeredModel.Create(FTree, FGradientChart, FModel);
   FLayeredModel.Lamda := FCD.Lambda;
 
   FLayeredModel.Generate;

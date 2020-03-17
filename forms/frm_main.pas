@@ -553,7 +553,7 @@ begin
     Calc.CalcData := CD;
     Calc.Limit := StrToFloat(cbMinLimit.Text);
     Calc.Tree := Tree;
-    Calc.Chart  := chGradients;
+    Calc.GradientChart  := chGradients;
     Pages.ActivePage := tsCalc;
     Calc.Run;
   except
