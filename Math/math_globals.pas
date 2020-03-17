@@ -148,7 +148,7 @@ begin
   if Width = 0 then Exit;
   Size := Series.Count;
   Width := Width * 0.849;
-  delta := Series.XValues[11] - Series.XValues[10];
+  delta := (Series.XValues.MaxValue - Series.XValues.MinValue)/Series.Count;
   N := Round(0.1 / delta);
   if frac(N / 2) = 0 then
     N := N - 1;

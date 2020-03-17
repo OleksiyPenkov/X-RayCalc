@@ -400,7 +400,6 @@ type
     procedure AddRecentItem(const FileName: string;const First:boolean = False);
     procedure FillExtensionLayres(const Period: string; var Layres: TCombobox);
     procedure AfterConstruction; override;
-    constructor Create(AOwner: TComponent);
   end;
 
 var
@@ -509,7 +508,6 @@ begin
 
   RT.Clear;
   Calc := TCalc.Create;
-  Calc.Threads := Settings.NumberOfThreads;
 
   try
     Calc.Model := FLastModel;
@@ -568,7 +566,6 @@ begin
       CalcRun.Enabled := True;
     end;
   end;
-
   FinalizeCalc;
   DecodeTime(Now - StartTime, Hour, Min, Sec, MSec);
   spnTime.Caption := Format('Time: %d.%3.3d s.', [60 * Min + Sec, MSec]);
@@ -682,11 +679,6 @@ end;
 procedure TfrmMain.ChartZoom(Sender: TObject);
 begin
   PrintMax;
-end;
-
-constructor TfrmMain.Create(AOwner: TComponent);
-begin
-
 end;
 
 procedure TfrmMain.CreateDefaultProject;

@@ -19,7 +19,7 @@ uses
   VirtualTrees,
   TeEngine, Series,
   TeeProcs, Chart,
-  OtlParallel,
+  OtlParallel, OtlCollections, OtlCommon,
   unit_materials;
 
 type
@@ -32,8 +32,6 @@ type
 
   TCalc = class(TObject)
   private
-    NThreads : byte;
-
     CalcParams: array of TCalcParams;
 
     FData: TDataArray;
@@ -74,7 +72,6 @@ type
       property TotalD: single read FTotalD;
       property Model: PVirtualNode write FModel;
       property HasGradients:Boolean read FHasGradients;
-      property Threads: Byte write NThreads;
   end;
 
 var
@@ -150,7 +147,6 @@ constructor TCalc.Create;
 begin
   inherited Create;
   FLimit   := 5E-7;
-  NThreads := 16;
 end;
 
 procedure TCalc.RunThetaThreads;
@@ -159,7 +155,7 @@ var
   dt: single;
 
   Tasks: array of TProc;
-
+  NThreads : byte;
 begin
   FLayeredModel := TLayeredModel.Create(FTree, FChart, FModel);
   FLayeredModel.Lamda := FCD.Lambda;
@@ -168,6 +164,13 @@ begin
 
   SetLength(FResult, 0);
   SetLength(FResult, FCD.N);
+
+  {$IFDEF DEBUG}
+    NThreads := 2;
+  {$ELSE}
+    NThreads := Environment.Process.Affinity.Count;
+  {$ENDIF}
+
 
   SetLength(Tasks, NThreads);
   SetLength(CalcParams,  NThreads);
@@ -183,50 +186,14 @@ begin
     CalcParams[i].N := N;
   end;
 
-//  for i := 0 to NThreads - 1 do //  <-- Looks nice but doesn't work
-//  begin
-//    Tasks[i] := (procedure begin CalcTet(CalcParams[i]); end);
-//  end;
-
-
-  Tasks[0] := (procedure begin CalcTet(CalcParams[0]); end);
-
-  if NThreads >= 2 then
-      Tasks[1] := (procedure begin CalcTet(CalcParams[1]); end );
-
-  if NThreads >= 4 then
-  begin
-      Tasks[2] := (procedure begin CalcTet(CalcParams[2]); end );
-      Tasks[3] := (procedure begin CalcTet(CalcParams[3]); end );
-  end;
-
-  if NThreads >= 8 then
-  begin
-    Tasks[4] := (procedure begin CalcTet(CalcParams[4]); end );
-    Tasks[5] := (procedure begin CalcTet(CalcParams[5]); end );
-    Tasks[6] := (procedure begin CalcTet(CalcParams[6]); end );
-    Tasks[7] := (procedure begin CalcTet(CalcParams[7]); end );
-  end;
-
-  if NThreads = 16 then
-  begin
-    Tasks[8]  := (procedure begin CalcTet(CalcParams[8]);  end );
-    Tasks[9]  := (procedure begin CalcTet(CalcParams[9]);  end );
-    Tasks[10] := (procedure begin CalcTet(CalcParams[10]); end );
-    Tasks[11] := (procedure begin CalcTet(CalcParams[11]); end );
-    Tasks[12] := (procedure begin CalcTet(CalcParams[12]); end );
-    Tasks[13] := (procedure begin CalcTet(CalcParams[13]); end );
-    Tasks[14] := (procedure begin CalcTet(CalcParams[14]); end );
-    Tasks[15] := (procedure begin CalcTet(CalcParams[15]); end );
-  end;
-
-  Parallel.Join(Tasks).Execute;
-
-//  Parallel.ForEach(0, NThreads - 1).Execute(  // Works but too slow; don't use!
-//                        procedure(const elem:Integer)
-//                        begin
-//                          CalcTet(CalcParams[elem]);
-//                        end);
+  Parallel.ForEach(0, NThreads - 1, 1)
+    .NumTasks(NThreads)
+    .PreserveOrder
+    .Execute(
+        procedure(const elem:Integer)
+        begin
+          CalcTet(CalcParams[elem]);
+        end);
 
   FTotalD := FLayeredModel.TotalD;
   FHasGradients := FLayeredModel.HasGradients;

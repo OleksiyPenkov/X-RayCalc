@@ -178,7 +178,7 @@ object frmMain: TfrmMain
       Columns = <
         item
           Position = 0
-          Width = 45
+          Width = 41
         end
         item
           Position = 1
@@ -233,7 +233,7 @@ object frmMain: TfrmMain
       Width = 954
       Height = 489
       Hint = ''
-      ActivePage = tsStructure
+      ActivePage = tsCalc
       Align = alClient
       Color = clSkyBlue
       UseColoredTabs = True
@@ -244,17 +244,13 @@ object frmMain: TfrmMain
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
-      TabIndex = 0
+      TabIndex = 1
       TabOrder = 0
       OnChange = PagesChange
       FixedDimension = 22
       object tsStructure: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Model Structure'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Tree: TVirtualStringTree
           AlignWithMargins = True
           Left = 3
@@ -340,10 +336,6 @@ object frmMain: TfrmMain
       object tsCalc: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Computation results'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Chart: TChart
           AlignWithMargins = True
           Left = 3
@@ -633,10 +625,6 @@ object frmMain: TfrmMain
       object tsGradients: TRzTabSheet
         Color = clSkyBlue
         Caption = 'Gradients'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object chGradients: TChart
           AlignWithMargins = True
           Left = 3
