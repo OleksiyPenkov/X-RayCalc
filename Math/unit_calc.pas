@@ -53,6 +53,7 @@ type
     procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
     procedure CalcTet(const Params: TCalcParams);
     procedure RunThetaThreads;
+    procedure Convolute(Width: single);
 
     { Private declarations }
     protected
@@ -146,12 +147,12 @@ end;
 constructor TCalc.Create;
 begin
   inherited Create;
-  FLimit   := 5E-7;
+  FLimit   := 1E-7;
 end;
 
 procedure TCalc.RunThetaThreads;
 var
-  N, i: Integer;
+  N, NCount, i: Integer;
   dt: single;
 
   Tasks: array of TProc;
@@ -159,14 +160,10 @@ var
 begin
   FLayeredModel := TLayeredModel.Create(FTree, FGradientChart, FModel);
   FLayeredModel.Lamda := FCD.Lambda;
-
   FLayeredModel.Generate;
 
-  SetLength(FResult, 0);
-  SetLength(FResult, FCD.N);
-
   {$IFDEF DEBUG}
-    NThreads := 2;
+    NThreads := 4;
   {$ELSE}
     NThreads := Environment.Process.Affinity.Count;
   {$ENDIF}
@@ -177,6 +174,7 @@ begin
 
   N := FCD.N div NThreads;
   dt := (FCD.EndT - FCD.StartT) / NThreads;
+  NCount := 0;
 
   for i := 0 to NThreads - 1 do
   begin
@@ -184,7 +182,11 @@ begin
     CalcParams[i].EndTeta := FCD.StartT + (i + 1) * dt;
     CalcParams[i].N0 := N * i;
     CalcParams[i].N := N;
+    inc(NCount, N);
   end;
+
+  SetLength(FResult, 0);
+  SetLength(FResult, NCount);
 
   Parallel.ForEach(0, NThreads - 1, 1)
     .NumTasks(NThreads)
@@ -204,8 +206,14 @@ end;
 procedure TCalc.Run;
 begin
    case FCD.Mode of
-    cmTheta : RunThetaThreads;
-    cmLambda: CalcLambda(FCD.StartL, FCD.EndL, FCD.Theta, FCD.N);
+    cmTheta : begin
+                RunThetaThreads;
+                 Convolute(FCD.DT * FCD.K);
+              end;
+    cmLambda: begin
+                CalcLambda(FCD.StartL, FCD.EndL, FCD.Theta, FCD.N);
+                Convolute(FCD.DW);
+              end;
   end;
 end;
 
@@ -308,6 +316,51 @@ begin
   end
   else
     Result := Rs;
+end;
+
+procedure TCalc.Convolute(Width: single);
+var
+  Sum, delta, t1: single;
+  i, N, k, p, Size: integer;
+
+  Temp: TDataArray;
+
+  function Gauss(x: single): single;
+  var
+    c: single;
+  begin
+    c := 1 / (Width * sqrt(Pi / 2));
+    Result := c * exp(-2 * sqr(x) / sqr(Width));
+  end;
+
+begin
+  if Width = 0 then Exit;
+
+  Size := Length(FResult);
+  Width := Width * 0.849;
+  delta := (FResult[Size - 1].t - FResult[0].t)/Size;
+  N := Round(0.1 / delta);
+  if frac(N / 2) = 0 then
+    N := N - 1;
+
+  SetLength(Temp, Size - 2*N);
+
+  p := 0;
+  for i := N to Size - N - 1 do
+  begin
+    t1 := -0.1;
+    Sum := 0;
+    for k := i - N to i + N do
+    begin
+      Sum := Sum + FResult[k].r * Gauss(t1) * delta;
+      t1 := t1 + delta;
+    end;
+    Temp[p].t := FResult[i + 1].t;
+    Temp[p].R := Sum;
+    inc(p);
+  end;
+
+  FResult := Temp;
 end;
 
 initialization

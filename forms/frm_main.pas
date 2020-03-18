@@ -381,7 +381,7 @@ type
     ThreadsRunning: Integer;
 
     procedure OnMyMessage(var Msg: TMessage); message WM_RECALC;
-    procedure FinalizeCalc;
+    procedure PlotResults;
     procedure CreateNewExtension(Node: PVirtualNode);
     procedure DeleteExtension(Node: PVirtualNode);
     procedure WMStartEditing(var Message: TMessage); message WM_STARTEDITING;
@@ -472,23 +472,13 @@ begin
   frmFitWin.ShowModal;
 end;
 
-procedure TfrmMain.FinalizeCalc;
+procedure TfrmMain.PlotResults;    { TODO -ooleks -c : Move to unit_calc 17.03.2020 17:03:45 }
 var
-  k, j : Integer;
+  j: Integer;
 begin
-  if cb2Theta.Checked then
-    k := 2
-  else
-    k := 1;
-
   FActiveModel.Curve.Clear;
   for j := 0 to High(Calc.Results) do
       FActiveModel.Curve.AddXY(Calc.Results[j].t, Calc.Results[j].R);
-
-  case rgCalcMode.ItemIndex of
-    0: Convolute(StrToFloat(edWidth.Text) * K, FActiveModel.Curve);
-    1: Convolute(StrToFloat(edDL.Text), FActiveModel.Curve);
-  end;
 end;
 
 procedure TfrmMain.CalcRunExecute(Sender: TObject);
@@ -534,6 +524,7 @@ begin
           CD.Lambda := StrToFloat(edLambda.Text);
           CD.StartT := StartT;
           CD.EndT   := EndT;
+          CD.DT     := StrToFloat(edWidth.Text);
         end;
 
       1:
@@ -566,7 +557,7 @@ begin
       CalcRun.Enabled := True;
     end;
   end;
-  FinalizeCalc;
+  PlotResults;
   DecodeTime(Now - StartTime, Hour, Min, Sec, MSec);
   spnTime.Caption := Format('Time: %d.%3.3d s.', [60 * Min + Sec, MSec]);
   FActiveModel.Curve.EndUpdate;

@@ -20,7 +20,6 @@ uses
 procedure ReadHenke(const N: string; E, L: single; var f: TComplex;
   var Na, Nro: single);
 
-procedure Convolute(Width: single; var Series: TLineSeries);
 procedure Sort(var Series: TLineSeries);
 procedure CopyData(const Input: TDataArray; var Output: TDataArray);
 
@@ -126,51 +125,6 @@ begin
     Series.AddXY(Temp[i].t, Temp[i].r)
 end;
 
-
-procedure Convolute(Width: single; var Series: TLineSeries);
-var
-  Sum, delta, t1: single;
-  i, N, k, p, Size: integer;
-
-  Temp: TDataArray;
-
-  function Gauss(x: single): single;
-  const
-    A = 1;
-  var
-    c: single;
-  begin
-    c := 1 / (Width * sqrt(Pi / 2));
-    Result := c * exp(-2 * sqr(x) / sqr(Width));
-  end;
-
-begin
-  if Width = 0 then Exit;
-  Size := Series.Count;
-  Width := Width * 0.849;
-  delta := (Series.XValues.MaxValue - Series.XValues.MinValue)/Series.Count;
-  N := Round(0.1 / delta);
-  if frac(N / 2) = 0 then
-    N := N - 1;
-  SetLength(Temp, Size - 2*N);
-  p := 0;
-  for i := N to Size - N - 1 do
-  begin
-    t1 := -0.1;
-    Sum := 0;
-    for k := i - N to i + N do
-    begin
-      Sum := Sum + Series.YValues[k] * Gauss(t1) * delta;
-      t1 := t1 + delta;
-    end;
-    Temp[p].t := Series.XValues[i + 1];
-    Temp[p].R := Sum;
-    inc(p);
-  end;
-  Series.Clear;
-  for i := 0 to High(Temp) - 1 do
-    Series.AddXY(Temp[i].t, Temp[i].r)
-end;
 
 function Interp(e1, e2, f1, f2, x: single): single;
 var

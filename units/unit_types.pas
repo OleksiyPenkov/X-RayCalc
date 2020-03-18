@@ -97,7 +97,7 @@ type
     RF: TRoughnessFunction;
     case Mode: TCalcMode of
       cmTheta:
-        (StartT, EndT: single;
+        (StartT, EndT, DT: single;
           Lambda: single);
       cmLambda:
         (StartL, EndL: single;
