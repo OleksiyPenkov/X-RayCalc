@@ -152,7 +152,7 @@ end;
 
 procedure TCalc.RunThetaThreads;
 var
-  N, NCount, i: Integer;
+  N, i: Integer;
   dt: single;
 
   Tasks: array of TProc;
@@ -174,7 +174,6 @@ begin
 
   N := FCD.N div NThreads;
   dt := (FCD.EndT - FCD.StartT) / NThreads;
-  NCount := 0;
 
   for i := 0 to NThreads - 1 do
   begin
@@ -182,11 +181,10 @@ begin
     CalcParams[i].EndTeta := FCD.StartT + (i + 1) * dt;
     CalcParams[i].N0 := N * i;
     CalcParams[i].N := N;
-    inc(NCount, N);
   end;
 
   SetLength(FResult, 0);
-  SetLength(FResult, NCount);
+  SetLength(FResult, NThreads * N);
 
   Parallel.ForEach(0, NThreads - 1, 1)
     .NumTasks(NThreads)
