@@ -217,7 +217,7 @@ end;
 
 function TCalc.RefCalc(t, Lambda: single; FLayers: TLayers): single;
 var
-  c, Rs, Rp, Rsp, s, s1, ex, sin_t, cos_t, sqr_sin_t: single;
+  c, Rs, Rp, Rsp, s1, sin_t, cos_t, sqr_sin_t: single;
 
   function TotalRecursiveRefraction: single;
   var
@@ -240,10 +240,29 @@ var
     Result := sqr(AbsZ(FLayers[0].R));
   end;
 
+  function Roughness(const RF: TRoughnessFunction; const sigma, s: single):Single;inline;
+  begin
+      case RF of
+        rfError:
+          Result := exp(-1 * sqr(sigma) * sqr(s));
+        rfExp:
+          Result := 1 / (1 + (sqr(s) * sqr(sigma)) / 2);
+        rfLinear:
+          if sigma < 0.5 then
+            Result := sin(sqrt(3) * sigma * s) /
+              (sqrt(3) * sigma * s)
+          else
+            Result := 1;
+        rfStep:
+          Result := cos(sigma * s);
+      end;
+  end;
+
   procedure LayerAmplitudeRefractionS;     { Коэффициент отражения Rs}
   var
     i: integer;
     b1, b2: TComplex;
+    s: Single;
   begin
     for i := 0 to Length(FLayers) - 2 do
     begin
@@ -253,32 +272,15 @@ var
       s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr_sin_t));
       s := c * sqrt(cos_t * sqrt(s1));
 
-      case FCD.RF of
-        rfError:
-          ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
-        rfExp:
-          ex := 1 / (1 + (sqr(s) * sqr(FLayers[i + 1].s)) / 2);
-        rfLinear:
-          if FLayers[i + 1].s < 0.5 then
-            ex := sin(sqrt(3) * FLayers[i + 1].s * s) /
-              (sqrt(3) * FLayers[i + 1].s * s)
-          else
-            ex := 1;
-        rfStep:
-          ex := cos(FLayers[i + 1].s * s);
-      end;
-
-      FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
+      FLayers[i].RF := MulRZ(Roughness(FCD.RF, FLayers[i + 1].s, s), FLayers[i].RF);
     end;
-
-    FLayers[ High(FLayers)].R.re := 0;
-    FLayers[ High(FLayers)].R.Im := 0;
   end;
 
   procedure LayerAmplitudeRefractionP;     { Коэффициент отражения Rp }
   var
     i: integer;
     a1, a2, b1, b2: TComplex;
+    s: Single;
   begin
     for i := 0 to Length(FLayers) - 2 do
     begin
@@ -290,17 +292,7 @@ var
       s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr_sin_t));
       s := c * sqrt(cos_t * sqrt(s1));
 
-      case FCD.RF of
-        rfError:
-          ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
-        rfExp:
-          ex := 1 / (1 + (sqr(s) * sqr(FLayers[i + 1].s)) / 2);
-        rfLinear:
-          ex := sin(sqrt(3) * FLayers[i + 1].s * s) /
-            (sqrt(3) * FLayers[i + 1].s * s);
-      end;
-
-      FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
+      FLayers[i].RF := MulRZ(Roughness(FCD.RF, FLayers[i + 1].s, s), FLayers[i].RF);
     end;
   end;
 
