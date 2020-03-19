@@ -62,7 +62,7 @@ type
     function IfHasGradients: Boolean;
   published
     constructor Create(ATree: TVirtualStringTree; AChart: TChart; AModel: PVirtualNode);
-    procedure Generate;
+    procedure Generate(const Lambda: Single);
 
     property Layers:TLayers Read GetLayers;
     property TotalD:Single read FTotalD;
@@ -369,6 +369,8 @@ end;
 
 procedure TLayeredModel.Generate;
 begin
+  FLambda := Lambda;
+
   Gradients := FillGradients;
   LayersCount := CountLayers;
 

@@ -98,7 +98,6 @@ type
     RibbonGroup9: TRibbonGroup;
     rgPolarisation: TRadioGroup;
     RzVersionInfoStatus1: TRzVersionInfoStatus;
-    Progress: TRzProgressStatus;
     rgCalcMode: TRadioGroup;
     edDL: TEdit;
     Label12: TLabel;
@@ -194,6 +193,7 @@ type
     RzStatusPane10: TRzStatusPane;
     RzStatusPane6: TRzStatusPane;
     StatusRi: TRzStatusPane;
+    Progress: TRzProgressStatus;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);

@@ -25,45 +25,38 @@ uses
 type
 
   TCalcParams = record
-                  StartTeta, EndTeta: single;
+                  StartTeta, EndTeta, Step: single;
                   N: integer;
                   N0: integer
                 end;
 
   TCalc = class(TObject)
-  private
-    CalcParams: array of TCalcParams;
+    private
+      CalcParams: array of TCalcParams;
 
-    FData: TDataArray;
-    FResult: TDataArray;
+      FData: TDataArray;
+      FResult: TDataArray;
 
-    FLayeredModel: TLayeredModel;
+      FLayeredModel: TLayeredModel;
 
-    FLimit: single;
+      FLimit: single;
 
-    FCD: TThreadParams;
+      FCD: TThreadParams;
 
-    FTree: TVirtualStringTree;
-    FGradientChart: TChart;
-    FTotalD: single;
-    FModel: PVirtualNode;
-    FHasGradients: Boolean;
+      FTree: TVirtualStringTree;
+      FGradientChart: TChart;
+      FTotalD: single;
+      FModel: PVirtualNode;
+      FHasGradients: Boolean;
 
-    function  RefCalc(t, Lambda: single; FLayers: TLayers): single;
-    procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
-    procedure CalcTet(const Params: TCalcParams);
-    procedure RunThetaThreads;
-    procedure Convolute(Width: single);
-
-    { Private declarations }
-    protected
-
+      function  RefCalc(t, Lambda:single; ALayers: TLayers): single;
+      procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
+      procedure CalcTet(const Params: TCalcParams);
+      procedure RunThetaThreads;
+      procedure Convolute(Width: single);
     public
       constructor Create;
       procedure Run;
-      //property ResSeries: TLineSeries write SetResSeries;
-
-//      property Layers: TLayers write FLayers;
       property CalcData: TThreadParams write FCD;
       property ExpValues: TDataArray write FData;
       property Limit: single write FLimit;
@@ -87,7 +80,6 @@ uses
   OtlSync,
   System.SysUtils;
 
-
   { TCalc }
 
 procedure TCalc.CalcLambda;
@@ -106,11 +98,10 @@ var
     for i := 0 to N - 1 do
     begin
       L := StartL + i * Step;
-      LayeredModel.Lamda := L;
-      LayeredModel.Generate;
+      LayeredModel.Generate(L);
       Layers := LayeredModel.Layers;
       FResult[i].t := L;
-      R := RefCalc(Theta, L,  Layers);
+      R := RefCalc(Theta, L, Layers);
       if R > FLimit then
         FResult[i].R := R
       else
@@ -126,16 +117,13 @@ end;
 procedure TCalc.CalcTet;
 var
   i: integer;
-  Step: single;
   R: single;
   FLayers: TLayers;
 begin
   FLayers := FLayeredModel.Layers;
-  Step := (Params.EndTeta - Params.StartTeta) / Params.N;
-
   for i := 0 to Params.N - 1 do
   begin
-    FResult[Params.N0 + i].t := Params.StartTeta + i * Step;
+    FResult[Params.N0 + i].t := Params.StartTeta + i * Params.Step;
     R := RefCalc((FResult[Params.N0 + i].t) / FCD.K, FCD.Lambda, FLayers);
     if R > FLimit then
       FResult[Params.N0 + i].R := R
@@ -153,14 +141,15 @@ end;
 procedure TCalc.RunThetaThreads;
 var
   N, i: Integer;
-  dt: single;
+  dt, step: single;
 
   Tasks: array of TProc;
   NThreads : byte;
 begin
   FLayeredModel := TLayeredModel.Create(FTree, FGradientChart, FModel);
-  FLayeredModel.Lamda := FCD.Lambda;
-  FLayeredModel.Generate;
+  FLayeredModel.Generate(FCD.Lambda);
+  FTotalD := FLayeredModel.TotalD;
+  FHasGradients := FLayeredModel.HasGradients;
 
   {$IFDEF DEBUG}
     NThreads := 4;
@@ -168,17 +157,18 @@ begin
     NThreads := Environment.Process.Affinity.Count;
   {$ENDIF}
 
-
   SetLength(Tasks, NThreads);
   SetLength(CalcParams,  NThreads);
 
   N := FCD.N div NThreads;
   dt := (FCD.EndT - FCD.StartT) / NThreads;
+  step := dt / N;
 
   for i := 0 to NThreads - 1 do
   begin
     CalcParams[i].StartTeta := FCD.StartT + i * dt;
     CalcParams[i].EndTeta := FCD.StartT + (i + 1) * dt;
+    CalcParams[i].Step :=  step;
     CalcParams[i].N0 := N * i;
     CalcParams[i].N := N;
   end;
@@ -187,26 +177,21 @@ begin
   SetLength(FResult, NThreads * N);
 
   Parallel.ForEach(0, NThreads - 1, 1)
-    .NumTasks(NThreads)
-    .PreserveOrder
     .Execute(
         procedure(const elem:Integer)
         begin
           CalcTet(CalcParams[elem]);
         end);
 
-  FTotalD := FLayeredModel.TotalD;
-  FHasGradients := FLayeredModel.HasGradients;
   FLayeredModel.Free;
 end;
-
 
 procedure TCalc.Run;
 begin
    case FCD.Mode of
     cmTheta : begin
                 RunThetaThreads;
-                 Convolute(FCD.DT * FCD.K);
+                Convolute(FCD.DT * FCD.K);
               end;
     cmLambda: begin
                 CalcLambda(FCD.StartL, FCD.EndL, FCD.Theta, FCD.N);
@@ -215,7 +200,7 @@ begin
   end;
 end;
 
-function TCalc.RefCalc(t, Lambda: single; FLayers: TLayers): single;
+function TCalc.RefCalc(t, Lambda:single; ALayers: TLayers): single;
 var
   c, Rs, Rp, Rsp, s1, sin_t, cos_t, sqr_sin_t: single;
 
@@ -226,18 +211,18 @@ var
     a1, a2, b1, b2: TComplex;
   begin
     Im := ToComplex(0, 1);
-    for i := High(FLayers) - 1 downto 0 do
+    for i := High(ALayers) - 1 downto 0 do
     begin
-      a1 := MulRZ(FLayers[i + 1].L * 2, FLayers[i + 1].K);
+      a1 := MulRZ(ALayers[i + 1].L * 2, ALayers[i + 1].K);
       a1 := MulZZ(Im, a1);
       a1 := ExpZ(a1);
-      a1 := MulZZ(FLayers[i + 1].R, a1);
-      b1 := AddZZ(FLayers[i].RF, a1);
-      a2 := MulZZ(FLayers[i].RF, a1);
+      a1 := MulZZ(ALayers[i + 1].R, a1);
+      b1 := AddZZ(ALayers[i].RF, a1);
+      a2 := MulZZ(ALayers[i].RF, a1);
       b2 := AddZR(a2, 1);
-      FLayers[i].R := DivZZ(b1, b2);
+      ALayers[i].R := DivZZ(b1, b2);
     end;
-    Result := sqr(AbsZ(FLayers[0].R));
+    Result := sqr(AbsZ(ALayers[0].R));
   end;
 
   function Roughness(const RF: TRoughnessFunction; const sigma, s: single):Single;inline;
@@ -264,15 +249,15 @@ var
     b1, b2: TComplex;
     s: Single;
   begin
-    for i := 0 to Length(FLayers) - 2 do
+    for i := 0 to Length(ALayers) - 2 do
     begin
-      b1 := SubZZ(FLayers[i].K, FLayers[i + 1].K);
-      b2 := AddZZ(FLayers[i].K, FLayers[i + 1].K);
-      FLayers[i].RF := DivZZ(b1, b2);
-      s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr_sin_t));
+      b1 := SubZZ(ALayers[i].K, ALayers[i + 1].K);
+      b2 := AddZZ(ALayers[i].K, ALayers[i + 1].K);
+      ALayers[i].RF := DivZZ(b1, b2);
+      s1 := Abs(1 - (AbsZ(DivZZ(ALayers[i].e, ALayers[i + 1].e)) * sqr_sin_t));
       s := c * sqrt(cos_t * sqrt(s1));
 
-      FLayers[i].RF := MulRZ(Roughness(FCD.RF, FLayers[i + 1].s, s), FLayers[i].RF);
+      ALayers[i].RF := MulRZ(Roughness(FCD.RF, ALayers[i + 1].s, s), ALayers[i].RF);
     end;
   end;
 
@@ -282,17 +267,17 @@ var
     a1, a2, b1, b2: TComplex;
     s: Single;
   begin
-    for i := 0 to Length(FLayers) - 2 do
+    for i := 0 to Length(ALayers) - 2 do
     begin
-      a1 := DivZZ(FLayers[i].K, FLayers[i].e);
-      a2 := DivZZ(FLayers[i + 1].K, FLayers[i + 1].e);
+      a1 := DivZZ(ALayers[i].K, ALayers[i].e);
+      a2 := DivZZ(ALayers[i + 1].K, ALayers[i + 1].e);
       b1 := SubZZ(MulRZ(1, a1), MulRZ(1, a2));
       b2 := AddZZ(MulRZ(1, a1), MulRZ(1, a2));
-      FLayers[i].RF := DivZZ(b1, b2);
-      s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr_sin_t));
+      ALayers[i].RF := DivZZ(b1, b2);
+      s1 := Abs(1 - (AbsZ(DivZZ(ALayers[i].e, ALayers[i + 1].e)) * sqr_sin_t));
       s := c * sqrt(cos_t * sqrt(s1));
 
-      FLayers[i].RF := MulRZ(Roughness(FCD.RF, FLayers[i + 1].s, s), FLayers[i].RF);
+      ALayers[i].RF := MulRZ(Roughness(FCD.RF, ALayers[i + 1].s, s), ALayers[i].RF);
     end;
   end;
 
@@ -303,10 +288,10 @@ var
     a1: TComplex;
   begin
     c := 2 * Pi / Lambda; {другое волновое число }
-    for i := 0 to Length(FLayers) - 1 do
+    for i := 0 to Length(ALayers) - 1 do
       begin
-        a1 := SqrtZ(AddZR(FLayers[i].e, -sqr_sin_t));
-        FLayers[i].K := MulRZ(c, a1);
+        a1 := SqrtZ(AddZR(ALayers[i].e, -sqr_sin_t));
+        ALayers[i].K := MulRZ(c, a1);
       end;
   end;
 
