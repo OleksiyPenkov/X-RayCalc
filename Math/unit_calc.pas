@@ -217,14 +217,15 @@ end;
 
 function TCalc.RefCalc(t, Lambda: single; FLayers: TLayers): single;
 var
-  c, Rs, Rp, s, s1, ex, sin_t, cos_t: single;
-  i: integer;
-  a1, a2, b1, b2, Im: TComplex;
+  c, Rs, Rp, Rsp, s, s1, ex, sin_t, cos_t, sqr_sin_t: single;
 
-  procedure RCalc;
+  function TotalRecursiveRefraction: single;
   var
     i: integer;
+    Im: TComplex;
+    a1, a2, b1, b2: TComplex;
   begin
+    Im := ToComplex(0, 1);
     for i := High(FLayers) - 1 downto 0 do
     begin
       a1 := MulRZ(FLayers[i + 1].L * 2, FLayers[i + 1].K);
@@ -236,56 +237,49 @@ var
       b2 := AddZR(a2, 1);
       FLayers[i].R := DivZZ(b1, b2);
     end;
+    Result := sqr(AbsZ(FLayers[0].R));
   end;
 
-{ ================== }
-begin
-  t := Pi / 2 - Pi * t / 180;
-  Im.re := 0;
-  Im.Im := 1;
-  c := 2 * Pi / Lambda; { волновое число }
-  sin_t := sin(t);
-  cos_t := cos(t);
-  for i := 0 to Length(FLayers) - 1 do
+  procedure LayerAmplitudeRefractionS;     { Коэффициент отражения Rs}
+  var
+    i: integer;
+    b1, b2: TComplex;
   begin
-    a1 := SqrtZ(AddZR(FLayers[i].e, -sqr(sin_t)));
-    FLayers[i].K := MulRZ(c, a1);
-  end;
-  { Френелевские коэффициенты (p-p) }
-  c := 4 * Pi / Lambda; { волновое число }
+    for i := 0 to Length(FLayers) - 2 do
+    begin
+      b1 := SubZZ(FLayers[i].K, FLayers[i + 1].K);
+      b2 := AddZZ(FLayers[i].K, FLayers[i + 1].K);
+      FLayers[i].RF := DivZZ(b1, b2);
+      s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr_sin_t));
+      s := c * sqrt(cos_t * sqrt(s1));
 
-  for i := 0 to Length(FLayers) - 2 do
-  begin
-    b1 := SubZZ(FLayers[i].K, FLayers[i + 1].K);
-    b2 := AddZZ(FLayers[i].K, FLayers[i + 1].K);
-    FLayers[i].RF := DivZZ(b1, b2);
-    s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr(sin_t)));
-    // s:=4*Pi*sqrt(cos(t)*sqrt(s1))/Lambda;
-    s := c * sqrt(cos_t * sqrt(s1));
-    case FCD.RF of
-      rfError:
-        ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
-      rfExp:
-        ex := 1 / (1 + (sqr(s) * sqr(FLayers[i + 1].s)) / 2);
-      rfLinear:
-        if FLayers[i + 1].s < 0.5 then
-          ex := sin(sqrt(3) * FLayers[i + 1].s * s) /
-            (sqrt(3) * FLayers[i + 1].s * s)
-        else
-          ex := 1;
-      rfStep:
-        ex := cos(FLayers[i + 1].s * s);
+      case FCD.RF of
+        rfError:
+          ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
+        rfExp:
+          ex := 1 / (1 + (sqr(s) * sqr(FLayers[i + 1].s)) / 2);
+        rfLinear:
+          if FLayers[i + 1].s < 0.5 then
+            ex := sin(sqrt(3) * FLayers[i + 1].s * s) /
+              (sqrt(3) * FLayers[i + 1].s * s)
+          else
+            ex := 1;
+        rfStep:
+          ex := cos(FLayers[i + 1].s * s);
+      end;
+
+      FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
     end;
-    FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
+
+    FLayers[ High(FLayers)].R.re := 0;
+    FLayers[ High(FLayers)].R.Im := 0;
   end;
-  { Коэффициент отражения Rs }
-  FLayers[ High(FLayers)].R.re := 0;
-  FLayers[ High(FLayers)].R.Im := 0;
-  RCalc;
-  Rs := sqr(AbsZ(FLayers[0].R));
-  if FCD.P = cmSP then
+
+  procedure LayerAmplitudeRefractionP;     { Коэффициент отражения Rp }
+  var
+    i: integer;
+    a1, a2, b1, b2: TComplex;
   begin
-    { Rp }
     for i := 0 to Length(FLayers) - 2 do
     begin
       a1 := DivZZ(FLayers[i].K, FLayers[i].e);
@@ -293,9 +287,9 @@ begin
       b1 := SubZZ(MulRZ(1, a1), MulRZ(1, a2));
       b2 := AddZZ(MulRZ(1, a1), MulRZ(1, a2));
       FLayers[i].RF := DivZZ(b1, b2);
-      s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr(sin_t)));
-      // s:=4*Pi*sqrt(cos(t)*sqrt(s1))/Lambda;
+      s1 := Abs(1 - (AbsZ(DivZZ(FLayers[i].e, FLayers[i + 1].e)) * sqr_sin_t));
       s := c * sqrt(cos_t * sqrt(s1));
+
       case FCD.RF of
         rfError:
           ex := exp(-1 * sqr(FLayers[i + 1].s) * sqr(s));
@@ -305,12 +299,41 @@ begin
           ex := sin(sqrt(3) * FLayers[i + 1].s * s) /
             (sqrt(3) * FLayers[i + 1].s * s);
       end;
+
       FLayers[i].RF := MulRZ(ex, FLayers[i].RF);
     end;
-    { Коэффициент отражения }
-    RCalc;
-    Rp := sqr(AbsZ(FLayers[0].R));
-    Result := (Rs + Rp) / 2;
+  end;
+
+  procedure FresnelCoefficients;   { Френелевские коэффициенты (p-p) }
+  var
+    i: Integer;
+    c: Single;
+    a1: TComplex;
+  begin
+    c := 2 * Pi / Lambda; {другое волновое число }
+    for i := 0 to Length(FLayers) - 1 do
+      begin
+        a1 := SqrtZ(AddZR(FLayers[i].e, -sqr_sin_t));
+        FLayers[i].K := MulRZ(c, a1);
+      end;
+  end;
+
+begin
+  c := 4 * Pi / Lambda; { волновое число }
+  t := Pi / 2 - Pi * t / 180;
+
+  sin_t := sin(t); cos_t := cos(t); sqr_sin_t := sqr(sin_t);
+
+  FresnelCoefficients;
+  LayerAmplitudeRefractionS;
+  Rs := TotalRecursiveRefraction;
+
+  if FCD.P = cmSP then
+  begin
+    LayerAmplitudeRefractionP;
+    Rp := TotalRecursiveRefraction;
+    Rsp := (Rs + Rp) / 2;
+    Result := Rsp;
   end
   else
     Result := Rs;
@@ -318,17 +341,15 @@ end;
 
 procedure TCalc.Convolute(Width: single);
 var
-  Sum, delta, t1: single;
+  Sum, delta, t1, c: single;
   i, N, k, p, Size: integer;
+  sqr_Width: Single;
 
   Temp: TDataArray;
 
-  function Gauss(x: single): single;
-  var
-    c: single;
+  function Gauss(const c, x, sqr_Width: single): single; inline;
   begin
-    c := 1 / (Width * sqrt(Pi / 2));
-    Result := c * exp(-2 * sqr(x) / sqr(Width));
+    Result := c * exp(-2 * sqr(x) / sqr_Width);
   end;
 
 begin
@@ -336,6 +357,9 @@ begin
 
   Size := Length(FResult);
   Width := Width * 0.849;
+  sqr_Width := sqr(Width);
+  c := 1 / (Width * sqrt(Pi/2));
+
   delta := (FResult[Size - 1].t - FResult[0].t)/Size;
   N := Round(0.1 / delta);
   if frac(N / 2) = 0 then
@@ -350,7 +374,7 @@ begin
     Sum := 0;
     for k := i - N to i + N do
     begin
-      Sum := Sum + FResult[k].r * Gauss(t1) * delta;
+      Sum := Sum + FResult[k].r * Gauss(c, t1, sqr_Width) * delta;
       t1 := t1 + delta;
     end;
     Temp[p].t := FResult[i + 1].t;

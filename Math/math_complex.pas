@@ -12,25 +12,22 @@ unit math_complex;
 interface
 
 uses
-  Math,
-  SysUtils,
-  System.VarCmplx;
+  Math, SysUtils;
 
 type
   TComplex = record
     Re, Im: single;
   end;
 
-  { Conversions & Extractions }
+{-------- Conversions & Extractions ---------}
 
-  { Convert R and I to complex }
+{ Convert R and I to complex }
 function ToComplex(R, I: single): TComplex;
 { return real part of Z }
-// function Real(Z:TComplex):single;
 { return imag part of Z }
 function Imag(Z: TComplex): single;
 
-{ Utility functions }
+{---------- Utility functions -----------------}
 
 { true if S is a valid complex string }
 function IsValidComplexString(const S: string): boolean;
@@ -43,36 +40,35 @@ function ComplexToString(Z: TComplex): string;
 { convert string to a TComplex }
 function StringToComplex(const S: String): TComplex;
 
-{ Standard operators (+,-,*,/) for complex numbers }
+{------ Standard operators (+,-,*,/) for complex numbers ----}
 
 { add two complex numbers }
 function AddZZ(const Z, Z2: TComplex): TComplex; inline;
 { add a complex and a real }
 function AddZR(const Z: TComplex; R: single): TComplex; inline;
 { subtract two complex numbers }
-
-function SubZZ(Z, Z2: TComplex): TComplex; inline;
+function SubZZ(const Z, Z2: TComplex): TComplex; inline;
 { subtract Z.re from R (Z - R) }
-function SubZR(Z: TComplex; R: single): TComplex; inline;
+function SubZR(const Z: TComplex;const R: single): TComplex; inline;
 { subtract R from Z.re (R - Z) }
-function SubRZ(R: single; Z: TComplex): TComplex; inline;
+function SubRZ(const R: single;const Z: TComplex): TComplex; inline;
 { multiply two complex numbers }
-function MulZZ(Z, Z2: TComplex): TComplex; inline;
+function MulZZ(const Z, Z2: TComplex): TComplex; inline;
 { multiply a real and a complex }
-function MulRZ(R: single; Z: TComplex): TComplex; inline;
+function MulRZ(const R: single;const Z: TComplex): TComplex; inline;
 { divide Z with R ( Z/R ) - let compiler handle divbyzero }
-function DivZR(Z: TComplex; R: single): TComplex; inline;
+function DivZR(const Z: TComplex;const R: single): TComplex; inline;
 { divide R with Z ( R/Z) - let compiler handle divbyzero }
-function DivRZ(R: single; Z: TComplex): TComplex; inline;
+function DivRZ(const R: single;const Z: TComplex): TComplex; inline;
 { divide two complex numbers }
-function DivZZ(Z1, Z2: TComplex): TComplex; inline;
+function DivZZ(const Z1, Z2: TComplex): TComplex; inline;
 
-{ Specific functions }
+{--------- Specific functions ----------------}
 
 { return absolute value of Z. ( sqrt(x*x + y*y)) }
-function AbsZ(Z: TComplex): single; inline;
+function AbsZ(const Z: TComplex): single; inline;
 { same as AbsZ }
-function ModZ(Z: TComplex): single; inline;
+function ModZ(const Z: TComplex): single; inline;
 { return the argument of Z in radians }
 function ArgZ(Z: TComplex): single;
 { return conjugate of Z (  conjugate( x + iy ) := x - iy ) }
@@ -83,10 +79,10 @@ function NormZ(Z: TComplex): single;
 function NegZ(Z: TComplex): TComplex;
 { test for equality }
 function EqualZZ(Z, Z2: TComplex): boolean;
+
+{----------- Trig. and hyperbolic functions ----------}
+
 { return the cosine of Z }
-
-{ Trig. and hyperbolic functions }
-
 function CosZ(Z: TComplex): TComplex;
 { return the hyperbolic cosine of Z }
 function CoshZ(Z: TComplex): TComplex;
@@ -109,10 +105,10 @@ function TanhZ(Z: TComplex): TComplex;
 { return the hyperbolic arctan of Z }
 function ArcTanhZ(Z: TComplex): TComplex;
 
-{ Math. functions }
+{------ Math. functions -------------------}
 
 { returns e raised to Z  (e^Z) }
-function ExpZ(Z: TComplex): TComplex; inline;
+function ExpZ(const Z: TComplex): TComplex; inline;
 { returns the natural log of Z }
 function LnZ(Z: TComplex): TComplex;
 { retuns the base 10 log of Z }
@@ -134,12 +130,7 @@ function PowRZ(R: single; Z: TComplex): TComplex;
 
 implementation
 
-const
-  Sqrt22 = 0.7071067812;
-
-{ Conversion }
-
-
+{========================= Conversion ========================================}
 
 { Convert R and I to complex }
 function ToComplex(R, I: single): TComplex;
@@ -238,7 +229,7 @@ begin
   Result := Z.Im;
 end;
 
-{ Standard Operators }
+{=========================== Standard Operators ===============================}
 
 { add two complex numbers: (x + yi) + (v + wi) = (x + v) + i(y + w) }
 function AddZZ(const Z, Z2: TComplex): TComplex;
@@ -255,48 +246,48 @@ begin
 end;
 
 { subtract two complex numbers: (x + yi) - (v + wi) = (x - v) + i(y -  w) }
-function SubZZ(Z, Z2: TComplex): TComplex;
+function SubZZ(const Z, Z2: TComplex): TComplex;
 begin
   Result.Re := Z.Re - Z2.Re;
   Result.Im := Z.Im - Z2.Im;
 end;
 
 { subtract Z.re from R: (x +yi) - r = (x-r) + yi }
-function SubZR(Z: TComplex; R: single): TComplex;
+function SubZR(const Z: TComplex; const R: single): TComplex;
 begin
   Result.Re := Z.Re - R;
   Result.Im := Z.Im;
 end;
 
 { subtract R from Z.re: r - (x + yi) = (r-x) - yi }
-function SubRZ(R: single; Z: TComplex): TComplex;
+function SubRZ(const R: single;const Z: TComplex): TComplex;
 begin
   Result := SubZZ(ToComplex(R, 0), Z);
 end;
 
 { multiply two complex numbers: (x + yi) * ( v + wi) = (xv - yw) + i(xw +yv) }
-function MulZZ(Z, Z2: TComplex): TComplex;
+function MulZZ(const Z, Z2: TComplex): TComplex;
 begin
   Result.Re := Z.Re * Z2.Re - Z.Im * Z2.Im;
   Result.Im := Z.Re * Z2.Im + Z.Im * Z2.Re;
 end;
 
 { multiply a real and a complex: r(x+yi) = rx + ryi }
-function MulRZ(R: single; Z: TComplex): TComplex;
+function MulRZ(const R: single;const Z: TComplex): TComplex;
 begin
   Result.Re := R * Z.Re;
   Result.Im := R * Z.Im;
 end;
 
 { divide Z with R ( Z/R ) - let compiler handle divbyzero: (x+yi) / r := x/r + yi/r }
-function DivZR(Z: TComplex; R: single): TComplex;
+function DivZR(const Z: TComplex;const  R: single): TComplex;
 begin
   Result.Re := Z.Re / R;
   Result.Im := Z.Im / R;
 end;
 
 { divide R with Z ( R/Z) - let compiler handle divbyzero: r/(x + yi) := r/x + r/yi }
-function DivRZ(R: single; Z: TComplex): TComplex;
+function DivRZ(const R: single;const Z: TComplex): TComplex;
 begin
   if (Z.Re = 0) and (Z.Im <> 0) then
     Result := ToComplex(0, R / Z.Im)
@@ -306,20 +297,17 @@ begin
     Result := ToComplex(R / Z.Re, R / Z.Im);
 end;
 
-function DivZZ(Z1, Z2: TComplex): TComplex;
+function DivZZ(const Z1, Z2: TComplex): TComplex;
 begin
-  // Zb := MulZZ(Z,ConjugateZ(Z2));
-  // Z2b := MulZZ(Z2,ConjugateZ(Z2)); { this should be re now (im := 0) }
-  // Result := DivZR(Zb,Real(Z2b));
   Result.Re := (Z1.Re * Z2.Re + Z1.Im * Z2.Im) /
     (Z2.Re * Z2.Re + Z2.Im * Z2.Im);
   Result.Im := (Z1.Im * Z2.Re - Z1.Re * Z2.Im) /
     (Z2.Re * Z2.Re + Z2.Im * Z2.Im);
 end;
 
-{ Misc. complex specific }
+{============================== Misc. complex specific =======================}
 { return absolute value of Z. ( sqrt(x*x + y*y)) }
-function AbsZ(Z: TComplex): single;
+function AbsZ(const Z: TComplex): single;
 var
   x, y: single;
 begin
@@ -339,7 +327,7 @@ begin
 end;
 
 { same as AbsZ }
-function ModZ(Z: TComplex): single;
+function ModZ(const Z: TComplex): single;
 begin
   Result := AbsZ(Z);
 end;
@@ -375,7 +363,7 @@ begin
   Result := ((Z.Re = Z2.Re) and (Z.Im = Z2.Im));
 end;
 
-{ Trigonometric }
+{===================================== Trigonometric ==========================}
 
 { return the cosine of Z }
 function CosZ(Z: TComplex): TComplex;
@@ -464,15 +452,14 @@ begin
   Result := ToComplex(Result.Im, -Result.Re);
 end;
 
-{ Math Functions }
+{==================================== Math Functions ==========================}
 
 { returns e raised to Z:  e^(x + yi) }
-function ExpZ(Z: TComplex): TComplex;
+function ExpZ(const Z: TComplex): TComplex;
 var
   x: single;
 begin
   x := Exp(Z.Re);
-  // Result := ToComplex(x * Cos(Z.im), x * Sin(Z.im));
   Result.Re := x * Cos(Z.Im);
   Result.Im := x * Sin(Z.Im);
 end;
