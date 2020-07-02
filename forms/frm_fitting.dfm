@@ -22,7 +22,7 @@ object frmFitWin: TfrmFitWin
     Height = 30
     Align = alTop
     BorderOuter = fsFlatRounded
-    Color = 16765595
+    Color = clSkyBlue
     TabOrder = 0
     object Label1: TLabel
       Left = 32
@@ -100,7 +100,7 @@ object frmFitWin: TfrmFitWin
     Height = 37
     Align = alBottom
     BorderOuter = fsFlatRounded
-    ParentColor = True
+    Color = clSkyBlue
     TabOrder = 2
     DesignSize = (
       363

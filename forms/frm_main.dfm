@@ -55,8 +55,8 @@ object frmMain: TfrmMain
     BorderOuter = fsNone
     BorderSides = [sdLeft, sdTop, sdRight, sdBottom]
     BorderWidth = 0
+    Color = clSkyBlue
     GradientColorStyle = gcsMSOffice
-    ParentColor = True
     TabOrder = 0
     VisualStyle = vsGradient
     object RzVersionInfoStatus1: TRzVersionInfoStatus
@@ -74,9 +74,9 @@ object frmMain: TfrmMain
       Top = 0
       Width = 148
       Height = 19
+      FlatColor = clSkyBlue
       Align = alLeft
       ParentShowHint = False
-      Visible = False
       NumSegments = 10
       PartsComplete = 0
       Percent = 0
@@ -84,13 +84,12 @@ object frmMain: TfrmMain
       TotalParts = 0
     end
     object spnTime: TRzStatusPane
-      Left = 100
+      Left = 248
       Top = 0
       Width = 285
       Height = 19
       Align = alLeft
       Caption = ''
-      ExplicitLeft = 248
     end
     object spRegistered: TRzStatusPane
       Left = 1106
@@ -102,7 +101,7 @@ object frmMain: TfrmMain
       ExplicitHeight = 20
     end
     object Status: TRzStatusPane
-      Left = 385
+      Left = 533
       Top = 0
       Height = 19
       Align = alLeft
@@ -133,9 +132,20 @@ object frmMain: TfrmMain
       ButtonStyle = bsTriangle
       Color = clWhite
       Colors.BorderColor = clSkyBlue
+      Colors.DisabledColor = clGray
+      Colors.DropMarkColor = 15385233
+      Colors.DropTargetColor = 15385233
+      Colors.DropTargetBorderColor = 15385233
+      Colors.FocusedSelectionColor = 15385233
+      Colors.FocusedSelectionBorderColor = 15385233
       Colors.GridLineColor = clSkyBlue
-      Colors.HeaderHotColor = clAqua
-      Colors.SelectionTextColor = clBtnFace
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 15385233
+      Colors.SelectionRectangleBorderColor = 15385233
+      Colors.SelectionTextColor = clBlack
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = clGray
       Colors.UnfocusedSelectionColor = clSkyBlue
       Colors.UnfocusedSelectionBorderColor = clSkyBlue
       DefaultNodeHeight = 25
@@ -196,7 +206,8 @@ object frmMain: TfrmMain
       Height = 82
       Align = alBottom
       BorderOuter = fsFlatRounded
-      ParentColor = True
+      Color = clSkyBlue
+      FlatColor = clSkyBlue
       TabOrder = 1
       object mmDescription: TRzMemo
         AlignWithMargins = True
@@ -262,8 +273,22 @@ object frmMain: TfrmMain
           Align = alClient
           Color = clWhite
           Colors.BorderColor = 10930928
-          Colors.HeaderHotColor = 16776176
-          Colors.SelectionTextColor = clWhite
+          Colors.DisabledColor = clGray
+          Colors.DropMarkColor = 15385233
+          Colors.DropTargetColor = 15385233
+          Colors.DropTargetBorderColor = 15385233
+          Colors.FocusedSelectionColor = 15385233
+          Colors.FocusedSelectionBorderColor = 15385233
+          Colors.GridLineColor = 15987699
+          Colors.HeaderHotColor = clBlack
+          Colors.HotColor = clBlack
+          Colors.SelectionRectangleBlendColor = 15385233
+          Colors.SelectionRectangleBorderColor = 15385233
+          Colors.SelectionTextColor = clBlack
+          Colors.TreeLineColor = 9471874
+          Colors.UnfocusedColor = clGray
+          Colors.UnfocusedSelectionColor = 13421772
+          Colors.UnfocusedSelectionBorderColor = 13421772
           EditDelay = 0
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -434,6 +459,7 @@ object frmMain: TfrmMain
           Align = alBottom
           BorderOuter = fsFlatRounded
           Color = clSkyBlue
+          FlatColor = clSkyBlue
           TabOrder = 1
           DesignSize = (
             944
@@ -785,6 +811,7 @@ object frmMain: TfrmMain
           Width = 173
           Height = 67
           BorderOuter = fsNone
+          Color = 15987699
           TabOrder = 0
           Transparent = True
           object Label1: TLabel
@@ -902,8 +929,8 @@ object frmMain: TfrmMain
           object cb2Theta: TRzCheckBox
             Left = 139
             Top = 40
-            Width = 33
-            Height = 18
+            Width = 37
+            Height = 19
             Caption = '2q'
             Checked = True
             Font.Charset = DEFAULT_CHARSET
@@ -931,6 +958,7 @@ object frmMain: TfrmMain
           Width = 125
           Height = 67
           BorderOuter = fsNone
+          Color = 15987699
           Enabled = False
           TabOrder = 0
           Transparent = True
@@ -1069,6 +1097,7 @@ object frmMain: TfrmMain
           Width = 212
           Height = 65
           BorderOuter = fsNone
+          Color = 15987699
           TabOrder = 0
           Transparent = True
           object Label5: TLabel
