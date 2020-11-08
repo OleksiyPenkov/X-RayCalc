@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{6283BDEA-4CD8-499D-909F-C78CBC8867A2}</ProjectGuid>
-        <ProjectVersion>19.0</ProjectVersion>
+        <ProjectVersion>18.8</ProjectVersion>
         <MainSource>xraycalc.dpr</MainSource>
         <Config Condition="'$(Config)'==''">Release</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
@@ -119,9 +119,9 @@
         <Icon_MainIcon>Resources\Icons\Icon1.ico</Icon_MainIcon>
         <DCC_ExeOutput>Out/Bin</DCC_ExeOutput>
         <DCC_DcuOutput>Out/Dcu</DCC_DcuOutput>
-        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=2.4.3.193;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=2.4.3.192;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Build>193</VerInfo_Build>
+        <VerInfo_Build>192</VerInfo_Build>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
         <DCC_ImportedDataReferences>false</DCC_ImportedDataReferences>
         <DCC_IOChecking>false</DCC_IOChecking>
@@ -172,11 +172,11 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_ExeOutput>Out/Bin</DCC_ExeOutput>
         <DCC_DcuOutput>Out/Dcu</DCC_DcuOutput>
-        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=1.2.0.93;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=X-Ray Software;FileDescription=X-Ray Calc;FileVersion=1.2.0.94;InternalName=X-Ray Calc;LegalCopyright=Oleksiy Penkov;LegalTrademarks=X-Ray Calc;ProductName=X-Ray Calc;ProductVersion=2.0.0.0;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
         <Icon_MainIcon>Resources\Icons\Icon1.ico</Icon_MainIcon>
         <AppDPIAwarenessMode>system</AppDPIAwarenessMode>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>93</VerInfo_Build>
+        <VerInfo_Build>94</VerInfo_Build>
         <Debugger_RunParams>&quot;e:\Temp\test.xrcx&quot;</Debugger_RunParams>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
@@ -846,16 +846,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="iPad_Launch2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="iPad_Launch768">
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
@@ -875,16 +865,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_LaunchDark2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -987,16 +967,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="iPhone_Launch2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="iPhone_Launch320">
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
@@ -1005,16 +975,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch3x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -1059,26 +1019,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_LaunchDark2x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_LaunchDark3x">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -1127,16 +1067,6 @@
                     </Platform>
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectiOSLaunchScreen">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen</RemoteDir>
-                        <Operation>64</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <RemoteDir>..\$(PROJECTNAME).launchscreen</RemoteDir>
-                        <Operation>64</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectiOSResource">
