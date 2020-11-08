@@ -712,7 +712,7 @@ object frmMain: TfrmMain
         Caption = 'Help'
         Page = rbnpgHelp
       end>
-    TabIndex = 2
+    TabIndex = 1
     OnHelpButtonClick = RibbonHelpButtonClick
     OnRecentItemClick = RibbonRecentItemClick
     OnTabChange = RibbonTabChange
@@ -780,6 +780,41 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Materials'
         GroupIndex = 5
+      end
+    end
+    object rbnpgHelp: TRibbonPage
+      Left = 0
+      Top = 50
+      Width = 1205
+      Height = 93
+      Caption = 'Help'
+      Index = 2
+      object rbngrpHelp: TRibbonGroup
+        Left = 315
+        Top = 3
+        Width = 94
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Help'
+        GroupIndex = 3
+      end
+      object rbngrpWebhelp: TRibbonGroup
+        Left = 4
+        Top = 3
+        Width = 140
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Web Help'
+        GroupIndex = 1
+      end
+      object rbngrpTutorials: TRibbonGroup
+        Left = 146
+        Top = 3
+        Width = 167
+        Height = 86
+        ActionManager = ActionManager
+        Caption = 'Tutorials'
+        GroupIndex = 2
       end
     end
     object rbnpgCalc: TRibbonPage
@@ -929,8 +964,8 @@ object frmMain: TfrmMain
           object cb2Theta: TRzCheckBox
             Left = 139
             Top = 40
-            Width = 37
-            Height = 19
+            Width = 33
+            Height = 18
             Caption = '2q'
             Checked = True
             Font.Charset = DEFAULT_CHARSET
@@ -965,28 +1000,28 @@ object frmMain: TfrmMain
           object Label9: TLabel
             Left = 1
             Top = 40
-            Width = 8
+            Width = 11
             Height = 13
             Caption = 'l2'
             Enabled = False
-            Font.Charset = DEFAULT_CHARSET
+            Font.Charset = GREEK_CHARSET
             Font.Color = clBlack
             Font.Height = -11
-            Font.Name = 'Tahoma'
+            Font.Name = 'Symbol'
             Font.Style = []
             ParentFont = False
           end
           object Label10: TLabel
             Left = 0
             Top = 17
-            Width = 8
+            Width = 11
             Height = 13
             Caption = 'l1'
             Enabled = False
-            Font.Charset = DEFAULT_CHARSET
+            Font.Charset = GREEK_CHARSET
             Font.Color = clBlack
             Font.Height = -11
-            Font.Name = 'Tahoma'
+            Font.Name = 'Symbol'
             Font.Style = []
             ParentFont = False
           end
@@ -997,24 +1032,24 @@ object frmMain: TfrmMain
             Height = 13
             Caption = 'q'
             Enabled = False
-            Font.Charset = DEFAULT_CHARSET
+            Font.Charset = GREEK_CHARSET
             Font.Color = clBlack
             Font.Height = -11
-            Font.Name = 'Tahoma'
+            Font.Name = 'Symbol'
             Font.Style = []
             ParentFont = False
           end
           object Label12: TLabel
             Left = 66
             Top = 41
-            Width = 9
+            Width = 12
             Height = 13
             Caption = 'Dl'
             Enabled = False
-            Font.Charset = DEFAULT_CHARSET
+            Font.Charset = GREEK_CHARSET
             Font.Color = clBlack
             Font.Height = -11
-            Font.Name = 'Tahoma'
+            Font.Name = 'Symbol'
             Font.Style = []
             ParentFont = False
           end
@@ -1189,41 +1224,6 @@ object frmMain: TfrmMain
         ActionManager = ActionManager
         Caption = 'Plot'
         GroupIndex = 7
-      end
-    end
-    object rbnpgHelp: TRibbonPage
-      Left = 0
-      Top = 50
-      Width = 1205
-      Height = 93
-      Caption = 'Help'
-      Index = 2
-      object rbngrpHelp: TRibbonGroup
-        Left = 315
-        Top = 3
-        Width = 94
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Help'
-        GroupIndex = 3
-      end
-      object rbngrpWebhelp: TRibbonGroup
-        Left = 4
-        Top = 3
-        Width = 140
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Web Help'
-        GroupIndex = 1
-      end
-      object rbngrpTutorials: TRibbonGroup
-        Left = 146
-        Top = 3
-        Width = 167
-        Height = 86
-        ActionManager = ActionManager
-        Caption = 'Tutorials'
-        GroupIndex = 2
       end
     end
   end
