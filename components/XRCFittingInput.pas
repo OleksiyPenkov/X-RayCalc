@@ -106,7 +106,7 @@ begin
   Thickness.Height := 21;
   Thickness.Decimals := 2;
   Thickness.Increment := 0.1;
-  Thickness.Max := 1000;
+  Thickness.Max := 9999;
   Thickness.TabOrder := 0;
 
   //Sigma
