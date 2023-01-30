@@ -6,6 +6,9 @@
         <Projects Include="xraycalc.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="xrccmd.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -23,14 +26,23 @@
     <Target Name="xraycalc:Make">
         <MSBuild Projects="xraycalc.dproj" Targets="Make"/>
     </Target>
+    <Target Name="xrccmd">
+        <MSBuild Projects="xrccmd.dproj"/>
+    </Target>
+    <Target Name="xrccmd:Clean">
+        <MSBuild Projects="xrccmd.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="xrccmd:Make">
+        <MSBuild Projects="xrccmd.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="xraycalc"/>
+        <CallTarget Targets="xraycalc;xrccmd"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="xraycalc:Clean"/>
+        <CallTarget Targets="xraycalc:Clean;xrccmd:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="xraycalc:Make"/>
+        <CallTarget Targets="xraycalc:Make;xrccmd:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

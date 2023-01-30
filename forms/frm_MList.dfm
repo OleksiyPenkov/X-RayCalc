@@ -11,7 +11,6 @@ object frmMaterialList: TfrmMaterialList
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
@@ -21,7 +20,7 @@ object frmMaterialList: TfrmMaterialList
     Left = 8
     Top = 8
     Width = 161
-    Height = 365
+    Height = 321
     ItemHeight = 13
     PopupMenu = PopupMenu1
     TabOrder = 0
@@ -103,6 +102,15 @@ object frmMaterialList: TfrmMaterialList
       Height = 21
       TabOrder = 4
     end
+  end
+  object btnGraph: TBitBtn
+    Left = 48
+    Top = 345
+    Width = 75
+    Height = 25
+    Caption = 'Show Graph'
+    TabOrder = 2
+    OnClick = btnGraphClick
   end
   object PopupMenu1: TPopupMenu
     Left = 104

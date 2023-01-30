@@ -2,8 +2,8 @@
   *
   *   X-Ray Calc 2
   *
-  *   Copyright (C) 2001-2020 Oleksiy Penkov
-  *   e-mail: oleksiy.penkov@gmail.com
+  *   Copyright (C) 2001-2022 Oleksiy Penkov
+  *   e-mail: oleksiypenkov@intl.zju.edu.cn
   *
   ****************************************************************************** *)
 
@@ -12,14 +12,19 @@ unit unit_calc;
 interface
 
 uses
-  FastMM4,
+//  FastMM4,
   Classes,
   unit_types,
   math_complex,
   VirtualTrees,
   TeEngine, Series,
   TeeProcs, Chart,
-  OtlParallel, OtlCollections, OtlCommon,
+  OtlParallel,
+  OtlCollections,
+  OtlCommon,
+  GpLists,
+  OtlSync,
+  System.SysUtils,
   unit_materials;
 
 type
@@ -49,16 +54,22 @@ type
       FModel: PVirtualNode;
       FHasGradients: Boolean;
 
+      Tasks: array of TProc;
+      NThreads : byte;
+
       function  RefCalc(t, Lambda:single; ALayers: TLayers): single;
       procedure CalcLambda(StartL, EndL, Theta: single; N: integer);
       procedure CalcTet(const Params: TCalcParams);
       procedure RunThetaThreads;
       procedure Convolute(Width: single);
+      procedure PrepareWorkers;
     public
       constructor Create;
+      destructor Free;
       procedure Run;
+
       property CalcData: TThreadParams write FCD;
-      property ExpValues: TDataArray write FData;
+      property ExpValues: TDataArray read FData write FData;
       property Limit: single write FLimit;
       property Results: TDataArray read FResult;
       property GradientChart: TChart read FGradientChart write FGradientChart;
@@ -68,19 +79,44 @@ type
       property HasGradients:Boolean read FHasGradients;
   end;
 
-var
-    Calc:   TCalc;
-
 implementation
 
 uses
   Math,
-  math_globals,
-  GpLists,
-  OtlSync,
-  System.SysUtils;
+  math_globals;
 
   { TCalc }
+
+procedure TCalc.PrepareWorkers;
+var
+  N, i: Integer;
+  dt, step: single;
+begin
+  {$IFDEF DEBUG}
+    NThreads := 1;
+  {$ELSE}
+    NThreads := Environment.Process.Affinity.Count;
+  {$ENDIF}
+
+  SetLength(Tasks, NThreads);
+  SetLength(CalcParams,  NThreads);
+
+  N := FCD.N div NThreads;
+  dt := (FCD.EndT - FCD.StartT) / NThreads;
+  step := dt / N;
+
+  for i := 0 to NThreads - 1 do
+  begin
+    CalcParams[i].StartTeta := FCD.StartT + i * dt;
+    CalcParams[i].EndTeta := FCD.StartT + (i + 1) * dt;
+    CalcParams[i].Step :=  step;
+    CalcParams[i].N0 := N * i;
+    CalcParams[i].N := N;
+  end;
+
+  SetLength(FResult, 0);
+  SetLength(FResult, NThreads * N);
+end;
 
 procedure TCalc.CalcLambda;
 var
@@ -138,52 +174,30 @@ begin
   FLimit   := 1E-7;
 end;
 
-procedure TCalc.RunThetaThreads;
-var
-  N, i: Integer;
-  dt, step: single;
-
-  Tasks: array of TProc;
-  NThreads : byte;
+destructor TCalc.Free;
 begin
-  FLayeredModel := TLayeredModel.Create(FTree, FGradientChart, FModel);
-  FLayeredModel.Generate(FCD.Lambda);
-  FTotalD := FLayeredModel.TotalD;
-  FHasGradients := FLayeredModel.HasGradients;
+  inherited Free;
+end;
 
-  {$IFDEF DEBUG}
-    NThreads := 4;
-  {$ELSE}
-    NThreads := Environment.Process.Affinity.Count;
-  {$ENDIF}
+procedure TCalc.RunThetaThreads;
+begin
+  try
+    FLayeredModel := TLayeredModel.Create(FTree, FGradientChart, FModel);
+    FLayeredModel.Generate(FCD.Lambda);
+    FTotalD := FLayeredModel.TotalD;
+    FHasGradients := FLayeredModel.HasGradients;
 
-  SetLength(Tasks, NThreads);
-  SetLength(CalcParams,  NThreads);
+    PrepareWorkers;
 
-  N := FCD.N div NThreads;
-  dt := (FCD.EndT - FCD.StartT) / NThreads;
-  step := dt / N;
-
-  for i := 0 to NThreads - 1 do
-  begin
-    CalcParams[i].StartTeta := FCD.StartT + i * dt;
-    CalcParams[i].EndTeta := FCD.StartT + (i + 1) * dt;
-    CalcParams[i].Step :=  step;
-    CalcParams[i].N0 := N * i;
-    CalcParams[i].N := N;
+    Parallel.ForEach(0, NThreads - 1, 1)
+      .Execute(
+          procedure(const elem:Integer)
+          begin
+            CalcTet(CalcParams[elem]);
+          end);
+  finally
+    FLayeredModel.Free;
   end;
-
-  SetLength(FResult, 0);
-  SetLength(FResult, NThreads * N);
-
-  Parallel.ForEach(0, NThreads - 1, 1)
-    .Execute(
-        procedure(const elem:Integer)
-        begin
-          CalcTet(CalcParams[elem]);
-        end);
-
-  FLayeredModel.Free;
 end;
 
 procedure TCalc.Run;
@@ -338,7 +352,7 @@ begin
   c := 1 / (Width * sqrt(Pi/2));
 
   delta := (FResult[Size - 1].t - FResult[0].t)/Size;
-  N := Round(0.1 / delta);
+  N := Round(0.1/ delta);
   if frac(N / 2) = 0 then
     N := N - 1;
 

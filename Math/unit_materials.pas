@@ -2,8 +2,8 @@
   *
   *   X-Ray Calc 2
   *
-  *   Copyright (C) 2001-2020 Oleksiy Penkov
-  *   e-mail: oleksiy.penkov@gmail.com
+  *   Copyright (C) 2001-2022 Oleksiy Penkov
+  *   e-mail: oleksiypenkov@intl.zju.edu.cn
   *
   ****************************************************************************** *)
 
@@ -12,7 +12,7 @@ unit unit_materials;
 interface
 
 uses
-  FastMM4,
+//  FastMM4,
   VirtualTrees,
   SysUtils, Chart, VCLTee.Series,
   unit_types,
@@ -37,7 +37,6 @@ type
     LayersCount: integer;
     Substrate, Material: TMaterial;
     Delta: single;
-    Str: string;
     GradientValue: single;
 
     Inside: boolean;
@@ -63,6 +62,7 @@ type
   published
     constructor Create(ATree: TVirtualStringTree; AChart: TChart; AModel: PVirtualNode);
     procedure Generate(const Lambda: Single);
+    procedure ExportToFile(const FileName: string);
 
     property Layers:TLayers Read GetLayers;
     property TotalD:Single read FTotalD;
@@ -70,7 +70,13 @@ type
     property HasGradients:Boolean read IfHasGradients;
   end;
 
+
+
+
 implementation
+
+uses
+  System.Classes;
 
 const
   kk = 0.54014E-5;
@@ -248,6 +254,8 @@ begin
         Chart.Series[g].AddXY(i, GradientValue);
       end;
     end;
+    Name := Material.Name;
+    ro   := Material.ro;
 
     c := kk * Material.ro / Material.am * sqr(FLambda);
     Delta := Delta + c * Material.f.re / 2 * Material.h.a;
@@ -261,23 +269,28 @@ end;
 
 procedure TLayeredModel.FillSubstrate;
 var
-    c: Single;
+    c : Single;
 begin
   with Substrate do // подложка
   begin
     FData := Tree.GetNodeData(Tree.GetLast);
     if FData.RowType = rtSubstrate then
     begin
-      ReadHenke(FData.Text, 0, FLambda, f, am, ro);
+      Name := FData.Text;
+      ReadHenke(Name, 0, FLambda, f, am, ro);
       if FData.r <> '' then ro := StrToFloat(FData.r);
       if FData.s <> '' then
         s := SetFun(FData.s)
       else
         s.a := 0;
+
+      s.a := s.a / 1.41;
+      s.b := Material.s.b / 1.41;
     end
     else
     begin
-      ReadHenke('Si', 0, FLambda, f, am, ro);
+      Name := 'Si';
+      ReadHenke(Name, 0, FLambda, f, am, ro);
       s.a := 5;
       s.b := 0;
     end;
@@ -286,6 +299,9 @@ begin
     FLayers[LayersCount + 1].s := s.a;
     FLayers[LayersCount + 1].e.re := 1 - f.re * c;
     FLayers[LayersCount + 1].e.im := f.im * c;
+
+    FLayers[LayersCount + 1].Name := Name;
+    FLayers[LayersCount + 1].ro   := ro;
   end;
 end;
 
@@ -365,6 +381,25 @@ begin
   Tree    := ATree;
   Chart   := AChart;
   Model   := AModel;
+end;
+
+procedure TLayeredModel.ExportToFile(const FileName: string);
+var
+  SL: TStringList;
+  i: Integer;
+  S: string;
+begin
+  SL := TStringList.Create;
+  try
+    for I := 1 to High(FLayers) do
+    begin
+      S := Format('%s;%f;%f;%f',[FLayers[i].Name, FLayers[i].L,FLayers[i].s * 1.41,FLayers[i].ro]);
+      SL.Add(S);
+    end;
+    SL.SaveToFile(FileName);
+  finally
+    FreeAndNil(SL);
+  end;
 end;
 
 procedure TLayeredModel.Generate;

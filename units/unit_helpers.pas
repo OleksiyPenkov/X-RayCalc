@@ -217,6 +217,7 @@ function SeriesToData( Series: TLineSeries): TDataArray;
 var
   i: integer;
 begin
+  SetLength(Result, 0);
   SetLength(Result, Series.Count);
   for I := 0 to Series.Count - 1 do
   begin

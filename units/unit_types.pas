@@ -88,6 +88,13 @@ type
   TCalcMode = (cmTheta, cmLambda, cmTest);
 
 
+  TFitResult = record
+    Param: Single;
+    ChiSquare: Single;
+  end;
+
+  TFitResults = array of TFitResult;
+
   TPolarisation = (cmS, cmSP);
 
   TThreadParams = record
@@ -116,8 +123,9 @@ type
   // Calculation data types
 
   TLayer = record
+    Name: string;
     e: TComplex; { Epsilon }
-    L, s: single; { Thickness, sigma, transition }
+    L, s, ro: single; { Thickness, sigma}
     K: TComplex; { kappa }
     RF, r: TComplex; { Френелевский коэф. }
     LID: byte;

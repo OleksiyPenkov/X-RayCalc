@@ -26,7 +26,7 @@ uses
   Grids,
   ExtCtrls,
   RzPanel,
-  Menus;
+  Menus, Vcl.Buttons;
 
 type
   TfrmMaterialList = class(TForm)
@@ -44,6 +44,7 @@ type
     Inserttothetable1: TMenuItem;
     N1: TMenuItem;
     Deletefile1: TMenuItem;
+    btnGraph: TBitBtn;
     procedure FormShow(Sender: TObject);
     procedure lbFilesDblClick(Sender: TObject);
     procedure SpinEdit1Change(Sender: TObject);
@@ -52,6 +53,7 @@ type
     procedure lbFilesKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure Deletefile1Click(Sender: TObject);
+    procedure btnGraphClick(Sender: TObject);
   private
     { Private declarations }
     function NewElement: boolean;
@@ -71,7 +73,7 @@ uses
   unit_settings,
   math_complex,
   math_globals,
-  System.UITypes;
+  System.UITypes, frm_RIGraph;
 
 {$R *.dfm}
 
@@ -96,6 +98,67 @@ begin
   end;
 end;
 
+procedure TfrmMaterialList.btnGraphClick(Sender: TObject);
+const
+  H = 12398.6;
+  kk = 0.54014E-5;
+var
+  i, N: integer;
+  s, Name: string;
+  e1, c, beta, gamma: single;
+  f1, f2: TComplex;
+  Size: integer;
+  Na, Nro, L: single;
+  StreamIn: TMemoryStream;
+  StrBuffer: PChar;
+
+  function GetString(Stream: TMemoryStream): string;
+  begin
+    Stream.Read(size, SizeOf(size));
+    StrBuffer := AllocMem(size);
+    Stream.Read(StrBuffer^, size);
+    Result := (StrBuffer);
+    FreeMem(StrBuffer);
+  end;
+
+
+begin
+
+  Name := lbFiles.Items[frmMaterialList.lbFiles.ItemIndex];
+  frmRIGraph.Clear;
+  try
+    StreamIn := TMemoryStream.Create;
+
+    StreamIn.LoadFromFile(Settings.HenkePath + Name + '.bin');
+
+    s := GetString(StreamIn);
+    Size := SizeOf(Na);
+
+    StreamIn.Read(Na, Size);
+    StreamIn.Read(Nro, Size);
+
+    while StreamIn.Position < StreamIn.Size do
+    begin
+      StreamIn.Read(e1, Size);
+      StreamIn.Read(f1.re, Size);
+      StreamIn.Read(f1.im, Size);
+
+      L := H / e1;
+      c := kk * Nro / Na * sqr(L);
+      if f1.re <> -9999 then
+        Beta := c * f1.re
+      else
+        Beta := 0;
+      Gamma := c * f1.im;
+
+      frmRIGraph.Add(L, Beta, Gamma);
+    end;
+    frmRIGraph.Show;
+  finally
+    StreamIn.Free;
+  end;
+end;
+
 procedure TfrmMaterialList.Deletefile1Click(Sender: TObject);
 var
   Name: string;
@@ -117,7 +180,6 @@ end;
 procedure TfrmMaterialList.FormShow(Sender: TObject);
 begin
   FillElementsList(Settings.HenkePath, lbFiles);
-
 end;
 
 procedure TfrmMaterialList.lbFilesDblClick(Sender: TObject);

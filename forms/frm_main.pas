@@ -12,13 +12,13 @@ unit frm_main;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Windows, Messages, System.SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ActnList, ImgList, ActnMan, ToolWin, ActnCtrls, Ribbon,
   RibbonLunaStyleActnCtrls, RibbonSilverStyleActnCtrls, RzTabs, ExtCtrls,
   RzPanel, VirtualTrees, ActnMenus, RibbonActnMenus, TeEngine, Series,
   TeeProcs, Chart, StdCtrls, Mask, RzEdit, RzSplit, unit_types, RzCmboBx,
   RzSpnEdt, RzButton, RzRadChk, RzRadGrp, XPMan, RzStatus, ActiveX, ScreenTips,
-  Menus, GestureMgr, System.Actions,
+  Menus, GestureMgr, System.Actions, unit_calc,
   unit_VersionChecker, Vcl.Buttons, VclTee.TeeGDIPlus, System.ImageList,
   editor_Gradient, unit_consts, AbBase, AbBrowse, AbZBrows, AbUnzper, AbZipper, AbUtils, System.IOUtils;
 
@@ -142,7 +142,6 @@ type
     FileCopyPlotBMP: TAction;
     FilePlotCopyWMF: TAction;
     cbMinLimit: TRzComboBox;
-    CalcGenetic: TAction;
     pmStructure: TPopupMenu;
     miAdd: TMenuItem;
     miCopy: TMenuItem;
@@ -194,6 +193,8 @@ type
     RzStatusPane6: TRzStatusPane;
     StatusRi: TRzStatusPane;
     Progress: TRzProgressStatus;
+    actAutoFitting: TAction;
+    spChiSqr: TRzStatusPane;
     procedure FileNewExecute(Sender: TObject);
     procedure LayerAddExecute(Sender: TObject);
     procedure FileCloseExecute(Sender: TObject);
@@ -325,6 +326,7 @@ type
       var PaintInfo: THeaderPaintInfo; const Elements: THeaderPaintElements);
     procedure ProjectHeaderDrawQueryElements(Sender: TVTHeader;
       var PaintInfo: THeaderPaintInfo; var Elements: THeaderPaintElements);
+    procedure actAutoFittingExecute(Sender: TObject);
   private
     { Private declarations }
     FSubstrate: PVirtualNode;
@@ -381,13 +383,15 @@ type
     ThreadsRunning: Integer;
 
     procedure OnMyMessage(var Msg: TMessage); message WM_RECALC;
-    procedure PlotResults;
+    procedure PlotResults(Calc: TCalc);
     procedure CreateNewExtension(Node: PVirtualNode);
     procedure DeleteExtension(Node: PVirtualNode);
     procedure WMStartEditing(var Message: TMessage); message WM_STARTEDITING;
     procedure FillExtensionPeriods(var Periods: TCombobox);
     procedure SaveData;
     procedure MoveModels(const OldPath, NewPath: string);
+    procedure GetThreadParams(var CD: TThreadParams);
+    procedure FinalizeCalc(Calc: TCalc);
 
   public
     { Public declarations }
@@ -425,7 +429,9 @@ uses
   frm_about,
   unit_VTEditors,
   frm_fitting,
-  frm_MList, unit_calc;
+  frm_MList,
+  unit_Permutate,
+  System.Math;
 
 {$R *.dfm}
 
@@ -472,7 +478,7 @@ begin
   frmFitWin.ShowModal;
 end;
 
-procedure TfrmMain.PlotResults;    { TODO -ooleks -c : Move to unit_calc 17.03.2020 17:03:45 }
+procedure TfrmMain.PlotResults(Calc: TCalc);    { TODO -ooleks -c : Move to unit_calc 17.03.2020 17:03:45 }
 var
   j: Integer;
 begin
@@ -481,83 +487,62 @@ begin
       FActiveModel.Curve.AddXY(Calc.Results[j].t, Calc.Results[j].R);
 end;
 
-procedure TfrmMain.CalcRunExecute(Sender: TObject);
+procedure TfrmMain.GetThreadParams(var CD: TThreadParams);
 var
-  CD: TThreadParams;
   StartT, EndT: single;
-  Hour, Min, Sec, MSec: Word;
 begin
-  if (FActiveModel = nil) or (Tree.ChildCount[Nil] = 0) then
-    Exit;
+  RT.Clear;
 
   StartTime := Now;
 
   Screen.Cursor := crHourGlass;
   FActiveModel.Curve.BeginUpdate;
+
   CalcRun.Enabled := False;
 
-  RT.Clear;
-  Calc := TCalc.Create;
+  StartT := StrToFloat(edStartTeta.Text);
+  EndT := StrToFloat(edEndTeta.Text);
 
-  try
-    Calc.Model := FLastModel;
+  if cb2Theta.Checked then
+    CD.k := 2
+  else
+    CD.k := 1;
 
-    StartT := StrToFloat(edStartTeta.Text);
-    EndT := StrToFloat(edEndTeta.Text);
+  if rgPolarisation.ItemIndex = 0 then
+    CD.P := cmS
+  else
+    CD.P := cmSP;
 
-    if cb2Theta.Checked then
-      CD.k := 2
-    else
-      CD.k := 1;
+  case rgCalcMode.ItemIndex of
+    0:begin
+        CD.Mode := cmTheta;
+        CD.Lambda := StrToFloat(edLambda.Text);
+        CD.StartT := StartT;
+        CD.EndT   := EndT;
+        CD.DT     := StrToFloat(edWidth.Text);
+      end;
 
-    if rgPolarisation.ItemIndex = 0 then
-      CD.P := cmS
-    else
-      CD.P := cmSP;
-
-    if (FLinkedData <> nil) and FActiveData.Curve.Visible then
-       Calc.ExpValues := SeriesToData(FLinkedData.Curve);
-
-    case rgCalcMode.ItemIndex of
-      0:begin
-          CD.Mode := cmTheta;
-          CD.Lambda := StrToFloat(edLambda.Text);
-          CD.StartT := StartT;
-          CD.EndT   := EndT;
-          CD.DT     := StrToFloat(edWidth.Text);
-        end;
-
-      1:
-        begin
-          ThreadsRunning := 1;
-          SetLength(FResults, 1);
-          CD.Mode := cmLambda;
-          CD.Theta := StrToFloat(edTheta.Text);
-          CD.StartL := StrToFloat(edStartL.Text);
-          CD.EndL := StrToFloat(edEndL.Text);
-          CD.DW := StrToFloat(edDL.Text);
-        end;
-    end;
-
-    CD.RF := rfError;
-    CD.N := StrToInt(edN.Text);
-    Calc.CalcData := CD;
-    Calc.Limit := StrToFloat(cbMinLimit.Text);
-    Calc.Tree := Tree;
-    Calc.GradientChart  := chGradients;
-    Pages.ActivePage := tsCalc;
-    Calc.Run;
-  except
-    on E: exception do
-    begin
-      ShowMessage(E.Message);
-      FActiveModel.Curve.EndUpdate;
-      FActiveModel.Curve.Repaint;
-      Screen.Cursor := crDefault;
-      CalcRun.Enabled := True;
-    end;
+    1:
+      begin
+        ThreadsRunning := 1;
+        SetLength(FResults, 1);
+        CD.Mode := cmLambda;
+        CD.Theta := StrToFloat(edTheta.Text);
+        CD.StartL := StrToFloat(edStartL.Text);
+        CD.EndL := StrToFloat(edEndL.Text);
+        CD.DW := StrToFloat(edDL.Text);
+      end;
   end;
-  PlotResults;
+
+  CD.RF := rfError;
+  CD.N := StrToInt(edN.Text);
+ end;
+
+procedure TfrmMain.FinalizeCalc(Calc: TCalc);
+var
+  Hour, Min, Sec, MSec: Word;
+begin
+  PlotResults(Calc);
   DecodeTime(Now - StartTime, Hour, Min, Sec, MSec);
   spnTime.Caption := Format('Time: %d.%3.3d s.', [60 * Min + Sec, MSec]);
   FActiveModel.Curve.EndUpdate;
@@ -567,6 +552,45 @@ begin
   Screen.Cursor := crDefault;
   CalcRun.Enabled := True;
   PrintMax;
+end;
+
+
+procedure TfrmMain.CalcRunExecute(Sender: TObject);
+var
+  CD: TThreadParams;
+  Calc: TCalc;
+begin
+  if (FActiveModel = nil) or (Tree.ChildCount[Nil] = 0) then
+    Exit;
+  GetThreadParams(CD);
+  try
+    Calc := TCalc.Create;
+    Calc.Model := FLastModel;
+
+    if (FLinkedData <> nil) and FActiveData.Curve.Visible then
+       Calc.ExpValues := SeriesToData(FLinkedData.Curve);
+
+    try
+      Calc.CalcData := CD;
+      Calc.Limit := StrToFloat(cbMinLimit.Text);
+      Calc.Tree := Tree;
+      Calc.GradientChart  := chGradients;
+      Pages.ActivePage := tsCalc;
+      Calc.Run;
+    except
+      on E: exception do
+      begin
+        ShowMessage(E.Message);
+        FActiveModel.Curve.EndUpdate;
+        FActiveModel.Curve.Repaint;
+        Screen.Cursor := crDefault;
+        CalcRun.Enabled := True;
+      end;
+    end;
+    FinalizeCalc(Calc);
+  finally
+    FreeAndNil(Calc);
+  end;
 end;
 
 procedure TfrmMain.CalcStopExecute(Sender: TObject);
@@ -1879,6 +1903,8 @@ var
 begin
   Allowed := True;
   Data := Sender.GetNodeData(NewNode);
+  if Data = nil then Exit;
+
   mmDescription.Lines.Text := Data.Description;
 
   if not((Data.RowType = prItem) and (Data.Group = gtModel)) then
@@ -1974,7 +2000,7 @@ var
   end;
 
 begin
-  Data := Tree.GetNodeData(Node);
+  Data := Project.GetNodeData(Node);
   Stream.Read(Data.ID, SizeOf(Data.ID));
   Data.Title := GetString;
   Stream.Read(Data.RowType, SizeOf(Data.RowType));
@@ -2100,6 +2126,23 @@ begin
   AllowChange := True;
   if NewIndex = 1 then
     FillLayerCombos;
+end;
+
+
+procedure TfrmMain.actAutoFittingExecute(Sender: TObject);
+var
+  CD: TThreadParams;
+  LayeredModel: TLayeredModel;
+begin
+   GetThreadParams(CD);
+   LayeredModel := TLayeredModel.Create(Tree, chGradients, FLastModel);
+   try
+     LayeredModel.Generate(CD.Lambda);
+     LayeredModel.ExportToFile('D:\input_structure.txt');
+   finally
+     FreeAndNil(LayeredModel);
+       Screen.Cursor := crDefault;
+   end;
 end;
 
 procedure TfrmMain.actCheckUpdateExecute(Sender: TObject);
